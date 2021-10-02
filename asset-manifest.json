@@ -1,0 +1,28 @@
+{
+  "files": {
+    "main.css": "/distributed-town-web/static/css/main.a9a76881.chunk.css",
+    "main.js": "/distributed-town-web/static/js/main.2e5cc3e2.chunk.js",
+    "main.js.map": "/distributed-town-web/static/js/main.2e5cc3e2.chunk.js.map",
+    "polyfills-dom.js": "/distributed-town-web/static/js/polyfills-dom.445c3404.chunk.js",
+    "polyfills-dom.js.map": "/distributed-town-web/static/js/polyfills-dom.445c3404.chunk.js.map",
+    "runtime-main.js": "/distributed-town-web/static/js/runtime-main.b2935953.js",
+    "runtime-main.js.map": "/distributed-town-web/static/js/runtime-main.b2935953.js.map",
+    "static/js/3.89bb534a.chunk.js": "/distributed-town-web/static/js/3.89bb534a.chunk.js",
+    "static/js/3.89bb534a.chunk.js.map": "/distributed-town-web/static/js/3.89bb534a.chunk.js.map",
+    "static/js/4.6e09eebd.chunk.js": "/distributed-town-web/static/js/4.6e09eebd.chunk.js",
+    "static/js/4.6e09eebd.chunk.js.map": "/distributed-town-web/static/js/4.6e09eebd.chunk.js.map",
+    "static/js/5.bbe051e0.chunk.js": "/distributed-town-web/static/js/5.bbe051e0.chunk.js",
+    "static/js/5.bbe051e0.chunk.js.map": "/distributed-town-web/static/js/5.bbe051e0.chunk.js.map",
+    "index.html": "/distributed-town-web/index.html",
+    "static/css/main.a9a76881.chunk.css.map": "/distributed-town-web/static/css/main.a9a76881.chunk.css.map",
+    "static/js/3.89bb534a.chunk.js.LICENSE.txt": "/distributed-town-web/static/js/3.89bb534a.chunk.js.LICENSE.txt",
+    "static/js/4.6e09eebd.chunk.js.LICENSE.txt": "/distributed-town-web/static/js/4.6e09eebd.chunk.js.LICENSE.txt",
+    "static/js/polyfills-dom.445c3404.chunk.js.LICENSE.txt": "/distributed-town-web/static/js/polyfills-dom.445c3404.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.b2935953.js",
+    "static/js/3.89bb534a.chunk.js",
+    "static/css/main.a9a76881.chunk.css",
+    "static/js/main.2e5cc3e2.chunk.js"
+  ]
+}
