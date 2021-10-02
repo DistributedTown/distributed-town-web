@@ -35,8 +35,8 @@ class App extends React.Component<any, AppState> {
   componentDidMount() {
     defineCustomElements(window);
     // @TODO remove this once Mike has added a ne even listener
-    // const skillwallet = JSON.parse(localStorage.getItem("skillWallet") || "{}");
-    // this.setState({ isLoading: !skillwallet });
+    const skillwallet = JSON.parse(localStorage.getItem("skillWallet") || "{}");
+    this.setState({ isLoading: !skillwallet });
     window.addEventListener("onSkillwalletLogin", this.onSWLogin.bind(this));
   }
 
