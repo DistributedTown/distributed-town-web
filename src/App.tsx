@@ -35,9 +35,12 @@ class App extends React.Component<any, AppState> {
   componentDidMount() {
     defineCustomElements(window);
     // @TODO remove this once Mike has added a ne even listener
-    const skillwallet = JSON.parse(localStorage.getItem("skillWallet") || "{}");
-    this.setState({ isLoading: !skillwallet });
+    // const skillwallet = JSON.parse(localStorage.getItem("skillWallet") || "{}");
+    // this.setState({ isLoading: !skillwallet });
     window.addEventListener("onSkillwalletLogin", this.onSWLogin.bind(this));
+
+    // @temporary: if in 5 seconds there is no event from sw wallet then stop loading
+    setTimeout(() => this.setState({ isLoading: false }), 5000);
   }
 
   componentWillUnmount() {
@@ -45,10 +48,7 @@ class App extends React.Component<any, AppState> {
   }
 
   onSWLogin() {
-    setTimeout(
-      () => this.setState({ isLoading: false, isAutheticated: true }),
-      2000
-    );
+    this.setState({ isLoading: false, isAutheticated: true });
   }
 
   render() {
@@ -120,11 +120,7 @@ class App extends React.Component<any, AppState> {
 export default withRouter(App);
 
 function Home() {
-  return (
-    <h2 style={{ color: "white" }}>
-      Test
-    </h2>
-  );
+  return <h2 style={{ color: "white" }}>Test</h2>;
 }
 
 const LoadingMessage = () => (
