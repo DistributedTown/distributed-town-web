@@ -2,7 +2,7 @@
   "name": "distributed-town-web",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://distributedtown.github.io",
+  "homepage": "https://distributedtown.github.io/distributed-town-web",
   "dependencies": {
     "@craco/craco": "^6.3.0",
     "@emotion/react": "^11.4.1",
