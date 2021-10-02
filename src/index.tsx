@@ -38,7 +38,7 @@ const theme = createTheme({
 ReactDOM.render(
   <StyledEngineProvider injectFirst>
     <ThemeProvider theme={theme}>
-      <Router>
+      <Router basename="/distributed-town-web">
         <App />
       </Router>
     </ThemeProvider>
