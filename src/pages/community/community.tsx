@@ -1,43 +1,21 @@
-import React from "react";
+import { SwAnimated, SwLogoSvg } from "sw-web-shared";
+import { Redirect, Route } from "react-router-dom";
 import "./community.scss";
-import { SwLogoSvg } from "sw-web-shared";
-import {
-  Redirect,
-  Route,
-} from "react-router-dom";
 
-interface CommunityState {
-  isLoading: boolean;
-  isAutheticated: boolean;
-}
+const Community = (props) => {
+  let { path } = props.match;
+  return (
+    <>
+      <Redirect from="/community" to={`${path}/skillwallet`} />
+      <Route component={Topic} path={`${path}/skillwallet`} {...props} />
+      <Route component={Topic} path={`${path}/dTown-hall`} {...props} />
+      <Route component={Topic} path={`${path}/notifications`} {...props} />
+      <Route component={Topic} path={`${path}/settings`} {...props} />
+    </>
+  );
+};
 
-class Community extends React.Component<any, CommunityState> {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoading: true,
-      isAutheticated: false,
-    };
-  }
-
-  componentDidMount() {
-    console.log(this.props);
-  }
-
-  componentWillUnmount() {}
-
-  render() {
-    let { path } = this.props.match;
-    return (
-      <>
-        <Redirect from="/community" to={`${path}/dTown-hall`} />
-        <Route path={`${path}/dTown-hall`} component={Topic} />
-      </>
-    );
-  }
-}
-
-function Topic() {
+function Topic(props) {
   return <SwLogoSvg width="50" height="50" />;
 }
 

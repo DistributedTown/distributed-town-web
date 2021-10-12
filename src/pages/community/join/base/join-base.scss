@@ -1,0 +1,49 @@
+@import "sw-web-shared/lib/styles/variables";
+@import "sw-web-shared/lib/styles/breakpoints";
+
+.sw-join-base-container {
+  display: flex !important;
+  height: 100%;
+  position: relative;
+
+  .sw-box {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+
+    &:first-child {
+      flex: 30%;
+    }
+
+    &:last-child {
+      flex: 70%;
+    }
+  }
+
+  @include media-breakpoint("lt-lg") {
+    flex-direction: column;
+    width: 80%;
+    margin: 0 auto;
+
+    & > .sw-box {
+      grid-gap: 10px !important;
+
+      &:first-child {
+        flex-direction: row;
+      }
+    }
+  }
+
+  @include media-breakpoint("lt-md") {
+    flex-direction: column;
+    width: 100%;
+    & > .sw-box {
+      &:first-child {
+        flex: unset !important;
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  }
+}

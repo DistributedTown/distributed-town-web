@@ -14,13 +14,3 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-
-.MuiContainer-root {
-  position: relative !important;
-}
-
-.wallet-btn {
-  position: absolute;
-  right: 24px;
-  z-index: 999;
-}

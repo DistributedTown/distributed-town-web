@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@dito-store/*": ["src/store/*"]
+    }
+  }
+}

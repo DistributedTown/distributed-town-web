@@ -1,44 +1,80 @@
-import { Box, Divider } from "@mui/material";
-import { DitoLogoSvg, SwButton } from "sw-web-shared";
+import { Badge, Box, Tooltip, Typography } from "@mui/material";
+import { DitoLogoFullSvg, SwButton, SwDivider, SwQuote } from "sw-web-shared";
 import { Link } from "react-router-dom";
+import HelpIcon from "@mui/icons-material/Help";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import "./get-started.scss";
 
 const GetStarted = () => {
+  const largeDevice = useMediaQuery("(min-width: 1280px)");
+  const small = useMediaQuery("(max-width: 959px)");
   return (
     <div className="sw-get-started-container">
       <Box sx={{ p: 0, m: 0 }} className="sw-box">
         <Box className="sw-box-logo">
-          <DitoLogoSvg width="280px" />
-        </Box>
-        <Box className="sw-box-quote">
-          <div className="quote text-white">
-            <p>
-              <strong>Distributed Town</strong> is a new financial
-              infrastructure for public goods, designed for the real world.
-            </p>
-            <p>
-              It’s built upon mutual, collaborative economics between
-              individuals and communities - and a universal identity management
-              based on skills, rather than personal data.
-            </p>
-          </div>
-        </Box>
-      </Box>
-      <Divider
-        color="white"
-        sx={{ width: 4, marginLeft: "40px", marginRight: "40px" }}
-        orientation="vertical"
-      />
-      <Box sx={{ p: 0, m: 0 }} className="sw-box">
-        <Box className="sw-box-title">
-          <h1 className="text-white text-2xl">
-            This is <span className="underline">your Community</span>
-          </h1>
+          <DitoLogoFullSvg width={largeDevice ? "280px" : "200px"} />
         </Box>
 
+        <SwQuote
+          mobile={small}
+          mobileStartText={
+            <p>
+               is a new financial...
+            </p>
+          }
+          children={
+            <>
+              <p>
+                <strong>Distributed Town</strong> is a new financial
+                infrastructure for public goods, designed for the real world.
+              </p>
+              <p>
+                It’s built upon mutual, collaborative economics between
+                individuals and communities - and a universal identity
+                management based on skills, rather than personal data.
+              </p>
+            </>
+          }
+        />
+      </Box>
+      <SwDivider orientation={largeDevice ? "vertical" : "horizontal"} />
+      <Box sx={{ p: 0, m: 0 }} className="sw-box">
+        <Box className="sw-box-title">
+          <Typography
+            color="text.primary"
+            component="div"
+            variant={largeDevice ? "h4" : "h5"}
+          >
+            This is <span className="underline">your Community</span>
+          </Typography>
+        </Box>
         <Box className="sw-box-actions">
-          <SwButton label="Create" component={Link} to="/community/create"/>
-          <SwButton label="Join" component={Link} to="/community/join"/>
+          <SwButton
+            label="Join a community"
+            component={Link}
+            to="/join-community"
+          />
+          <Badge
+            badgeContent={
+              <Tooltip title="Coming soon!" arrow>
+                <HelpIcon
+                  sx={{
+                    bgcolor: "text.primary",
+                    borderRadius: "50%",
+                    fontSize: "1.2rem",
+                    position: "absolute",
+                  }}
+                />
+              </Tooltip>
+            }
+          >
+            <SwButton
+              disabled
+              label="Create"
+              component={Link}
+              to="/community/create"
+            />
+          </Badge>
         </Box>
       </Box>
     </div>
