@@ -26,7 +26,7 @@
     "redux-query-interface-superagent": "^3.4.2",
     "redux-query-react": "^3.4.2",
     "simplebar-react": "^2.3.6",
-    "sw-web-shared": "0.0.1",
+    "sw-web-shared": "git+https://github.com/DistributedTown/sw-web-shared.git#master",
     "use-immer": "^0.6.0",
     "vivus": "^0.4.6"
   },
