@@ -23,7 +23,7 @@
     "react-router-dom": "^5.3.0",
     "react-transition-group": "^4.4.2",
     "redux-logger": "^3.0.6",
-    "sw-web-shared": "0.0.1"
+    "sw-web-shared": "git+https://github.com/DistributedTown/sw-web-shared.git#master"
   },
   "scripts": {
     "start": "react-app-rewired start",
