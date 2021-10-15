@@ -1,41 +1,41 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import "./index.css";
-import App from "./App";
-import {
-  createTheme,
-  StyledEngineProvider,
-  ThemeOptions,
-  ThemeProvider,
-} from "@mui/material/styles";
-import { BrowserRouter as Router } from "react-router-dom";
-import reportWebVitals from "./reportWebVitals";
-import { Provider } from "react-redux";
-import store from "./store/store";
+import './index.css';
+import { createTheme, StyledEngineProvider, ThemeOptions, ThemeProvider } from '@mui/material/styles';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { BrowserRouter as Router } from 'react-router-dom';
 
-export const getQueries = (state) => state.queries;
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+import store from './store/store';
 
 const theme = createTheme({
+  components: {
+    MuiUseMediaQuery: {
+      defaultProps: {
+        noSsr: true,
+      },
+    },
+  },
   breakpoints: {
     values: {
       xs: 0,
       sm: 600,
-      md: 900,
-      lg: 1200,
-      xl: 1400,
+      md: 960,
+      lg: 1280,
+      xl: 1920,
     },
   },
   palette: {
-    type: "dark",
+    type: 'dark',
     text: {
-      primary: "#fff",
+      primary: '#fff',
       // secondary: "rgba(255, 255, 255, 0.7)",
     },
     primary: {
-      main: "#161615",
+      main: '#161615',
     },
     secondary: {
-      main: "#D8D8D8",
+      main: '#D8D8D8',
     },
     // background: {
     //   default: "#161615",
@@ -46,7 +46,7 @@ const theme = createTheme({
     borderRadius: 0,
   },
   typography: {
-    fontFamily: ["Josefin Sans", " sans-serif"].join(","),
+    fontFamily: ['Josefin Sans', ' sans-serif'].join(','),
   },
 } as ThemeOptions);
 
@@ -60,7 +60,7 @@ ReactDOM.render(
       </Router>
     </ThemeProvider>
   </StyledEngineProvider>,
-  document.getElementById("root")
+  document.getElementById('root')
 );
 
 // // If you want to start measuring performance in your app, pass a function

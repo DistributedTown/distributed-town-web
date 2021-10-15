@@ -1,9 +1,13 @@
-import { SwAnimated, SwLogoSvg } from "sw-web-shared";
-import { Redirect, Route } from "react-router-dom";
-import "./community.scss";
+import { Redirect, Route } from 'react-router-dom';
+import { DitoLogoFullSvg } from 'sw-web-shared';
+import './community.scss';
+
+function Topic() {
+  return <DitoLogoFullSvg width="50" height="50" />;
+}
 
 const Community = (props) => {
-  let { path } = props.match;
+  const { path } = props.match;
   return (
     <>
       <Redirect from="/community" to={`${path}/skillwallet`} />
@@ -14,9 +18,5 @@ const Community = (props) => {
     </>
   );
 };
-
-function Topic(props) {
-  return <SwLogoSvg width="50" height="50" />;
-}
 
 export default Community;

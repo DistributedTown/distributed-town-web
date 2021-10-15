@@ -1,292 +1,242 @@
+import { ResultState } from '@dito-store/status';
+import { RootState, useAppDispatch } from '@dito-store/store';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import { Box, CircularProgress, Dialog, DialogContent, ThemeOptions, Typography } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { DitoLogoFullSvg, SwButton, SwQuote } from 'sw-web-shared';
 import {
-  DitoLogoFullSvg,
-  SwButton,
-  SwScrollbar,
-  SwDivider,
-  SwQuote,
-} from "sw-web-shared";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Badge,
-  Box,
-  Card,
-  CardContent,
-  CircularProgress,
-  List,
-  ListItem,
-  Slider,
-  Stack,
-  Tooltip,
-  Typography,
-} from "@mui/material";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
-import "./skills.scss";
-import { fetchSkills, toggleSkill, updateSkill } from "../store/join.reducer";
-import { RootState } from "@dito-store/store";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
-import useMediaQuery from "@mui/material/useMediaQuery";
+  claimCommunityMembership,
+  ensureEtheruemIsConnected,
+  ensureEtheruemNetworkIsCorrect,
+  getOrCreateTextileBucket,
+  joinCommunityMembership,
+} from '../../../../auth/auth.reducer';
 
-const Communities = (props) => {
-  const largeDevice = useMediaQuery("(min-width: 1280px)");
-  const small = useMediaQuery("(max-width: 959px)");
+import JoinBaseLayoyt from '../base/join-base';
+import { fetchCommunities, selectCommunity } from '../store/join.reducer';
+import { CommunityCategory } from '../store/model';
+import './communities.scss';
+import CommunityCard from './community-card';
+import { mockCommunity, metadataJson } from './mock-data';
 
-  const dispatch = useDispatch();
-  const { entities, status, selectedSkills } = useSelector(
-    (state: RootState) => state.joinCommunity.skills
-  );
-
-  const { selected } = useSelector(
-    (state: RootState) => state.joinCommunity.category
-  );
-
-  useEffect(() => {
-    dispatch(fetchSkills(selected));
-  }, [dispatch, selected]);
-
+const LoadingDialog = ({ open, handleClose, dialogContent }: any) => {
   return (
-    <div className="sw-skills-container">
-      <Box sx={{ p: 0, m: 0, gridGap: "60px" }} className="sw-box">
-        <Box className="sw-box-logo">
-          <DitoLogoFullSvg width={largeDevice ? "280px" : "200px"} />
-        </Box>
-        <SwQuote
-          mobile={small}
-          mobileStartText={<p>Have you ever thought...</p>}
-          children={
-            <>
-              <p>
-                Have you ever thought, <br />
-                "I would like to contribute, but ..."
-              </p>
-              <p className="mt-4 mb-4">
-                Distributed Town (DiTo) lets you create or join a community with
-                one click.
-              </p>
-
-              <p>
-                Just select what you are best at - and we will match with the
-                best communities that need you the most.
-              </p>
-            </>
-          }
-        />
-      </Box>
-      <SwDivider orientation={largeDevice ? "vertical" : "horizontal"} />
-      <Box
-        sx={{
-          p: 0,
-          m: 0,
-          gridGap: "20px",
-        }}
-        className="sw-box"
+    <Dialog open={open} onClose={handleClose}>
+      <DialogContent
+        sx={{ width: '400px', height: '400px', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}
       >
-        <Box className="sw-box-skills">
-          {status === "loading" ? (
-            <CircularProgress sx={{ color: "background.paper" }} />
-          ) : (
-            <SwScrollbar>
-              <div
-                className="skill-card-wrapper"
-                style={{
-                  display: "grid",
-                  gridGap: "15px",
-                  padding: 0,
-                }}
-              >
-                <Typography
-                  sx={{ color: "background.paper", textAlign: "center" }}
-                  component="div"
-                  variant="h6"
-                >
-                  Pick your skills (1-to-3) that you want to offer, & recieve
-                  the Credits you deserve!
-                </Typography>
-                {entities.map(({ credits, skills, subCat }) => (
-                  <SkillCard
-                    key={subCat}
-                    selectedSkills={selectedSkills}
-                    category={subCat}
-                    credits={credits}
-                    skills={skills}
-                    updateSkill={(skill) => dispatch(updateSkill(skill))}
-                    toggleSkill={(skill) => dispatch(toggleSkill(skill))}
-                  />
-                ))}
-              </div>
-            </SwScrollbar>
-          )}
-        </Box>
-        <Box className="sw-box-actions">
-          <div className="prev-step">
-            <SwButton
-              endIcon={<NavigateBeforeIcon />}
-              component={Link}
-              to={`/join-community/categories`}
-              label=""
-            />
-          </div>
-          <div className="next-step">
-            <SwButton
-              disabled={selected === null || selectedSkills.length === 0}
-              endIcon={<NavigateNextIcon />}
-              component={Link}
-              to={`/join-community/skills`}
-              label="Next: Join your community"
-            />
-          </div>
-        </Box>
-      </Box>
-    </div>
+        {dialogContent}
+      </DialogContent>
+    </Dialog>
   );
 };
 
-function SkillCard({
-  category,
-  skills,
-  credits,
-  selectedSkills,
-  toggleSkill,
-  updateSkill,
-}) {
+const DialogLoadingMessage = ({ message, subtitle = null, onCancel }) => {
   return (
-    <Card className="skill-card" sx={{ display: "flex" }}>
-      <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
-        <CardContent sx={{ flex: "1 0 auto" }}>
-          <Typography component="div" variant="h6">
-            {category} <small>({credits} Credits)</small>
-          </Typography>
-        </CardContent>
-        <Box
-          sx={{ display: "flex", alignItems: "center", pl: "16px", pr: "16px" }}
-        >
-          <List
-            sx={{
-              width: "100%",
-              display: "grid",
-              gridGap: "8px",
-              padding: 0,
-              gridTemplateColumns: `repeat(auto-fit, minmax(300px, 1fr))`,
-              gridAutoRows: `minmax(60px, auto)`,
-            }}
-          >
-            {skills.map((skill: string, index: number) => {
-              const currentSkill = selectedSkills.find(
-                (x) => x.skill === skill
-              );
-              return (
-                <ListItem
-                  key={index}
-                  sx={{ minHeight: "45px", alignItems: "flex-start" }}
-                  disablePadding
-                >
-                  <Accordion
-                    disableGutters
-                    elevation={0}
-                    square
-                    sx={{ p: 0, m: 0, width: "100%" }}
-                    expanded={!!currentSkill}
-                  >
-                    <AccordionSummary>
-                      <SwButton
-                        label={skill}
-                        sx={{
-                          height: "100%",
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          width: "100%",
-                        }}
-                        disabled={selectedSkills.length === 3 && !currentSkill}
-                        className={currentSkill ? "active-link" : ""}
-                        onClick={() => toggleSkill(skill)}
-                      />
-                    </AccordionSummary>
-                    <AccordionDetails sx={{ padding: "16px" }}>
-                      <Typography
-                        color="primary.main"
-                        component="div"
-                        variant="subtitle1"
-                        align="center"
-                      >
-                        <Badge
-                          sx={{
-                            padding: "0 8px",
-                          }}
-                          badgeContent={
-                            <Tooltip
-                              title="Tell your community about the Experience you have."
-                              arrow
-                            >
-                              <HelpOutlineIcon
-                                sx={{
-                                  fontSize: "1.2rem",
-                                  position: "absolute",
-                                }}
-                              />
-                            </Tooltip>
-                          }
-                        >
-                          Your XP Level
-                        </Badge>
-                      </Typography>
-
-                      <Stack
-                        spacing={2}
-                        direction="row"
-                        sx={{ mb: 1 }}
-                        alignItems="center"
-                      >
-                        <Typography
-                          color="primary.main"
-                          component="div"
-                          variant="subtitle2"
-                        >
-                          1
-                        </Typography>
-                        <Slider
-                          key={`slider-${currentSkill?.xp}`}
-                          valueLabelDisplay="auto"
-                          step={1}
-                          marks
-                          min={1}
-                          max={10}
-                          defaultValue={currentSkill?.xp}
-                          onChangeCommitted={(_, value: number) => {
-                            updateSkill({
-                              xp: value,
-                              skill,
-                            });
-                          }}
-                          sx={{
-                            "& .MuiSlider-thumb": {
-                              borderRadius: "0px",
-                            },
-                          }}
-                        />
-                        <Typography
-                          color="primary.main"
-                          component="div"
-                          variant="subtitle2"
-                        >
-                          10
-                        </Typography>
-                      </Stack>
-                    </AccordionDetails>
-                  </Accordion>
-                </ListItem>
-              );
-            })}
-          </List>
-        </Box>
-      </Box>
-    </Card>
+    <>
+      <CircularProgress />
+      <Typography sx={{ color: 'black', textAlign: 'center', mt: 2 }} component="div" variant="h6">
+        {message}
+      </Typography>
+      <Typography sx={{ color: 'text.secondary', textAlign: 'center', mt: 2 }} component="div" variant="body2">
+        {subtitle}
+      </Typography>
+      <SwButton color="error" onClick={onCancel} sx={{ mt: 4 }} label="Cancel" />
+    </>
   );
-}
+};
+
+const DialogErrorMessage = ({ message, onCancel }) => {
+  return (
+    <>
+      <Typography sx={{ color: 'black', textAlign: 'center', mt: 2 }} component="div" variant="h6">
+        {message}
+        <SwButton color="error" onClick={onCancel} sx={{ mt: 4 }} label="Cancel" />
+      </Typography>
+    </>
+  );
+};
+
+const Communities = () => {
+  const largeDevice = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.up('lg'));
+  const small = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.down('md'));
+
+  const dispatch = useAppDispatch();
+  const { entities, status, selectedCommunity, communitySelectedCategory } = useSelector(
+    (state: RootState) => state.joinCommunity.community
+  );
+  const [open, setOpen] = useState(false);
+  const [dialogContent, setDialogContent] = useState(null);
+
+  const { selectedCategory } = useSelector((state: RootState) => state.joinCommunity.category);
+
+  const handleClose = () => setOpen(false);
+
+  const handleEthConnection = async () => {
+    setDialogContent(<DialogLoadingMessage message="Ensuring ethereum connection ..." onCancel={handleClose} />);
+    const connection = await dispatch(ensureEtheruemIsConnected());
+    const isConnected = connection.payload as boolean;
+    if (!isConnected) {
+      setDialogContent(<DialogErrorMessage message="We could not connect to ethereum network, please try again!" onCancel={handleClose} />);
+    }
+    return isConnected;
+  };
+
+  const handleEthNetwork = async (isConnected: boolean) => {
+    if (!isConnected) {
+      return false;
+    }
+    setDialogContent(<DialogLoadingMessage message="Ensuring correct network ..." onCancel={handleClose} />);
+    const network = await dispatch(ensureEtheruemNetworkIsCorrect());
+    const isCorrectNetwork = network.payload as boolean;
+
+    if (!isCorrectNetwork) {
+      setDialogContent(
+        <DialogErrorMessage message="We could not set the correct network, please set it manually and try again" onCancel={handleClose} />
+      );
+    }
+    return isCorrectNetwork;
+  };
+
+  const handleTextileBucket = async (isCorrectNetwork: boolean) => {
+    if (!isCorrectNetwork) {
+      return null;
+    }
+    setDialogContent(<DialogLoadingMessage message="Generating textile bucket url ..." onCancel={handleClose} />);
+    const textile = await dispatch(getOrCreateTextileBucket(metadataJson as any));
+
+    if (textile.meta.requestStatus === 'fulfilled') {
+      return textile.payload as string;
+    }
+
+    setDialogContent(<DialogErrorMessage message={textile.payload} onCancel={handleClose} />);
+    return null;
+  };
+
+  const handleJoinMembership = async (buckerUrl: string) => {
+    if (!buckerUrl) {
+      return null;
+    }
+    setDialogContent(
+      <DialogLoadingMessage
+        subtitle="This might take awhile, please be patient"
+        message="Executing join membership smart contract ..."
+        onCancel={handleClose}
+      />
+    );
+    const skillwalletJoin = await dispatch(
+      joinCommunityMembership({
+        url: buckerUrl,
+        credits: '2222',
+        communityAddress: mockCommunity.address,
+      })
+    );
+
+    if (skillwalletJoin.meta.requestStatus === 'fulfilled') {
+      return skillwalletJoin.payload as any;
+    }
+
+    setDialogContent(<DialogErrorMessage message={skillwalletJoin.payload} onCancel={handleClose} />);
+    return null;
+  };
+
+  const handleClaimMembership = async (communityAddress: string, member: any) => {
+    if (!communityAddress || !member) {
+      return null;
+    }
+    setDialogContent(
+      <DialogLoadingMessage
+        subtitle="This might take awhile, please be patient"
+        message="Executing claim membership smart contract ..."
+        onCancel={handleClose}
+      />
+    );
+    const skillwalletClaim = await dispatch(claimCommunityMembership(mockCommunity.address));
+
+    if (skillwalletClaim.meta.requestStatus === 'fulfilled') {
+      return skillwalletClaim.payload as any;
+    }
+
+    setDialogContent(<DialogErrorMessage message={skillwalletClaim.payload} onCancel={handleClose} />);
+    return null;
+  };
+
+  const claimMembership = async () => {
+    setOpen(true);
+    const isConnected = await handleEthConnection();
+    const isCorrectNetwork = await handleEthNetwork(isConnected);
+    const bucketUrl = await handleTextileBucket(isCorrectNetwork);
+    const member = await handleJoinMembership(bucketUrl);
+
+    console.log(member, 'member');
+    await handleClaimMembership(mockCommunity.address, member);
+  };
+
+  useEffect(() => {
+    // don't fetch again when the selected category is same as before
+    // this is for cases where we go back and forth on the steps
+    if (!selectedCategory || selectedCategory !== communitySelectedCategory) {
+      dispatch(fetchCommunities(selectedCategory));
+    }
+  }, [dispatch, communitySelectedCategory, selectedCategory]);
+
+  return (
+    <>
+      <LoadingDialog open={open} onClose={handleClose} dialogContent={dialogContent} />
+      <JoinBaseLayoyt
+        status={status}
+        className="sw-communities-container"
+        left={
+          <>
+            <Box className="sw-box-logo">
+              <DitoLogoFullSvg width={largeDevice ? '280px' : '200px'} />
+            </Box>
+            <SwQuote mobile={small} mobileStartText={<p>Have you ever thought...</p>}>
+              <>
+                <p>
+                  Have you ever thought, <br />
+                  "I would like to contribute, but ..."
+                </p>
+                <p className="mt-4 mb-4">Distributed Town (DiTo) lets you create or join a community with one click.</p>
+
+                <p>Just select what you are best at - and we will match with the best communities that need you the most.</p>
+              </>
+            </SwQuote>
+          </>
+        }
+        right={
+          <div className="sw-communties-wrapper">
+            <Typography sx={{ color: 'background.paper', textAlign: 'center', pb: 2 }} component="div" variant="h6">
+              Here is a few comminities for you (Based on your Skills). Choose one that inspires you the most & start adding Value to it
+            </Typography>
+            {entities.map((community: CommunityCategory, index) => (
+              <CommunityCard
+                inactive={index === 1}
+                onSelect={(name) => dispatch(selectCommunity(name))}
+                selectedCommunity={selectedCommunity}
+                community={community}
+                key={`community-${index}`}
+              />
+            ))}
+          </div>
+        }
+        prevBtn={<SwButton startIcon={<NavigateBeforeIcon />} component={Link} to="/join-community/skills" label="Prev" />}
+        nextBtn={
+          <SwButton
+            disabled={selectedCommunity === null || status === ResultState.Loading}
+            endIcon={<NavigateNextIcon />}
+            onClick={() => claimMembership()}
+            to="/join-community/Community"
+            label={small ? 'Next' : 'Next: Claim your membership'}
+          />
+        }
+      />
+    </>
+  );
+};
 
 export default Communities;

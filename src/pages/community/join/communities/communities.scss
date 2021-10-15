@@ -1,11 +1,7 @@
 @import "sw-web-shared/lib/styles/variables";
 @import "sw-web-shared/lib/styles/breakpoints";
 
-.sw-skills-container {
-  display: flex !important;
-  height: 100%;
-  position: relative;
-
+.sw-join-base-container.sw-communities-container {
   .sw-box-logo {
     display: flex;
     width: 100%;
@@ -15,104 +11,21 @@
   .sw-box-quote {
     width: 100%;
     flex: 60%;
-    .quote {
-      padding: 20px;
-      border: 2px solid $border-color-base;
-      background: rgba($primary-color, 0.8);
-    }
   }
 
-  .sw-box-skills {
-    width: 100%;
-    max-height: "100%";
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    flex: 1;
-  }
-
-  .skill-card {
-    border: 2px solid $border-color-base;
-    background: rgba($primary-color, 0.8);
-    .MuiButtonBase-root {
-      padding: 0;
-      .MuiAccordionSummary-content {
-        margin: 0;
-        padding: 0;
-        height: 48px;
-      }
-    }
-  }
-  .sw-box-actions {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    padding-left: 12px;
-    grid-gap: 20px;
-
-    .prev-step {
-      .sw-button .MuiButton-endIcon {
-        margin-left: 0;
-      }
-    }
-  }
-
-  .sw-box {
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
-
-    &:first-child {
-      flex: 30%;
-    }
-
-    &:last-child {
-      flex: 70%;
-    }
+  .sw-communties-wrapper {
+    display: grid;
+    grid-gap: 15px;
   }
 
   @include media-breakpoint("lt-lg") {
-    flex-direction: column;
-    width: 80%;
-    margin: 0 auto;
-
     & > .sw-box {
-      grid-gap: 10px !important;
-
-      &:first-child {
-        flex-direction: row;
-      }
-
       .sw-box-quote {
         flex: auto;
       }
 
       .sw-box-logo {
         justify-content: center;
-        margin-bottom: 16px;
-      }
-
-      .sw-box-actions {
-        flex-direction: row;
-        align-items: flex-start;
-
-        & > * {
-          flex: auto;
-        }
-      }
-    }
-  }
-
-  @include media-breakpoint("lt-md") {
-    flex-direction: column;
-    width: 100%;
-    & > .sw-box {
-      &:first-child {
-        flex: unset !important;
-        flex-direction: column;
-        text-align: center;
       }
     }
   }
