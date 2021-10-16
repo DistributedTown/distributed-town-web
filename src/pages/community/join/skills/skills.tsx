@@ -16,18 +16,14 @@ import './skills.scss';
 import SkillCard from './skill-card';
 
 const Skills = () => {
+  const dispatch = useDispatch();
   const largeDevice = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.up('lg'));
   const small = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.down('md'));
-
-  const dispatch = useDispatch();
   const { entities, status, selectedSkills, skillSelectedCategory } = useSelector((state: RootState) => state.joinCommunity.skills);
-
   const { selectedCategory } = useSelector((state: RootState) => state.joinCommunity.category);
 
   useEffect(() => {
-    // don't fetch again when the selected category is same as before
-    // this is for cases where we go back and forth on the steps
-    if (!selectedCategory || selectedCategory !== skillSelectedCategory) {
+    if (selectedCategory && selectedCategory !== skillSelectedCategory) {
       dispatch(fetchSkills(selectedCategory));
     }
   }, [dispatch, skillSelectedCategory, selectedCategory]);
@@ -59,17 +55,28 @@ const Skills = () => {
           <Typography sx={{ color: 'background.paper', textAlign: 'center', pb: 2 }} component="div" variant="h6">
             Pick your skills (1-to-3) that you want to offer, & recieve the Credits you deserve!
           </Typography>
-          {entities.map(({ credits, skills, subCat }) => (
-            <SkillCard
-              key={subCat}
-              selectedSkills={selectedSkills}
-              category={subCat}
-              credits={credits}
-              skills={skills}
-              updateSkill={(skill) => dispatch(updateSkill(skill))}
-              toggleSkill={(skill) => dispatch(toggleSkill(skill))}
-            />
-          ))}
+          {skillSelectedCategory ? (
+            entities.map(({ credits, skills, subCat }) => (
+              <SkillCard
+                key={subCat}
+                selectedSkills={selectedSkills}
+                category={subCat}
+                credits={credits}
+                skills={skills}
+                updateSkill={(skill) => dispatch(updateSkill(skill))}
+                toggleSkill={(skill) => dispatch(toggleSkill(skill))}
+              />
+            ))
+          ) : (
+            <Typography
+              className="no-item-selected"
+              sx={{ color: 'background.paper', textAlign: 'center', pb: 2 }}
+              component="div"
+              variant="h6"
+            >
+              No category was selected, go back to select one!
+            </Typography>
+          )}
         </div>
       }
       prevBtn={<SwButton startIcon={<NavigateBeforeIcon />} component={Link} to="/join-community/categories" label="Prev" />}

@@ -39,10 +39,25 @@
     grid-gap: 20px;
   }
 
+
+  .no-item-selected {
+    position: absolute;
+    text-align: center;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+    width: 100%;
+    font-weight: bold;
+  }
+
   @include media-breakpoint('lt-lg') {
     flex-direction: column;
     width: 80%;
     margin: 0 auto;
+
+    .no-item-selected {
+      position: relative;
+    }
 
     & > .sw-box {
       grid-gap: 10px !important;

@@ -5,7 +5,7 @@
   display: flex;
   border: 2px solid $border-color-base;
   background: rgba($primary-color, 0.8);
-  transition: $transition; 
+  transition: $transition;
 
   &:not(.inactive):hover,
   &:not(.inactive).active {
@@ -61,10 +61,26 @@
   }
 
   @include media-breakpoint('lt-sm') {
-    & > .sw-box {
-      .community-card {
-        .sw-community-list {
-          grid-template-columns: 1fr;
+    .MuiCardContent-root {
+      flex-direction: column-reverse;
+
+      .MuiCardHeader-root {
+        flex-direction: column;
+        text-align: center;
+
+        .MuiCardHeader-avatar {
+          margin: 0;
+        }
+      }
+      .can-accept-in {
+        flex-direction: revert;
+        width: auto;
+        justify-content: space-around;
+        margin-bottom: 16px;
+
+        .toggle-circle {
+          width: 50px;
+          height: 50px;
         }
       }
     }

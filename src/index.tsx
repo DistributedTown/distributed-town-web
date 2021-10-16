@@ -4,15 +4,28 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 
+import { persistStore } from 'redux-persist';
+import { PersistGate } from 'redux-persist/integration/react';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import store from './store/store';
+
+const persistor = persistStore(store);
 
 const theme = createTheme({
   components: {
     MuiUseMediaQuery: {
       defaultProps: {
         noSsr: true,
+      },
+    },
+    MuiDialogContent: {
+      styleOverrides: {
+        root: {
+          borderStyle: 'solid',
+          borderWidth: '1px',
+          borderColor: 'text.primary',
+        },
       },
     },
   },
@@ -55,7 +68,9 @@ ReactDOM.render(
     <ThemeProvider theme={theme}>
       <Router basename="/distributed-town-web">
         <Provider store={store}>
-          <App />
+          <PersistGate persistor={persistor}>
+            <App />
+          </PersistGate>
         </Provider>
       </Router>
     </ThemeProvider>

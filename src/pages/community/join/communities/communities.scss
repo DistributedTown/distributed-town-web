@@ -1,6 +1,17 @@
 @import "sw-web-shared/lib/styles/variables";
 @import "sw-web-shared/lib/styles/breakpoints";
 
+
+.sw-join-dialog-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex: 1;
+  justify-content: center;
+}
+
+
 .sw-join-base-container.sw-communities-container {
   .sw-box-logo {
     display: flex;

@@ -36,7 +36,7 @@ const GetStarted = () => {
           </Typography>
         </Box>
         <Box className="sw-box-actions">
-          <SwButton label="Join a community" component={Link} to="/join-community" />
+          <SwButton label="Join a community" component={Link} to="/join-community/categories" />
           <Badge
             badgeContent={
               <Tooltip title="Coming soon!" arrow>

@@ -1,23 +1,24 @@
-import { Card, CardContent, Typography, Box, Avatar, CardHeader, CardActionArea } from '@mui/material';
+import { Card, CardContent, Typography, Box, Avatar, CardHeader, CardActionArea, ThemeOptions, useMediaQuery } from '@mui/material';
 import { red } from '@mui/material/colors';
 import { CommunityCategory } from '../store/model';
 import './community-card.scss';
 
 function CommunityCard({
   community,
-  selectedCommunity,
+  selectedCommunityName,
   onSelect,
   inactive,
 }: {
   inactive: boolean;
   community: CommunityCategory;
-  selectedCommunity: string;
+  selectedCommunityName: string;
   onSelect: (communityName: string) => any;
 }) {
+  const small = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.down('sm'));
   return (
     <Card
       onClick={() => !inactive && onSelect(community.name)}
-      className={`sw-community-card ${selectedCommunity === community.name ? 'active' : ''} ${inactive ? 'inactive' : ''}`}
+      className={`sw-community-card ${selectedCommunityName === community.name ? 'active' : ''} ${inactive ? 'inactive' : ''}`}
     >
       <CardActionArea disabled={inactive}>
         <CardContent sx={{ display: 'flex' }}>
@@ -34,7 +35,7 @@ function CommunityCard({
                 </Avatar>
               }
               title={
-                <Typography variant="h5" color="primary.main">
+                <Typography variant={small ? 'h6' : 'h5'} color="primary.main">
                   {community.name}
                 </Typography>
               }

@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import { toWei } from 'web3-utils';
-import { CommunityContract, CommunityContractError, CommunityContractResponse } from './model';
+import { CommunityContract, CommunityContractError, CommunityContractResponse, NonceActions } from './model';
 
 const skillWalletAbi = [
   {
@@ -1547,21 +1547,31 @@ export const executeCommunityContract = async ({
     });
   }
 
-  return memberJoinedEvent.args;
+  const [userAddress, tokenId, communityCredits] = memberJoinedEvent.args;
+  return {
+    userAddress,
+    tokenId,
+    credits: communityCredits,
+  };
 };
 
-export const hasPendingAuthentication = async (address: string) => {
-  const response = await fetch(`${process.env.REACT_APP_PUBLIC_SKILL_WALLET_API_URL}/api/skillWallet/hasPendingAuth?address=${address}`, {
+export const hasPendingAuthentication = async (address: string): Promise<{ hasPendingAuth: boolean }> => {
+  return fetch(`${process.env.REACT_APP_PUBLIC_SKILL_WALLET_API_URL}/api/skillWallet/hasPendingAuth?address=${address}`, {
     method: 'GET',
-  });
-  const pendingAuths = await response.json();
-  return pendingAuths.hasPendingAuth;
+  }).then((response) => response.json());
 };
 
-export const generateNonce = async (action, tokenId) => {
-  const response = await fetch(`${process.env.REACT_APP_PUBLIC_SKILL_WALLET_API_URL}/api/skillWallet/${tokenId}/nonces?action=${action}`, {
-    method: 'POST',
-  });
-  const nonce = await response.json();
-  return nonce.nonce;
+export const generateNonce = async (action: NonceActions, tokenId: string): Promise<string> => {
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_PUBLIC_SKILL_WALLET_API_URL}/api/skillWallet/${tokenId}/nonces?action=${action}`,
+      {
+        method: 'POST',
+      }
+    );
+    const nonce = await response.json();
+    return nonce.nonce;
+  } catch (error) {
+    return null;
+  }
 };

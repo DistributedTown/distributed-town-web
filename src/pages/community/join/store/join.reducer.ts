@@ -1,8 +1,14 @@
+import { TextileBucketSkillsMetadata } from 'src/api/model';
 import { ResultState } from '@dito-store/status';
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
 
 import { getCategories, getCommunties, getSkills } from './join.api';
 import { Category, CommunityCategory, SkillCategory } from './model';
+
+interface Skill {
+  skill: string;
+  xp: number;
+}
 
 export interface JoinCommunityState {
   category: {
@@ -13,13 +19,13 @@ export interface JoinCommunityState {
   community: {
     entities: CommunityCategory[];
     communitySelectedCategory: string;
-    selectedCommunity: string;
+    selectedCommunityName: string;
     status: ResultState;
   };
   skills: {
     entities: SkillCategory[];
     skillSelectedCategory: string;
-    selectedSkills: { skill: string; xp: number }[];
+    selectedSkills: Skill[];
     status: ResultState;
   };
 }
@@ -37,7 +43,7 @@ const initialState: JoinCommunityState = {
   community: {
     entities: [],
     communitySelectedCategory: null,
-    selectedCommunity: null,
+    selectedCommunityName: null,
     status: ResultState.Idle,
   },
   skills: {
@@ -56,7 +62,7 @@ export const joinCommunitySlice = createSlice({
       state.category.selectedCategory = action.payload;
     },
     selectCommunity(state, action) {
-      state.community.selectedCommunity = action.payload;
+      state.community.selectedCommunityName = action.payload;
     },
     updateSkill(state, action) {
       const { skill } = action.payload;
@@ -108,5 +114,33 @@ export const joinCommunitySlice = createSlice({
 });
 
 export const { selectCategory, resetJoinCommunityState, toggleSkill, updateSkill, selectCommunity } = joinCommunitySlice.actions;
+
+export const getCommunity = createSelector(selectCommunity, (x1) => {
+  const { entities, selectedCommunityName } = x1.payload.joinCommunity.community;
+  return entities.find((e) => e.name === selectedCommunityName);
+});
+
+export const getFormattedSkills = createSelector(updateSkill, toggleSkill, (x1): TextileBucketSkillsMetadata[] => {
+  const { selectedSkills } = x1.payload.joinCommunity.skills;
+  return selectedSkills.reduce((prev: TextileBucketSkillsMetadata[], curr: Skill) => {
+    return [
+      ...prev,
+      {
+        name: curr.skill,
+        value: curr.xp,
+      },
+    ];
+  }, []);
+});
+
+export const getCredits = createSelector(updateSkill, toggleSkill, (x1): string => {
+  const { selectedSkills, entities } = x1.payload.joinCommunity.skills;
+  const totalSkillCredits = selectedSkills.reduce((prev: number, curr: Skill) => {
+    const entity = entities.find(({ skills }) => skills.some((s) => s === curr.skill));
+    prev += (entity?.credits || 0) * curr.xp;
+    return prev;
+  }, 0);
+  return (totalSkillCredits + 2000).toString();
+});
 
 export default joinCommunitySlice.reducer;

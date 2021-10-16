@@ -34,3 +34,13 @@ export interface CommunityContractResponse {
   tokenId: string;
   credits: number;
 }
+
+// eslint-disable-next-line no-shadow
+export enum NonceActions {
+  Activate,
+  Login,
+  CreateGig,
+  TakeGig,
+  SubmitGig,
+  CompleteGig,
+}
