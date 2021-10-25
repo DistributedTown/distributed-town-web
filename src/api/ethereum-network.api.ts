@@ -1,7 +1,9 @@
+const timeout = (prom: Promise<any>, time: number) => Promise.race([prom, new Promise((_r, rej) => setTimeout(rej, time))]);
+
 export const connectToEthereum = async (): Promise<boolean> => {
   if (!window.ethereum.selectedAddress) {
     try {
-      await window.ethereum.enable();
+      await timeout(window.ethereum.request({ method: 'eth_requestAccounts' }), 20000);
       return true;
     } catch (error) {
       return false;

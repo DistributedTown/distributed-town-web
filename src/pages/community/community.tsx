@@ -1,9 +1,9 @@
 import { Redirect, Route } from 'react-router-dom';
-import { DitoLogoFullSvg } from 'sw-web-shared';
+import { DitoLogoSvg } from 'sw-web-shared';
 import './community.scss';
 
 function Topic() {
-  return <DitoLogoFullSvg width="50" height="50" />;
+  return <DitoLogoSvg width="50" height="50" />;
 }
 
 const Community = (props) => {

@@ -1,7 +1,6 @@
 import { ResultState } from '@dito-store/status';
 import { RootState, useAppDispatch } from '@dito-store/store';
-import { asyncPoll } from '@dito-utils/async-poller';
-import { hasPendingAuthentication } from '@dito-api/skillwallet.api';
+import { getSkillWalletDescription } from '@dito-api/skillwallet.api';
 import { TextileBucketMetadata } from 'src/api/model';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
@@ -10,7 +9,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { DitoLogoFullSvg, SwButton, SwQuote } from 'sw-web-shared';
+import { DitoLogoSvg, SwButton, SwQuote } from 'sw-web-shared';
 
 import JoinBaseLayoyt from '../base/join-base';
 import { ClaimSkillWalletErrors, CommunityCategory, JoinSkillWalletErrors } from '../store/model';
@@ -33,6 +32,7 @@ const Communities = () => {
   // selectors
   const { selectedCategory } = useSelector((state: RootState) => state.joinCommunity.category);
   const { selectedSkills } = useSelector((state: RootState) => state.joinCommunity.skills);
+  const userInfo = useSelector((state: RootState) => state.joinCommunity.userInfo);
   const { entities, status, selectedCommunityName, communitySelectedCategory } = useSelector(
     (state: RootState) => state.joinCommunity.community
   );
@@ -46,16 +46,6 @@ const Communities = () => {
   const [tokenId, setTokenId] = useState(null);
   const [nonce, setNonce] = useState(null);
 
-  const onAuthenticate = async () => {
-    if (!nonce || !tokenId) {
-      return;
-    }
-    const fn = () => hasPendingAuthentication(window.ethereum.selectedAddress);
-    const condition = ({ hasPendingAuth }) => !hasPendingAuth && !!open;
-    const { hasPendingAuth } = await asyncPoll<{ hasPendingAuth: boolean }>(fn, condition);
-    console.log('hasPendingAuth: ', hasPendingAuth);
-  };
-
   const handleClose = () => {
     setOpen(false);
     setNonce(null);
@@ -64,18 +54,18 @@ const Communities = () => {
   };
 
   const claimMembership = async () => {
-    const username = 'Tao';
+    const description = await getSkillWalletDescription();
     const metadataJson: TextileBucketMetadata = {
-      name: `${username}'s SkillWallet`,
-      description: 'Universal, self-sovereign IDs tied to skills & contributions rather than personal data.',
-      image: null,
+      name: `${userInfo?.name}'s SkillWallet`,
+      description,
+      image: userInfo?.avatar,
       properties: {
-        username,
+        username: userInfo?.name,
         skills: formattedSkills,
       },
     };
     setOpen(true);
-    const { onEthConnection, onEthNetworkChange, onTextileBucket, onJoinMembership, onClaimMembership, onQRCodeGenerate } =
+    const { onEthConnection, onEthNetworkChange, onTextileBucket, onJoinMembership, onClaimMembership, onQRCodeGenerate, onAuthenticate } =
       OnClaimMembershipHandlers(
         setDialogContent,
         () => handleClose(),
@@ -83,19 +73,19 @@ const Communities = () => {
           if (JoinSkillWalletErrors.AlreadyMember === message) {
             // call connect once implemented in skillwallet auth the ability to call connect programatically
             handleClose();
-          } else if (JoinSkillWalletErrors.SkillWalletNotActivated === message) {
+          } else if (JoinSkillWalletErrors.SkillWalletNotActivated === message || ClaimSkillWalletErrors.AlreadyClaimed === message) {
             const generatedNonce = await onQRCodeGenerate(hardcodedTokenId);
             setNonce(generatedNonce);
-            await onAuthenticate();
-          } else if (JoinSkillWalletErrors.SkillWalletNotClaimed === message) {
+            await onAuthenticate(nonce, tokenId);
+          } else if (JoinSkillWalletErrors.SkillWalletNotClaimed === message || ClaimSkillWalletErrors.Retry === message) {
             const hasJoinedCommunity = true;
             await onClaimMembership(selectedCommunity.address, hasJoinedCommunity);
             // TODO: get token id from api once implemented in https://dito-labs.atlassian.net/browse/DITO-129
             // setTokenId(member?.tokenId);
             const generatedNonce = await onQRCodeGenerate(hardcodedTokenId);
             setNonce(generatedNonce);
-            await onAuthenticate();
-          } else if (JoinSkillWalletErrors.Retry === message || ClaimSkillWalletErrors.Retry === message) {
+            await onAuthenticate(nonce, tokenId);
+          } else if (JoinSkillWalletErrors.Retry === message) {
             setNonce(null);
             setTokenId(null);
             setDialogContent(null);
@@ -117,7 +107,7 @@ const Communities = () => {
     setTokenId(member?.tokenId);
     const generatedNonce = await onQRCodeGenerate(tokenId);
     setNonce(generatedNonce);
-    await onAuthenticate();
+    await onAuthenticate(nonce, tokenId);
   };
 
   useEffect(() => {
@@ -135,7 +125,7 @@ const Communities = () => {
         left={
           <>
             <Box className="sw-box-logo">
-              <DitoLogoFullSvg width={largeDevice ? '280px' : '200px'} />
+              <DitoLogoSvg width={largeDevice ? '100px' : '80px'} />
             </Box>
             <SwQuote mobile={small} mobileStartText={<p>Have you ever thought...</p>}>
               <>

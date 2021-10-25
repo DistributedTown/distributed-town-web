@@ -1,0 +1,68 @@
+@import 'sw-web-shared/lib/styles/breakpoints';
+@import 'sw-web-shared/lib/styles/variables';
+
+.sw-join-base-container.sw-user-info-container {
+  .sw-box-logo {
+    display: flex;
+    width: 90%;
+    justify-content: flex-start;
+  }
+
+  .sw-user-info-wrapper {
+    width: 100%;
+  }
+
+  .sw-box-quote {
+    width: 90%;
+    flex: 60%;
+  }
+
+  .sw-form-field + .sw-form-field {
+    margin-top: 20px;
+  }
+
+  .sw-form-field-content {
+    border: 2px solid $border-color-base;
+    background: rgba($primary-color, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+
+    .MuiInput-root {
+      color: white;
+      min-width: 250px;
+
+      &::before, &::after {
+        border-bottom: 2px solid #fff;
+      }
+    }
+  }
+
+  .sw-image-upload {
+    min-height: 60px;
+  }
+
+  @include media-breakpoint('lt-lg') {
+    & > .sw-box {
+      .sw-box-quote {
+        flex: auto;
+        width: 100%;
+      }
+
+      .sw-box-logo {
+        justify-content: center;
+        width: 100%;
+      }
+    }
+  }
+
+  @include media-breakpoint('lt-md') {
+    & > .sw-box {
+      .sw-form-field-content {
+        flex-direction: column;
+        grid-gap: 10px;
+      }
+    }
+  }
+}

@@ -6,7 +6,7 @@ export interface TextileBucketSkillsMetadata {
 export interface TextileBucketMetadata {
   name: string;
   description: string;
-  image: null;
+  image: string;
   properties: {
     username: string;
     skills: TextileBucketSkillsMetadata[];

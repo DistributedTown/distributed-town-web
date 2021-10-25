@@ -11,6 +11,10 @@ interface Skill {
 }
 
 export interface JoinCommunityState {
+  userInfo: {
+    name: string;
+    avatar: string;
+  };
   category: {
     entities: Category[];
     selectedCategory: string;
@@ -35,6 +39,10 @@ export const fetchSkills = createAsyncThunk('skills/entities', async (categoryId
 export const fetchCommunities = createAsyncThunk('community/entities', async (categoryId: string) => getCommunties(categoryId));
 
 const initialState: JoinCommunityState = {
+  userInfo: {
+    name: null,
+    avatar: null,
+  },
   category: {
     entities: [],
     selectedCategory: null,
@@ -58,6 +66,12 @@ export const joinCommunitySlice = createSlice({
   name: 'joinCommunity',
   initialState,
   reducers: {
+    updateName(state, action) {
+      state.userInfo.name = action.payload;
+    },
+    updateAvatarUrl(state, action) {
+      state.userInfo.avatar = action.payload;
+    },
     selectCategory(state, action) {
       state.category.selectedCategory = action.payload;
     },
@@ -113,7 +127,8 @@ export const joinCommunitySlice = createSlice({
   },
 });
 
-export const { selectCategory, resetJoinCommunityState, toggleSkill, updateSkill, selectCommunity } = joinCommunitySlice.actions;
+export const { selectCategory, resetJoinCommunityState, toggleSkill, updateSkill, selectCommunity, updateAvatarUrl, updateName } =
+  joinCommunitySlice.actions;
 
 export const getCommunity = createSelector(selectCommunity, (x1) => {
   const { entities, selectedCommunityName } = x1.payload.joinCommunity.community;

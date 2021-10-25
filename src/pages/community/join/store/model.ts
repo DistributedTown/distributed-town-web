@@ -1,4 +1,5 @@
-// eslint-disable-next-line no-shadow
+/* eslint-disable no-shadow */
+
 export enum JoinSkillWalletErrors {
   NoFreeSpots = 'NoFreeSpots',
   AlreadyMember = 'AlreadyMember',
@@ -7,13 +8,15 @@ export enum JoinSkillWalletErrors {
   Retry = 'Retry',
 }
 
-// eslint-disable-next-line no-shadow
 export enum ClaimSkillWalletErrors {
   AlreadyClaimed = 'AlreadyClaimed',
   SkillWalletNotCreated = 'SkillWalletNotCreated',
   Retry = 'Retry',
 }
 
+export enum SkillWalletAuthenticationErrors {
+  Retry = 'Retry',
+}
 export interface Category {
   id: number;
   name: string;

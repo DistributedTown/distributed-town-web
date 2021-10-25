@@ -1,11 +1,12 @@
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { Box, List, ListItem, ThemeOptions, Typography } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { DitoLogoFullSvg, SwButton, SwQuote } from 'sw-web-shared';
+import { DitoLogoSvg, SwButton, SwQuote } from 'sw-web-shared';
 
 import { RootState } from '@dito-store/store';
 
@@ -21,12 +22,13 @@ const Categories = () => {
 
   const dispatch = useDispatch();
   const { entities, status, selectedCategory } = useSelector((state: RootState) => state.joinCommunity.category);
+  const userInfo = useSelector((state: RootState) => state.joinCommunity.userInfo);
 
   useEffect(() => {
-    if (!entities.length) {
+    if (!entities.length && userInfo?.name && userInfo?.avatar) {
       dispatch(fetchCategories());
     }
-  }, [dispatch, entities]);
+  }, [dispatch, entities, userInfo]);
 
   return (
     <JoinBaseLayoyt
@@ -35,7 +37,7 @@ const Categories = () => {
       left={
         <>
           <Box className="sw-box-logo">
-            <DitoLogoFullSvg width={largeDevice ? '280px' : '200px'} />
+            <DitoLogoSvg width={largeDevice ? '100px' : '80px'} />
           </Box>
 
           <SwQuote mobile={small} mobileStartText={<p>Have you ever thought...</p>}>
@@ -56,40 +58,52 @@ const Categories = () => {
           <Typography sx={{ color: 'background.paper', textAlign: 'center', pb: 2 }} component="div" variant="h6">
             Pick a category
           </Typography>
-          <List
-            sx={{
-              display: 'grid',
-              width: '100%',
-              gridGap: '15px',
-              padding: 0,
-              gridTemplateColumns: 'repeat(auto-fit, minmax(175px, 1fr))',
-              gridAutoRows: 'minmax(60px, auto)',
-            }}
-          >
-            {entities.map(({ id, name }) => (
-              <ListItem key={id} sx={{ height: '45px' }} disablePadding>
-                <SwButton
-                  sx={{
-                    height: '100%',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    width: '100%',
-                  }}
-                  onClick={() => dispatch(selectCategory('Backend'))}
-                  className={selectedCategory === name ? 'active-link' : ''}
-                  startIcon={<HelpOutlineIcon />}
-                  label={name}
-                />
-              </ListItem>
-            ))}
-          </List>
+
+          {userInfo?.name && userInfo?.avatar ? (
+            <List
+              sx={{
+                display: 'grid',
+                width: '100%',
+                gridGap: '15px',
+                padding: 0,
+                gridTemplateColumns: 'repeat(auto-fit, minmax(175px, 1fr))',
+                gridAutoRows: 'minmax(60px, auto)',
+              }}
+            >
+              {entities.map(({ id, name }) => (
+                <ListItem key={id} sx={{ height: '45px' }} disablePadding>
+                  <SwButton
+                    sx={{
+                      height: '100%',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      width: '100%',
+                    }}
+                    onClick={() => dispatch(selectCategory('Backend'))}
+                    className={selectedCategory === name ? 'active-link' : ''}
+                    startIcon={<HelpOutlineIcon />}
+                    label={name}
+                  />
+                </ListItem>
+              ))}
+            </List>
+          ) : (
+            <Typography
+              className="no-item-selected"
+              sx={{ color: 'background.paper', textAlign: 'center', pb: 2 }}
+              component="div"
+              variant="h6"
+            >
+              Personal information was not provided, go back to provide it!
+            </Typography>
+          )}
         </div>
       }
-      prevBtn={null}
+      prevBtn={<SwButton startIcon={<NavigateBeforeIcon />} component={Link} to="/join-community/user-info" label="Prev" />}
       nextBtn={
         <SwButton
-          disabled={selectedCategory === null || status === ResultState.Loading}
+          disabled={selectedCategory === null || status === ResultState.Loading || !(userInfo?.name && userInfo?.avatar)}
           endIcon={<NavigateNextIcon />}
           component={Link}
           to="/join-community/skills"

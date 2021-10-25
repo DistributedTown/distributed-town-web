@@ -17,9 +17,6 @@ export const authSlice = createSlice({
     },
     resetAuthState: () => initialState,
   },
-  extraReducers: (builder) => {
-    // implement builder
-  },
 });
 
 export const { setAuthenticated, resetAuthState } = authSlice.actions;

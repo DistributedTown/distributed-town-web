@@ -5,7 +5,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { DitoLogoFullSvg, SwButton, SwQuote } from 'sw-web-shared';
+import { DitoLogoSvg, SwButton, SwQuote } from 'sw-web-shared';
 
 import { RootState } from '@dito-store/store';
 
@@ -35,7 +35,7 @@ const Skills = () => {
       left={
         <>
           <Box className="sw-box-logo">
-            <DitoLogoFullSvg width={largeDevice ? '280px' : '200px'} />
+            <DitoLogoSvg width={largeDevice ? '100px' : '80px'} />
           </Box>
           <SwQuote mobile={small} mobileStartText={<p>Have you ever thought...</p>}>
             <>

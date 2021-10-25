@@ -7,6 +7,7 @@ import Skills from './skills/skills';
 import { resetJoinCommunityState } from './store/join.reducer';
 import './join.scss';
 import Communities from './communities/communities';
+import UserInfo from './user-info/user-info';
 
 const Join = (props) => {
   const dispatch = useDispatch();
@@ -18,6 +19,7 @@ const Join = (props) => {
   );
   return (
     <div className="sw-join-community-container">
+      <Route path="/join-community/user-info" component={UserInfo} {...props} />
       <Route path="/join-community/categories" component={Categories} {...props} />
       <Route path="/join-community/skills" component={Skills} {...props} />
       <Route path="/join-community/communities" component={Communities} {...props} />

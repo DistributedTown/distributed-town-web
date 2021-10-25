@@ -1,12 +1,18 @@
 import { NonceActions, TextileBucketMetadata } from '@dito-api/model';
-import { claimCommunityMembershipContract, executeCommunityContract, generateNonce } from '@dito-api/skillwallet.api';
+import {
+  claimCommunityMembershipContract,
+  executeCommunityContract,
+  generateNonce,
+  hasPendingAuthentication,
+} from '@dito-api/skillwallet.api';
 import { ParseSWErrorMessage } from '@dito-utils/parse-smart-contact-error';
 import { Box, CircularProgress, Typography } from '@mui/material';
 import { SwButton } from 'sw-web-shared';
 import { QRCode } from 'react-qrcode-logo';
 import { generateTextileBucketUrl } from '@dito-api/textile-bucket.api';
 import { connectToEthereum, switchToEtheremNetwork } from '@dito-api/ethereum-network.api';
-import { JoinSkillWalletErrors } from '../store/model';
+import { asyncPoll } from '@dito-utils/async-poller';
+import { ClaimSkillWalletErrors, JoinSkillWalletErrors, SkillWalletAuthenticationErrors } from '../store/model';
 
 const DialogLoadingMessage = ({ message, subtitle = null, onCancel }) => {
   return (
@@ -225,7 +231,7 @@ export const OnClaimMembershipHandlers = (
               actionLabel="Connect"
               subtitle="Connect to SkillWallet account to see your community"
               message={message}
-              handleAdditionalAction={() => handleAdditionalAction(JoinSkillWalletErrors.AlreadyMember)}
+              handleAdditionalAction={() => handleAdditionalAction(ClaimSkillWalletErrors.AlreadyClaimed)}
               onCancel={handleClose}
             />
           </>
@@ -237,7 +243,7 @@ export const OnClaimMembershipHandlers = (
               actionLabel="Retry"
               subtitle={null}
               message={message}
-              handleAdditionalAction={() => handleAdditionalAction(JoinSkillWalletErrors.Retry)}
+              handleAdditionalAction={() => handleAdditionalAction(ClaimSkillWalletErrors.Retry)}
               onCancel={handleClose}
             />
           </>
@@ -299,6 +305,34 @@ export const OnClaimMembershipHandlers = (
     return generatedNonce;
   };
 
+  const onAuthenticate = async (nonce: string, tokenId: string) => {
+    if (!nonce || !tokenId) {
+      return;
+    }
+
+    setDialogContent(
+      <DialogLoadingMessage subtitle="This might take awhile, please be patient" message="Authenticating ...." onCancel={handleClose} />
+    );
+    try {
+      const fn = () => hasPendingAuthentication(window.ethereum.selectedAddress);
+      const condition = ({ hasPendingAuth }) => !hasPendingAuth;
+      const { hasPendingAuth } = await asyncPoll<{ hasPendingAuth: boolean }>(fn, condition);
+      console.log('hasPendingAuth: ', hasPendingAuth);
+    } catch (error) {
+      setDialogContent(
+        <>
+          <DialogAdditionalActionNeeded
+            actionLabel="Retry"
+            subtitle="Something went wrong"
+            message="Authentication was unsuccessful"
+            handleAdditionalAction={() => handleAdditionalAction(SkillWalletAuthenticationErrors.Retry)}
+            onCancel={handleClose}
+          />
+        </>
+      );
+    }
+  };
+
   return {
     onEthConnection,
     onEthNetworkChange,
@@ -306,5 +340,6 @@ export const OnClaimMembershipHandlers = (
     onJoinMembership,
     onClaimMembership,
     onQRCodeGenerate,
+    onAuthenticate,
   };
 };

@@ -1492,6 +1492,10 @@ function NoEventException(value: CommunityContractError) {
   };
 }
 
+export const getSkillWalletDescription = async () => {
+  return 'Universal, self-sovereign IDs tied to skills & contributions rather than personal data.';
+};
+
 export const getSkillWalletAddress = async (communityAddress = '0x1e79bE396CE37F7eB43aF0Ef0ffb3124F3fD23eF') => {
   return communityAddress;
 };

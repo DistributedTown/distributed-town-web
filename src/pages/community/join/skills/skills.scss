@@ -3,24 +3,25 @@
 .sw-join-base-container.sw-skill-container {
   .sw-box-logo {
     display: flex;
-    width: 100%;
+    width: 90%;
     justify-content: flex-start;
   }
 
   .sw-box-quote {
-    width: 100%;
+    width: 90%;
     flex: 60%;
   }
 
   @include media-breakpoint('lt-lg') {
     & > .sw-box {
-
       .sw-box-quote {
         flex: auto;
+        width: 100%;
       }
 
       .sw-box-logo {
         justify-content: center;
+        width: 100%;
       }
     }
   }
