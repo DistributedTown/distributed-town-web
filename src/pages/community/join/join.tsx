@@ -13,6 +13,7 @@ const Join = (props) => {
   const dispatch = useDispatch();
   useEffect(
     () => () => {
+      console.log('success');
       dispatch(resetJoinCommunityState());
     },
     [dispatch]

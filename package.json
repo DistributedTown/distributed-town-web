@@ -1,5 +1,6 @@
 {
   "name": "distributed-town-web",
+  "description": "Universal, self-sovereign IDs tied to skills & contributions rather than personal data.",
   "version": "0.1.0",
   "private": true,
   "homepage": "https://distributedtown.github.io/distributed-town-web/",
@@ -27,7 +28,7 @@
     "react-transition-group": "^4.4.2",
     "redux-logger": "^3.0.6",
     "redux-persist": "^6.0.0",
-    "sw-web-shared": "git+https://github.com/DistributedTown/sw-web-shared.git#master"
+    "sw-web-shared": "0.0.1"
   },
   "scripts": {
     "start": "react-app-rewired start",

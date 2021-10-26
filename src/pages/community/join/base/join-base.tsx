@@ -4,7 +4,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { SwDivider, SwScrollbar } from 'sw-web-shared';
 import './join-base.scss';
 
-const JoinBaseLayoyt = ({
+const JoinBaseLayout = ({
   left,
   right,
   prevBtn,
@@ -63,4 +63,4 @@ const JoinBaseLayoyt = ({
   );
 };
 
-export default JoinBaseLayoyt;
+export default JoinBaseLayout;

@@ -109,6 +109,7 @@ export const joinCommunitySlice = createSlice({
         state.category.status = ResultState.Idle;
       })
       .addCase(fetchSkills.pending, (state) => {
+        state.skills.selectedSkills = [];
         state.skills.status = ResultState.Loading;
       })
       .addCase(fetchSkills.fulfilled, (state, action) => {
@@ -156,6 +157,22 @@ export const getCredits = createSelector(updateSkill, toggleSkill, (x1): string 
     return prev;
   }, 0);
   return (totalSkillCredits + 2000).toString();
+});
+
+export const getSkillCredits = createSelector(updateSkill, toggleSkill, (x1): string => {
+  const { selectedSkills, entities } = x1.payload.joinCommunity.skills;
+  return selectedSkills.reduce((prev: any[], curr: Skill) => {
+    const entity = entities.find(({ skills }) => skills.some((s) => s === curr.skill));
+    prev = [
+      ...prev,
+      {
+        percentage: (curr.xp / 10) * 100,
+        name: curr.skill,
+        credits: (entity?.credits || 0) * curr.xp,
+      },
+    ];
+    return prev;
+  }, []);
 });
 
 export default joinCommunitySlice.reducer;

@@ -4,14 +4,16 @@ import logger from 'redux-logger';
 import { useDispatch } from 'react-redux';
 
 import storage from 'redux-persist/lib/storage';
+import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import { combineReducers } from 'redux';
-import { persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
+import { persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER, PersistConfig } from 'redux-persist';
 import authSliceReducer from '../auth/auth.reducer';
 import joinCommunitySliceReducer from '../pages/community/join/store/join.reducer';
 
-const persistConfig = {
+const persistConfig: PersistConfig<any> = {
   key: 'appState',
   storage,
+  stateReconciler: autoMergeLevel2,
 };
 
 const reducers = combineReducers({
