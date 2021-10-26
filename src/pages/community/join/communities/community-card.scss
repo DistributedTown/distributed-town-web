@@ -1,0 +1,88 @@
+@import 'sw-web-shared/lib/styles/variables';
+@import 'sw-web-shared/lib/styles/breakpoints';
+
+.sw-community-card {
+  display: flex;
+  border: 2px solid $border-color-base;
+  background: rgba($primary-color, 0.8);
+  transition: $transition;
+
+  &:not(.inactive):hover,
+  &:not(.inactive).active {
+    background-color: white !important;
+    .MuiCardHeader-root {
+      background-color: $primary-color;
+
+      .MuiTypography-root {
+        color: white;
+      }
+    }
+
+    .card-description {
+      color: $primary-color;
+    }
+
+    .can-accept-in .MuiTypography-root {
+      color: $primary-color;
+    }
+  }
+
+  .can-accept-in {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .car-subtitle {
+    display: flex;
+  }
+
+  .toggle-circle {
+    color: $primary-color;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border-width: 4px;
+    border-style: solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $secondary-color;
+    font-size: 21px;
+
+    &.accepting {
+      border-color: $success-color;
+    }
+
+    &.not-accepting {
+      border-color: $error-color;
+    }
+  }
+
+  @include media-breakpoint('lt-sm') {
+    .MuiCardContent-root {
+      flex-direction: column-reverse;
+
+      .MuiCardHeader-root {
+        flex-direction: column;
+        text-align: center;
+
+        .MuiCardHeader-avatar {
+          margin: 0;
+        }
+      }
+      .can-accept-in {
+        flex-direction: revert;
+        width: auto;
+        justify-content: space-around;
+        margin-bottom: 16px;
+
+        .toggle-circle {
+          width: 50px;
+          height: 50px;
+        }
+      }
+    }
+  }
+}

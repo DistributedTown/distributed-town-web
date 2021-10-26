@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@dito-store/*": ["src/store/*"],
+      "@dito-utils/*": ["src/utils/*"],
+      "@dito-auth/*": ["src/auth/*"],
+      "@dito-components/*": ["src/components/*"],
+      "@dito-hooks/*": ["src/hooks/*"],
+      "@dito-api/*": ["src/api/*"],
+    }
+  }
+}

@@ -1,0 +1,31 @@
+@import 'sw-web-shared/lib/styles/variables';
+@import 'sw-web-shared/lib/styles/breakpoints';
+
+.sw-skill-card {
+  display: flex;
+  border: 2px solid $border-color-base;
+  background: rgba($primary-color, 0.8);
+  .MuiButtonBase-root {
+    padding: 0;
+    .MuiAccordionSummary-content {
+      margin: 0;
+      padding: 0;
+      height: 48px;
+    }
+  }
+
+  .sw-skill-list {
+    width: 100%;
+    display: grid;
+    grid-gap: 8px;
+    padding: 0;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-auto-rows: minmax(60px, auto);
+  }
+
+  @include media-breakpoint('lt-sm') {
+    .sw-skill-list {
+      grid-template-columns: 1fr;
+    }
+  }
+}

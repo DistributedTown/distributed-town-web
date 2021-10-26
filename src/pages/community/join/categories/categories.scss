@@ -1,0 +1,32 @@
+@import "sw-web-shared/lib/styles/breakpoints";
+
+.sw-join-base-container.sw-categories-container {
+  .sw-box-logo {
+    display: flex;
+    width: 90%;
+    justify-content: flex-start;
+  }
+
+  .sw-category-wrapper {
+    width: 100%;
+  }
+
+  .sw-box-quote {
+    width: 90%;
+    flex: 60%;
+  }
+
+  @include media-breakpoint("lt-lg") {
+    & > .sw-box {
+      .sw-box-quote {
+        flex: auto;
+        width: 100%;
+      }
+
+      .sw-box-logo {
+        justify-content: center;
+        width: 100%;
+      }
+    }
+  }
+}

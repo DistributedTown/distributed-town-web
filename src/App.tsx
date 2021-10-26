@@ -1,153 +1,136 @@
-import React from "react";
-import "./App.scss";
-import { renderToStaticMarkup } from "react-dom/server";
-import {
-  SwLayout,
-  MainBackgroundSvg,
-  JoinSelSvg,
-  SwSidebar,
-  SwLogoSvg,
-} from "sw-web-shared";
-import { defineCustomElements } from "@skill-wallet/auth/loader";
-import SvgIcon from "@mui/material/SvgIcon";
-import { Switch, Route, withRouter } from "react-router-dom";
-import GetStarted from "./pages/get-started/get-started";
-import Community from "./pages/community/community";
+import React, { useEffect, useState } from 'react';
 
-const svgString = encodeURIComponent(
-  renderToStaticMarkup(<MainBackgroundSvg />)
-);
+import './App.scss';
+import SvgIcon from '@mui/material/SvgIcon';
+import { defineCustomElements } from '@skill-wallet/auth/loader';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { withRouter, Route } from 'react-router-dom';
+import { SwLayout, MainBackgroundSvg, JoinSelSvg, SwSidebar, DitoLogoSvg } from 'sw-web-shared';
 
-interface AppState {
-  isLoading: boolean;
-  isAutheticated: boolean;
-}
+import { useSelector } from 'react-redux';
+import { RootState, useAppDispatch } from '@dito-store/store';
+import Community from './pages/community/community';
+import Join from './pages/community/join/join';
+import GetStarted from './pages/get-started/get-started';
+import { resetAuthState, setAuthenticated } from './auth/auth.reducer';
 
-class App extends React.Component<any, AppState> {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoading: true,
-      isAutheticated: false,
-    };
-  }
-
-  componentDidMount() {
-    defineCustomElements(window);
-    // @TODO remove this once Mike has added a ne even listener
-    // const skillwallet = JSON.parse(localStorage.getItem("skillWallet") || "{}");
-    // this.setState({ isLoading: !skillwallet });
-    window.addEventListener("onSkillwalletLogin", this.onSWLogin.bind(this));
-
-    // @temporary: if in 5 seconds there is no event from sw wallet then stop loading
-    setTimeout(() => this.setState({ isLoading: false }), 5000);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("onSkillwalletLogin", this.onSWLogin.bind(this));
-  }
-
-  onSWLogin() {
-    this.setState({ isLoading: false, isAutheticated: true });
-  }
-
-  render() {
-    const menuItems: any[] = [
-      {
-        label: "SkillWallet",
-        href: "/",
-        icon: <SvgIcon component={JoinSelSvg} />,
-      },
-      {
-        label: "dTown Hall",
-        href: "/community/dTown-hall",
-        icon: <SvgIcon component={JoinSelSvg} />,
-      },
-      {
-        label: "Notifications",
-        href: "/community/notifications",
-        icon: <SvgIcon component={JoinSelSvg} />,
-      },
-      {
-        label: "Settings",
-        href: "/community/settings",
-        icon: <SvgIcon component={JoinSelSvg} />,
-      },
-      {
-        type: "divider",
-      },
-      {
-        label: "Log off",
-        href: "/community/logout",
-        icon: <SvgIcon component={JoinSelSvg} />,
-      },
-    ];
-
-    return (
-      <SwLayout
-        className={this.state.isLoading ? "loading" : ""}
-        children={
-          <>
-            <div
-              className="wallet-btn"
-              style={{
-                visibility: this.state.isLoading ? "hidden" : "visible",
-              }}
-            >
-              {/* @ts-ignore */}
-              <skillwallet-auth id="walletButton" />
-            </div>
-            {this.state.isLoading ? (
-              <LoadingMessage />
-            ) : this.state.isAutheticated ? (
-              <PrivateRoutes />
-            ) : (
-              <AuthRoutes />
-            )}
-          </>
-        }
-        backgroundUrl={`url('data:image/svg+xml;utf8, ${svgString}')`}
-        drawer={
-          this.state.isAutheticated && (
-            <SwSidebar open={true} menuItems={menuItems} />
-          )
-        }
-      />
-    );
-  }
-}
-
-export default withRouter(App);
+const svgString = encodeURIComponent(renderToStaticMarkup(<MainBackgroundSvg />));
 
 function Home() {
-  return <h2 style={{ color: "white" }}>Test</h2>;
+  return <h2 style={{ color: 'white' }}>Test</h2>;
 }
 
 const LoadingMessage = () => (
   <div className="app-loading">
-    <SwLogoSvg width="80" height="80" />
+    <DitoLogoSvg width="80" height="80" />
   </div>
 );
 
-const PrivateRoutes: React.FC = () => {
+const PrivateRoutes: React.FC = (props: any) => {
+  const { path } = props.match;
   return (
     <>
-      <Switch>
-        {/* <Redirect to="/community/dTown-hall" /> */}
-        <Route path="/community" component={Community} />
-        <Route path="/notifications" component={Home} />
-      </Switch>
+      <Route path={`${path}/community`} component={Community} {...props} />
+      <Route path={`${path}/notifications`} component={Home} {...props} />
     </>
   );
 };
 
-const AuthRoutes: React.FC = () => {
+const AuthRoutes: React.FC = ({ ...props }: any) => (
+  <>
+    <Route exact component={GetStarted} path="/" {...props} />
+    <Route component={Join} path="/join-community" {...props} />
+  </>
+);
+
+const App = (props: any) => {
+  const dispatch = useAppDispatch();
+  const [isLoading, setLoading] = useState(true);
+
+  const { isAutheticated } = useSelector((state: RootState) => state.auth);
+
+  useEffect(() => {
+    const onSWLogin = async () => {
+      setLoading(false);
+      dispatch(setAuthenticated(true));
+    };
+    defineCustomElements(window);
+    window.addEventListener('onSkillwalletLogin', onSWLogin);
+
+    // temporary
+    const timeout = setTimeout(() => {
+      if (!isAutheticated) {
+        setLoading(false);
+      }
+    }, 2000);
+
+    return () => {
+      clearTimeout(timeout);
+      window.removeEventListener('onSkillwalletLogin', onSWLogin);
+    };
+  }, [isAutheticated, dispatch]);
+
+  const menuItems: any[] = [
+    {
+      type: 'href',
+      label: 'SkillWallet',
+      href: '/community/skillwallet',
+      icon: <SvgIcon component={JoinSelSvg} />,
+    },
+    {
+      type: 'href',
+      label: 'dTown Hall',
+      href: '/community/dTown-hall',
+      icon: <SvgIcon component={JoinSelSvg} />,
+    },
+    {
+      type: 'href',
+      label: 'Notifications',
+      href: '/community/notifications',
+      icon: <SvgIcon component={JoinSelSvg} />,
+    },
+    {
+      type: 'href',
+      label: 'Settings',
+      href: '/community/settings',
+      icon: <SvgIcon component={JoinSelSvg} />,
+    },
+    {
+      type: 'divider',
+    },
+    {
+      label: 'Log off',
+      type: 'button',
+      onClick: () => {
+        localStorage.removeItem('skillWallet');
+        dispatch(resetAuthState());
+        props.history.push('/');
+        window.location.reload();
+      },
+      icon: <SvgIcon component={JoinSelSvg} />,
+    },
+  ];
+
   return (
-    <>
-      <Switch>
-        {/* <Redirect to="/" /> */}
-        <Route exact path="/" component={GetStarted} />
-      </Switch>
-    </>
+    <SwLayout
+      className={isLoading ? 'loading' : ''}
+      top={
+        <div
+          className="wallet-btn"
+          style={{
+            visibility: isLoading ? 'hidden' : 'visible',
+          }}
+        >
+          {/* @ts-ignore */}
+          <skillwallet-auth allowCreateNewUser={false} id="walletButton" />
+        </div>
+      }
+      backgroundUrl={`url('data:image/svg+xml;utf8, ${svgString}')`}
+      drawer={isAutheticated && <SwSidebar sidebarTop={<DitoLogoSvg width="100" height="100" />} open menuItems={menuItems} />}
+    >
+      {isLoading ? <LoadingMessage /> : isAutheticated ? <PrivateRoutes {...props} /> : <AuthRoutes {...props} />}
+    </SwLayout>
   );
 };
+
+export default withRouter(App);
