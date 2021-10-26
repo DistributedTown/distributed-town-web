@@ -127,10 +127,6 @@ const Communities = () => {
     const isCorrectNetwork = await onEthNetworkChange(isConnected);
     console.log('IsCorrectNetwork: ', isConnected);
 
-    // const t = await onGetTokenId(selectedCommunity.address);
-
-    // console.log(t, 'token');
-
     /*
         Step 3 - Store image & join community flow metadata to textile bucket
     */

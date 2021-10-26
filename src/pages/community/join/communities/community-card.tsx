@@ -1,5 +1,4 @@
 import { Card, CardContent, Typography, Box, Avatar, CardHeader, CardActionArea, ThemeOptions, useMediaQuery } from '@mui/material';
-import { red } from '@mui/material/colors';
 import { CommunityCategory } from '../store/model';
 import './community-card.scss';
 
