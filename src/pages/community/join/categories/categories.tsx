@@ -11,7 +11,7 @@ import { DitoLogoSvg, SwButton, SwQuote } from 'sw-web-shared';
 import { RootState } from '@dito-store/store';
 
 import { ResultState } from '@dito-store/status';
-import JoinBaseLayoyt from '../base/join-base';
+import JoinBaseLayout from '../base/join-base';
 import { fetchCategories, selectCategory } from '../store/join.reducer';
 
 import './categories.scss';
@@ -31,7 +31,7 @@ const Categories = () => {
   }, [dispatch, entities, userInfo]);
 
   return (
-    <JoinBaseLayoyt
+    <JoinBaseLayout
       status={status}
       className="sw-categories-container"
       left={
@@ -80,7 +80,7 @@ const Categories = () => {
                       textOverflow: 'ellipsis',
                       width: '100%',
                     }}
-                    onClick={() => dispatch(selectCategory('Backend'))}
+                    onClick={() => dispatch(selectCategory(name))}
                     className={selectedCategory === name ? 'active-link' : ''}
                     startIcon={<HelpOutlineIcon />}
                     label={name}

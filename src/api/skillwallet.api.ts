@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ethers } from 'ethers';
 import { toWei } from 'web3-utils';
 import { CommunityContract, CommunityContractError, CommunityContractResponse, NonceActions } from './model';
@@ -1496,8 +1497,8 @@ export const getSkillWalletDescription = async () => {
   return 'Universal, self-sovereign IDs tied to skills & contributions rather than personal data.';
 };
 
-export const getSkillWalletAddress = async (communityAddress = '0x1e79bE396CE37F7eB43aF0Ef0ffb3124F3fD23eF') => {
-  return communityAddress;
+export const getSkillWalletAddress = async (communityAddress = null) => {
+  return '0x1e79bE396CE37F7eB43aF0Ef0ffb3124F3fD23eF';
 };
 
 export const claimCommunityMembershipContract = async (communityAddress: string): Promise<string> => {
@@ -1523,6 +1524,20 @@ export const claimCommunityMembershipContract = async (communityAddress: string)
   }
 
   return claimedEvent.args;
+};
+
+export const getTokenIdContract = async (communityAddress: string): Promise<string> => {
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const skillwalletAddress = await getSkillWalletAddress(communityAddress);
+  const contract = new ethers.Contract(skillwalletAddress, skillWalletAbi, signer);
+  const isRegistered = await contract.isSkillWalletRegistered(window.ethereum.selectedAddress);
+
+  if (isRegistered) {
+    const tokenId = await contract.getSkillWalletIdByOwner(window.ethereum.selectedAddress);
+    return tokenId?.toString();
+  }
+  return null;
 };
 
 export const executeCommunityContract = async ({
@@ -1554,7 +1569,7 @@ export const executeCommunityContract = async ({
   const [userAddress, tokenId, communityCredits] = memberJoinedEvent.args;
   return {
     userAddress,
-    tokenId,
+    tokenId: tokenId?.toString(),
     credits: communityCredits,
   };
 };

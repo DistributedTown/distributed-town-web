@@ -19,11 +19,6 @@
     justify-content: flex-start;
   }
 
-  .sw-box-quote {
-    width: 90%;
-    flex: 60%;
-  }
-
   .sw-communties-wrapper {
     display: grid;
     grid-gap: 15px;
@@ -31,11 +26,6 @@
 
   @include media-breakpoint("lt-lg") {
     & > .sw-box {
-      .sw-box-quote {
-        flex: auto;
-        width: 100%;
-      }
-
       .sw-box-logo {
         justify-content: center;
         width: 100%;

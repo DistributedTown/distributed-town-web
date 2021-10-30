@@ -8,6 +8,18 @@ export enum JoinSkillWalletErrors {
   Retry = 'Retry',
 }
 
+export enum EhereumNetworkErrors {
+  Retry = 'Retry',
+}
+
+export enum TextileStorageErrors {
+  Retry = 'Retry',
+}
+
+export enum SkillWalletNonceErrors {
+  Retry = 'Retry',
+}
+
 export enum ClaimSkillWalletErrors {
   AlreadyClaimed = 'AlreadyClaimed',
   SkillWalletNotCreated = 'SkillWalletNotCreated',
@@ -35,4 +47,6 @@ export interface CommunityCategory {
   scarcityScore: number;
   address: string;
   description: string;
+  totalMembersAllowed: number;
+  image: string;
 }

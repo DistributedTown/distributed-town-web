@@ -9,15 +9,24 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { DitoLogoSvg, SwButton, SwQuote } from 'sw-web-shared';
+import { DitoLogoSvg, SwButton } from 'sw-web-shared';
 
-import JoinBaseLayoyt from '../base/join-base';
-import { ClaimSkillWalletErrors, CommunityCategory, JoinSkillWalletErrors } from '../store/model';
+import JoinBaseLayout from '../base/join-base';
+import {
+  ClaimSkillWalletErrors,
+  CommunityCategory,
+  EhereumNetworkErrors,
+  JoinSkillWalletErrors,
+  SkillWalletAuthenticationErrors,
+  SkillWalletNonceErrors,
+  TextileStorageErrors,
+} from '../store/model';
 import './communities.scss';
-import { fetchCommunities, getCommunity, getCredits, getFormattedSkills, selectCommunity } from '../store/join.reducer';
+import { fetchCommunities, getCommunity, getCredits, getFormattedSkills, getSkillCredits, selectCommunity } from '../store/join.reducer';
 import CommunityCard from './community-card';
 import { OnClaimMembershipHandlers } from './claim-membership-handlers';
 import { ClaimMembershipDialog } from './claim-membership-dialog';
+import CommunityCredits from './community-credits';
 
 const hardcodedTokenId = '2456546';
 
@@ -30,15 +39,15 @@ const Communities = () => {
   const extraSmall = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.down('sm'));
 
   // selectors
+  const { isAutheticated } = useSelector((state: RootState) => state.auth);
   const { selectedCategory } = useSelector((state: RootState) => state.joinCommunity.category);
   const { selectedSkills } = useSelector((state: RootState) => state.joinCommunity.skills);
   const userInfo = useSelector((state: RootState) => state.joinCommunity.userInfo);
-  const { entities, status, selectedCommunityName, communitySelectedCategory } = useSelector(
-    (state: RootState) => state.joinCommunity.community
-  );
+  const { entities, status, selectedCommunityName } = useSelector((state: RootState) => state.joinCommunity.community);
   const selectedCommunity = useSelector(getCommunity);
   const formattedSkills = useSelector(getFormattedSkills);
   const credits = useSelector(getCredits);
+  const creditSkills = useSelector(getSkillCredits);
 
   // function/local state
   const [open, setOpen] = useState(false);
@@ -65,61 +74,111 @@ const Communities = () => {
       },
     };
     setOpen(true);
-    const { onEthConnection, onEthNetworkChange, onTextileBucket, onJoinMembership, onClaimMembership, onQRCodeGenerate, onAuthenticate } =
-      OnClaimMembershipHandlers(
-        setDialogContent,
-        () => handleClose(),
-        async (message: string) => {
-          if (JoinSkillWalletErrors.AlreadyMember === message) {
-            // call connect once implemented in skillwallet auth the ability to call connect programatically
-            handleClose();
-          } else if (JoinSkillWalletErrors.SkillWalletNotActivated === message || ClaimSkillWalletErrors.AlreadyClaimed === message) {
-            const generatedNonce = await onQRCodeGenerate(hardcodedTokenId);
-            setNonce(generatedNonce);
-            await onAuthenticate(nonce, tokenId);
-          } else if (JoinSkillWalletErrors.SkillWalletNotClaimed === message || ClaimSkillWalletErrors.Retry === message) {
-            const hasJoinedCommunity = true;
-            await onClaimMembership(selectedCommunity.address, hasJoinedCommunity);
-            // TODO: get token id from api once implemented in https://dito-labs.atlassian.net/browse/DITO-129
-            // setTokenId(member?.tokenId);
-            const generatedNonce = await onQRCodeGenerate(hardcodedTokenId);
-            setNonce(generatedNonce);
-            await onAuthenticate(nonce, tokenId);
-          } else if (JoinSkillWalletErrors.Retry === message) {
-            setNonce(null);
-            setTokenId(null);
-            setDialogContent(null);
-            claimMembership();
-          }
-        }
-      );
+    const {
+      onEthConnection,
+      onEthNetworkChange,
+      onGetTokenId,
+      onTextileBucket,
+      onJoinMembership,
+      onClaimMembership,
+      onQRCodeGenerate,
+      onAuthenticate,
+    } = OnClaimMembershipHandlers(setDialogContent, handleClose, async (message: string) => {
+      if (JoinSkillWalletErrors.AlreadyMember === message) {
+        // call connect once implemented in skillwallet auth the ability to call connect programatically
+        handleClose();
+      } else if (
+        JoinSkillWalletErrors.SkillWalletNotActivated === message ||
+        ClaimSkillWalletErrors.AlreadyClaimed === message ||
+        SkillWalletNonceErrors.Retry === message
+      ) {
+        setTokenId(await onGetTokenId(selectedCommunity.address));
+        setNonce(await onQRCodeGenerate(hardcodedTokenId));
+        await onAuthenticate(nonce, tokenId);
+      } else if (JoinSkillWalletErrors.SkillWalletNotClaimed === message || ClaimSkillWalletErrors.Retry === message) {
+        const hasJoinedCommunity = true;
+        await onClaimMembership(selectedCommunity.address, hasJoinedCommunity);
+        setTokenId(await onGetTokenId(selectedCommunity.address));
+        setNonce(await onQRCodeGenerate(tokenId));
+        await onAuthenticate(nonce, tokenId);
+      } else if (SkillWalletAuthenticationErrors.Retry) {
+        await onAuthenticate(nonce, tokenId);
+      } else if (
+        JoinSkillWalletErrors.Retry === message ||
+        EhereumNetworkErrors.Retry === message ||
+        TextileStorageErrors.Retry === message
+      ) {
+        setNonce(null);
+        setTokenId(null);
+        setDialogContent(null);
+        claimMembership();
+      }
+    });
 
-    console.log(credits, 'credits');
+    /*
+        Step 1 - Connect to ethereum / metamask
+    */
     const isConnected = await onEthConnection();
-    console.log('isConnected: ', isConnected);
+    console.log('IsConnected: ', isConnected);
+
+    /*
+        Step 2 - Change to correct ethereum network
+    */
     const isCorrectNetwork = await onEthNetworkChange(isConnected);
-    console.log('isCorrectNetwork: ', isConnected);
+    console.log('IsCorrectNetwork: ', isConnected);
+
+    /*
+        Step 3 - Store image & join community flow metadata to textile bucket
+    */
     const bucketUrl = await onTextileBucket(isCorrectNetwork, metadataJson);
-    console.log('bucketUrl: ', bucketUrl);
+    console.log('BucketUrl: ', bucketUrl);
+
+    /*
+        Step 4 - Execute join membership smart contract
+    */
     const member = await onJoinMembership(bucketUrl, selectedCommunity.address, credits);
-    console.log('member: ', member);
-    await onClaimMembership(selectedCommunity.address, !!member);
     setTokenId(member?.tokenId);
-    const generatedNonce = await onQRCodeGenerate(tokenId);
-    setNonce(generatedNonce);
-    await onAuthenticate(nonce, tokenId);
+    console.log('Member: ', member);
+
+    /*
+        Step 5 - Execute claim membership smart contract
+    */
+    await onClaimMembership(selectedCommunity.address, !!member);
+
+    /*
+        Step 6 - Generate nonce & show qr code
+    */
+    setNonce(await onQRCodeGenerate(tokenId));
+    console.log('Nonce: ', nonce);
+
+    /*
+        Step 7 - Poll until skillwallet is authenticated
+    */
+    const isAuthenticated = await onAuthenticate(nonce, tokenId);
+    console.log('IsAuthenticated: ', isAuthenticated);
+
+    /*
+        Step 8 - Go to success screen
+    */
+    // TODO: Implement success navigation
   };
 
   useEffect(() => {
-    if (selectedSkills.length && selectedCategory && selectedCategory !== communitySelectedCategory) {
+    if (selectedSkills.length && selectedCategory) {
       dispatch(fetchCommunities(selectedCategory));
     }
-  }, [dispatch, communitySelectedCategory, selectedCategory, selectedSkills]);
+  }, [dispatch, selectedCategory, selectedSkills]);
+
+  useEffect(() => {
+    if (isAutheticated) {
+      handleClose();
+    }
+  }, [dispatch, isAutheticated]);
 
   return (
     <>
       <ClaimMembershipDialog fullScreen={extraSmall} open={open} onClose={() => setOpen(false)} dialogContent={dialogContent} />
-      <JoinBaseLayoyt
+      <JoinBaseLayout
         status={status}
         className="sw-communities-container"
         left={
@@ -127,17 +186,7 @@ const Communities = () => {
             <Box className="sw-box-logo">
               <DitoLogoSvg width={largeDevice ? '100px' : '80px'} />
             </Box>
-            <SwQuote mobile={small} mobileStartText={<p>Have you ever thought...</p>}>
-              <>
-                <p>
-                  Have you ever thought, <br />
-                  "I would like to contribute, but ..."
-                </p>
-                <p className="mt-4 mb-4">Distributed Town (DiTo) lets you create or join a community with one click.</p>
-
-                <p>Just select what you are best at - and we will match with the best communities that need you the most.</p>
-              </>
-            </SwQuote>
+            <CommunityCredits totalCredits={credits} creditSkills={creditSkills} />
           </>
         }
         right={
@@ -146,15 +195,20 @@ const Communities = () => {
               Here is a few comminities for you (Based on your Skills). Choose one that inspires you the most & start adding Value to it
             </Typography>
             {selectedCategory && selectedSkills.length ? (
-              entities.map((community: CommunityCategory, index) => (
-                <CommunityCard
-                  inactive={index === 1}
-                  onSelect={(name) => dispatch(selectCommunity(name))}
-                  selectedCommunityName={selectedCommunityName}
-                  community={community}
-                  key={`community-${index}`}
-                />
-              ))
+              !entities?.length ? (
+                <Typography sx={{ color: 'background.paper', textAlign: 'center', pb: 2, mt: 4 }} component="div" variant="h6">
+                  We could not find any communities for {selectedCategory} category, please go back and select a different category!
+                </Typography>
+              ) : (
+                entities.map((community: CommunityCategory, index) => (
+                  <CommunityCard
+                    onSelect={(name) => dispatch(selectCommunity(name))}
+                    selectedCommunityName={selectedCommunityName}
+                    community={community}
+                    key={`community-${index}`}
+                  />
+                ))
+              )
             ) : (
               <Typography
                 className="no-item-selected"

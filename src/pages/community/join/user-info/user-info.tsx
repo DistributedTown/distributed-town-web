@@ -10,7 +10,7 @@ import { toBase64 } from '@dito-utils/to-base-64';
 import { ResultState } from '@dito-store/status';
 import { useEffect, useMemo } from 'react';
 import debounce from 'lodash.debounce';
-import JoinBaseLayoyt from '../base/join-base';
+import JoinBaseLayout from '../base/join-base';
 
 import './user-info.scss';
 
@@ -35,7 +35,7 @@ const UserInfo = () => {
   }, [debouncedChangeHandler]);
 
   return (
-    <JoinBaseLayoyt
+    <JoinBaseLayout
       status={ResultState.Idle}
       className="sw-user-info-container"
       left={

@@ -10,7 +10,7 @@ import { DitoLogoSvg, SwButton, SwQuote } from 'sw-web-shared';
 import { RootState } from '@dito-store/store';
 
 import { ResultState } from '@dito-store/status';
-import JoinBaseLayoyt from '../base/join-base';
+import JoinBaseLayout from '../base/join-base';
 import { fetchSkills, toggleSkill, updateSkill } from '../store/join.reducer';
 import './skills.scss';
 import SkillCard from './skill-card';
@@ -29,7 +29,7 @@ const Skills = () => {
   }, [dispatch, skillSelectedCategory, selectedCategory]);
 
   return (
-    <JoinBaseLayoyt
+    <JoinBaseLayout
       status={status}
       className="sw-skill-container"
       left={
@@ -56,17 +56,23 @@ const Skills = () => {
             Pick your skills (1-to-3) that you want to offer, & recieve the Credits you deserve!
           </Typography>
           {skillSelectedCategory ? (
-            entities.map(({ credits, skills, subCat }) => (
-              <SkillCard
-                key={subCat}
-                selectedSkills={selectedSkills}
-                category={subCat}
-                credits={credits}
-                skills={skills}
-                updateSkill={(skill) => dispatch(updateSkill(skill))}
-                toggleSkill={(skill) => dispatch(toggleSkill(skill))}
-              />
-            ))
+            !entities?.length ? (
+              <Typography sx={{ color: 'background.paper', textAlign: 'center', pb: 2, mt: 4 }} component="div" variant="h6">
+                We could not find any skills for {skillSelectedCategory} category, please go back and select a different category!
+              </Typography>
+            ) : (
+              entities.map(({ credits, skills, subCat }) => (
+                <SkillCard
+                  key={subCat}
+                  selectedSkills={selectedSkills}
+                  category={subCat}
+                  credits={credits}
+                  skills={skills}
+                  updateSkill={(skill) => dispatch(updateSkill(skill))}
+                  toggleSkill={(skill) => dispatch(toggleSkill(skill))}
+                />
+              ))
+            )
           ) : (
             <Typography
               className="no-item-selected"

@@ -3,6 +3,7 @@ import {
   claimCommunityMembershipContract,
   executeCommunityContract,
   generateNonce,
+  getTokenIdContract,
   hasPendingAuthentication,
 } from '@dito-api/skillwallet.api';
 import { ParseSWErrorMessage } from '@dito-utils/parse-smart-contact-error';
@@ -12,7 +13,14 @@ import { QRCode } from 'react-qrcode-logo';
 import { generateTextileBucketUrl } from '@dito-api/textile-bucket.api';
 import { connectToEthereum, switchToEtheremNetwork } from '@dito-api/ethereum-network.api';
 import { asyncPoll } from '@dito-utils/async-poller';
-import { ClaimSkillWalletErrors, JoinSkillWalletErrors, SkillWalletAuthenticationErrors } from '../store/model';
+import {
+  ClaimSkillWalletErrors,
+  EhereumNetworkErrors,
+  JoinSkillWalletErrors,
+  SkillWalletAuthenticationErrors,
+  SkillWalletNonceErrors,
+  TextileStorageErrors,
+} from '../store/model';
 
 const DialogLoadingMessage = ({ message, subtitle = null, onCancel }) => {
   return (
@@ -79,7 +87,7 @@ export const OnClaimMembershipHandlers = (
             actionLabel="Retry"
             subtitle="If this problem repeats plase make sure your metamask is connected"
             message="We could not enable the ethereum network"
-            handleAdditionalAction={() => handleAdditionalAction(JoinSkillWalletErrors.Retry)}
+            handleAdditionalAction={() => handleAdditionalAction(EhereumNetworkErrors.Retry)}
             onCancel={handleClose}
           />
         </>
@@ -97,7 +105,15 @@ export const OnClaimMembershipHandlers = (
 
     if (!isCorrectNetwork) {
       setDialogContent(
-        <DialogErrorMessage message="We could not set the correct network, please set it manually and try again" onCancel={handleClose} />
+        <>
+          <DialogAdditionalActionNeeded
+            actionLabel="Retry"
+            subtitle={null}
+            message="We could not set the correct network, please set it manually and try again"
+            handleAdditionalAction={() => handleAdditionalAction(EhereumNetworkErrors.Retry)}
+            onCancel={handleClose}
+          />
+        </>
       );
     }
     return isCorrectNetwork;
@@ -118,7 +134,7 @@ export const OnClaimMembershipHandlers = (
             actionLabel="Retry"
             subtitle={null}
             message="Unknown Error"
-            handleAdditionalAction={() => handleAdditionalAction(JoinSkillWalletErrors.Retry)}
+            handleAdditionalAction={() => handleAdditionalAction(TextileStorageErrors.Retry)}
             onCancel={handleClose}
           />
         </>
@@ -253,26 +269,66 @@ export const OnClaimMembershipHandlers = (
     }
   };
 
-  const onQRCodeGenerate = async (generatedTokenId: string) => {
-    if (!generatedTokenId) {
+  const onGetTokenId = async (communityAddress: string) => {
+    if (!communityAddress) {
+      return null;
+    }
+    setDialogContent(
+      <DialogLoadingMessage
+        subtitle="This might take awhile, please be patient"
+        message="Getting your skillwallet metadata ..."
+        onCancel={handleClose}
+      />
+    );
+    try {
+      return await getTokenIdContract(communityAddress);
+    } catch (error) {
+      const message = ParseSWErrorMessage(error.data.message.payload as string);
+      setDialogContent(
+        <>
+          <DialogAdditionalActionNeeded
+            actionLabel="Retry"
+            subtitle={null}
+            message={message}
+            handleAdditionalAction={() => handleAdditionalAction(ClaimSkillWalletErrors.Retry)}
+            onCancel={handleClose}
+          />
+        </>
+      );
+      return null;
+    }
+  };
+
+  const onQRCodeGenerate = async (tokenId: string) => {
+    if (!tokenId) {
       return null;
     }
     setDialogContent(
       <DialogLoadingMessage subtitle="This might take awhile, please be patient" message="Generating QR code ..." onCancel={handleClose} />
     );
 
-    const generatedNonce = await generateNonce(NonceActions.Activate, generatedTokenId);
+    const nonce = await generateNonce(NonceActions.Activate, tokenId);
 
-    if (!generatedNonce) {
-      setDialogContent(<DialogErrorMessage message="QR code was not generated successfully!" onCancel={handleClose} />);
+    if (!nonce) {
+      setDialogContent(
+        <>
+          <DialogAdditionalActionNeeded
+            actionLabel="Retry"
+            subtitle={null}
+            message="QR code was not generated successfully!"
+            handleAdditionalAction={() => handleAdditionalAction(SkillWalletNonceErrors.Retry)}
+            onCancel={handleClose}
+          />
+        </>
+      );
     } else {
       setDialogContent(
         <>
           <Box sx={{ display: 'flex', mt: 2, p: 2, bgcolor: 'white' }}>
             <QRCode
               value={JSON.stringify({
-                tokenId: generatedTokenId,
-                nonce: generatedNonce,
+                tokenId,
+                nonce,
               })}
               logoWidth={140}
               logoHeight={140}
@@ -302,22 +358,23 @@ export const OnClaimMembershipHandlers = (
       );
     }
 
-    return generatedNonce;
+    return nonce;
   };
 
   const onAuthenticate = async (nonce: string, tokenId: string) => {
     if (!nonce || !tokenId) {
-      return;
+      return false;
     }
 
     setDialogContent(
       <DialogLoadingMessage subtitle="This might take awhile, please be patient" message="Authenticating ...." onCancel={handleClose} />
     );
+
     try {
       const fn = () => hasPendingAuthentication(window.ethereum.selectedAddress);
       const condition = ({ hasPendingAuth }) => !hasPendingAuth;
       const { hasPendingAuth } = await asyncPoll<{ hasPendingAuth: boolean }>(fn, condition);
-      console.log('hasPendingAuth: ', hasPendingAuth);
+      return hasPendingAuth;
     } catch (error) {
       setDialogContent(
         <>
@@ -331,6 +388,8 @@ export const OnClaimMembershipHandlers = (
         </>
       );
     }
+
+    return false;
   };
 
   return {
@@ -341,5 +400,6 @@ export const OnClaimMembershipHandlers = (
     onClaimMembership,
     onQRCodeGenerate,
     onAuthenticate,
+    onGetTokenId,
   };
 };

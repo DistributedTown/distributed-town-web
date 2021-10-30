@@ -1,5 +1,4 @@
 import { Card, CardContent, Typography, Box, Avatar, CardHeader, CardActionArea, ThemeOptions, useMediaQuery } from '@mui/material';
-import { red } from '@mui/material/colors';
 import { CommunityCategory } from '../store/model';
 import './community-card.scss';
 
@@ -7,13 +6,12 @@ function CommunityCard({
   community,
   selectedCommunityName,
   onSelect,
-  inactive,
 }: {
-  inactive: boolean;
   community: CommunityCategory;
   selectedCommunityName: string;
   onSelect: (communityName: string) => any;
 }) {
+  const inactive = community.members >= community.totalMembersAllowed;
   const small = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.down('sm'));
   return (
     <Card
@@ -29,11 +27,7 @@ function CommunityCard({
                 bgcolor: inactive ? 'secondary.main' : 'white',
                 py: '8px',
               }}
-              avatar={
-                <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                  R
-                </Avatar>
-              }
+              avatar={<Avatar sx={{ width: 50, height: 50 }} src={community.image} />}
               title={
                 <Typography variant={small ? 'h6' : 'h5'} color="primary.main">
                   {community.name}
