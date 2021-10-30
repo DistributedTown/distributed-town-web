@@ -1,5 +1,5 @@
 import { ResultState } from '@dito-store/status';
-import { RootState, useAppDispatch } from '@dito-store/store';
+import { useAppDispatch, RootState } from '@dito-store/store.model';
 import { getSkillWalletDescription } from '@dito-api/skillwallet.api';
 import { TextileBucketMetadata } from 'src/api/model';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
@@ -11,16 +11,9 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { DitoLogoSvg, SwButton } from 'sw-web-shared';
 
+import { useWeb3React } from '@web3-react/core';
 import JoinBaseLayout from '../base/join-base';
-import {
-  ClaimSkillWalletErrors,
-  CommunityCategory,
-  EhereumNetworkErrors,
-  JoinSkillWalletErrors,
-  SkillWalletAuthenticationErrors,
-  SkillWalletNonceErrors,
-  TextileStorageErrors,
-} from '../store/model';
+import { ClaimMembershipErrorTypes, CommunityCategory } from '../store/model';
 import './communities.scss';
 import { fetchCommunities, getCommunity, getCredits, getFormattedSkills, getSkillCredits, selectCommunity } from '../store/join.reducer';
 import CommunityCard from './community-card';
@@ -28,10 +21,9 @@ import { OnClaimMembershipHandlers } from './claim-membership-handlers';
 import { ClaimMembershipDialog } from './claim-membership-dialog';
 import CommunityCredits from './community-credits';
 
-const hardcodedTokenId = '2456546';
-
 const Communities = () => {
   const dispatch = useAppDispatch();
+  const { activate } = useWeb3React();
 
   // responsiveness
   const largeDevice = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.up('lg'));
@@ -83,42 +75,47 @@ const Communities = () => {
       onClaimMembership,
       onQRCodeGenerate,
       onAuthenticate,
-    } = OnClaimMembershipHandlers(setDialogContent, handleClose, async (message: string) => {
-      if (JoinSkillWalletErrors.AlreadyMember === message) {
-        // call connect once implemented in skillwallet auth the ability to call connect programatically
-        handleClose();
-      } else if (
-        JoinSkillWalletErrors.SkillWalletNotActivated === message ||
-        ClaimSkillWalletErrors.AlreadyClaimed === message ||
-        SkillWalletNonceErrors.Retry === message
-      ) {
-        setTokenId(await onGetTokenId(selectedCommunity.address));
-        setNonce(await onQRCodeGenerate(hardcodedTokenId));
-        await onAuthenticate(nonce, tokenId);
-      } else if (JoinSkillWalletErrors.SkillWalletNotClaimed === message || ClaimSkillWalletErrors.Retry === message) {
-        const hasJoinedCommunity = true;
-        await onClaimMembership(selectedCommunity.address, hasJoinedCommunity);
-        setTokenId(await onGetTokenId(selectedCommunity.address));
-        setNonce(await onQRCodeGenerate(tokenId));
-        await onAuthenticate(nonce, tokenId);
-      } else if (SkillWalletAuthenticationErrors.Retry) {
-        await onAuthenticate(nonce, tokenId);
-      } else if (
-        JoinSkillWalletErrors.Retry === message ||
-        EhereumNetworkErrors.Retry === message ||
-        TextileStorageErrors.Retry === message
-      ) {
-        setNonce(null);
-        setTokenId(null);
-        setDialogContent(null);
-        claimMembership();
+    } = OnClaimMembershipHandlers(dispatch, setDialogContent, handleClose, async (message: ClaimMembershipErrorTypes) => {
+      switch (message) {
+        case ClaimMembershipErrorTypes.AlreadyMember:
+          handleClose();
+          break;
+        case ClaimMembershipErrorTypes.SkillWalletNotActivated:
+        case ClaimMembershipErrorTypes.AlreadyClaimed:
+        case ClaimMembershipErrorTypes.RetryNonce:
+          setTokenId(await onGetTokenId(selectedCommunity.address));
+          setNonce(await onQRCodeGenerate(tokenId));
+          await onAuthenticate(nonce, tokenId);
+          break;
+        case ClaimMembershipErrorTypes.SkillWalletNotClaimed:
+        case ClaimMembershipErrorTypes.RetryClaim:
+          await onClaimMembership(selectedCommunity.address, true);
+          setTokenId(await onGetTokenId(selectedCommunity.address));
+          console.log('TokenId: ', tokenId);
+          setNonce(await onQRCodeGenerate(tokenId));
+          console.log('Nonce: ', nonce);
+          await onAuthenticate(nonce, tokenId);
+          break;
+        case ClaimMembershipErrorTypes.RetryAuth:
+          await onAuthenticate(nonce, tokenId);
+          break;
+        case ClaimMembershipErrorTypes.RetryJoin:
+        case ClaimMembershipErrorTypes.RetryNetwork:
+        case ClaimMembershipErrorTypes.RetryTextile:
+          setNonce(null);
+          setTokenId(null);
+          setDialogContent(null);
+          claimMembership();
+          break;
+        default:
+          console.error('Not handled!');
       }
     });
 
     /*
         Step 1 - Connect to ethereum / metamask
     */
-    const isConnected = await onEthConnection();
+    const isConnected = await onEthConnection(activate);
     console.log('IsConnected: ', isConnected);
 
     /*
@@ -139,6 +136,7 @@ const Communities = () => {
     const member = await onJoinMembership(bucketUrl, selectedCommunity.address, credits);
     setTokenId(member?.tokenId);
     console.log('Member: ', member);
+    console.log('TokenId: ', tokenId);
 
     /*
         Step 5 - Execute claim membership smart contract

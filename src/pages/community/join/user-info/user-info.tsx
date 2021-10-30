@@ -1,6 +1,6 @@
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { Box, TextField, ThemeOptions, Typography } from '@mui/material';
-import { RootState } from '@dito-store/store';
+import { RootState } from '@dito-store/store.model';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';

@@ -2,6 +2,7 @@ import { TextileBucketSkillsMetadata } from 'src/api/model';
 import { ResultState } from '@dito-store/status';
 import { createSlice, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
 
+import { ErrorParser } from '@dito-utils/error-parser';
 import { getCategories, getCommunties, getSkills } from './join.api';
 import { Category, CommunityCategory, SkillCategory } from './model';
 
@@ -36,7 +37,13 @@ export interface JoinCommunityState {
 
 export const fetchCategories = createAsyncThunk('category/entities', async () => getCategories());
 export const fetchSkills = createAsyncThunk('skills/entities', async (categoryId: string) => getSkills(categoryId));
-export const fetchCommunities = createAsyncThunk('community/entities', async (categoryId: string) => getCommunties(categoryId));
+export const fetchCommunities = createAsyncThunk('community/entities', async (categoryId: string, { dispatch }) => {
+  try {
+    return await getCommunties(categoryId);
+  } catch (error) {
+    return ErrorParser(error, dispatch);
+  }
+});
 
 const initialState: JoinCommunityState = {
   userInfo: {
@@ -124,6 +131,11 @@ export const joinCommunitySlice = createSlice({
         state.community.entities = action.payload as any[];
         state.community.communitySelectedCategory = state.category.selectedCategory;
         state.community.status = ResultState.Idle;
+      })
+      .addCase(fetchCommunities.rejected, (state) => {
+        state.community.entities = [];
+        state.community.communitySelectedCategory = null;
+        state.community.status = ResultState.Failed;
       });
   },
 });

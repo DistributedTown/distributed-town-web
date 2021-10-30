@@ -1,34 +1,21 @@
 /* eslint-disable no-shadow */
 
-export enum JoinSkillWalletErrors {
+export enum ClaimMembershipErrorTypes {
   NoFreeSpots = 'NoFreeSpots',
   AlreadyMember = 'AlreadyMember',
   SkillWalletNotActivated = 'SkillWalletNotActivated',
   SkillWalletNotClaimed = 'SkillWalletNotClaimed',
-  Retry = 'Retry',
-}
-
-export enum EhereumNetworkErrors {
-  Retry = 'Retry',
-}
-
-export enum TextileStorageErrors {
-  Retry = 'Retry',
-}
-
-export enum SkillWalletNonceErrors {
-  Retry = 'Retry',
-}
-
-export enum ClaimSkillWalletErrors {
+  RetryJoin = 'RetryJoin',
+  RetryNetwork = 'RetryNetwork',
+  RetryTextile = 'RetryTextile',
+  RetryNonce = 'RetryNonce',
   AlreadyClaimed = 'AlreadyClaimed',
   SkillWalletNotCreated = 'SkillWalletNotCreated',
-  Retry = 'Retry',
+  RetryClaim = 'RetryClaim',
+  RetryAuth = 'RetryAuth',
+  RetryTokenId = 'RetryTokenId',
 }
 
-export enum SkillWalletAuthenticationErrors {
-  Retry = 'Retry',
-}
 export interface Category {
   id: number;
   name: string;

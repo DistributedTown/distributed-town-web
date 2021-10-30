@@ -1,5 +1,5 @@
 import { Badge, Box, styled, ThemeOptions, Tooltip, Typography, useMediaQuery } from '@mui/material';
-import { SwQuote, TokenomicsSvg, DitoCreditsSvg } from 'sw-web-shared';
+import { SwQuote, DitoCreditsSvg, TokenomicsSvg } from 'sw-web-shared';
 import HelpIcon from '@mui/icons-material/Help';
 import './community-credits.scss';
 

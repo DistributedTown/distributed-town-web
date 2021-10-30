@@ -1,4 +1,3 @@
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { Box, List, ListItem, ThemeOptions, Typography } from '@mui/material';
@@ -6,15 +5,67 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { DitoLogoSvg, SwButton, SwQuote } from 'sw-web-shared';
-
-import { RootState } from '@dito-store/store';
+import {
+  DitoLogoSvg,
+  SwButton,
+  SwQuote,
+  ManagementSvg,
+  ArchitectureSvg,
+  BackendSvg,
+  BlockchainSvg,
+  CommunitySvg,
+  DefiSvg,
+  FrontendSvg,
+  GameTheorySvg,
+  GardeningSvg,
+  GovernanceSvg,
+  HouseHoldingSvg,
+  LegalSvg,
+  MobileSvg,
+  NetworkSvg,
+  PaintingSvg,
+  PhotographySvg,
+  SmartContractsSvg,
+  TeachingSvg,
+  TokenomicsSvg,
+  TrainSportSvg,
+  VideoSvg,
+  WebDevSvg,
+  ConsensusSvg,
+} from 'sw-web-shared';
+import { RootState } from '@dito-store/store.model';
 
 import { ResultState } from '@dito-store/status';
 import JoinBaseLayout from '../base/join-base';
 import { fetchCategories, selectCategory } from '../store/join.reducer';
 
 import './categories.scss';
+
+const Icons = {
+  Management: ManagementSvg,
+  Network: NetworkSvg,
+  TrainSport: TrainSportSvg,
+  WebDev: WebDevSvg,
+  Defi: DefiSvg,
+  Tokenomics: TokenomicsSvg,
+  Painting: PaintingSvg,
+  Consensus: ConsensusSvg,
+  Photography: PhotographySvg,
+  Community: CommunitySvg,
+  Governance: GovernanceSvg,
+  Teaching: TeachingSvg,
+  Architecture: ArchitectureSvg,
+  Frontend: FrontendSvg,
+  Gardening: GardeningSvg,
+  Mobile: MobileSvg,
+  Video: VideoSvg,
+  Legal: LegalSvg,
+  SmartContracts: SmartContractsSvg,
+  GameTheory: GameTheorySvg,
+  HouseHolding: HouseHoldingSvg,
+  Backend: BackendSvg,
+  Blockchain: BlockchainSvg,
+};
 
 const Categories = () => {
   const largeDevice = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.up('lg'));
@@ -70,23 +121,26 @@ const Categories = () => {
                 gridAutoRows: 'minmax(60px, auto)',
               }}
             >
-              {entities.map(({ id, name }) => (
-                <ListItem key={id} sx={{ height: '45px' }} disablePadding>
-                  <SwButton
-                    sx={{
-                      height: '100%',
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      width: '100%',
-                    }}
-                    onClick={() => dispatch(selectCategory(name))}
-                    className={selectedCategory === name ? 'active-link' : ''}
-                    startIcon={<HelpOutlineIcon />}
-                    label={name}
-                  />
-                </ListItem>
-              ))}
+              {entities.map(({ id, name, icon }) => {
+                const SwIcon = Icons[icon];
+                return (
+                  <ListItem key={id} sx={{ height: '45px' }} disablePadding>
+                    <SwButton
+                      sx={{
+                        height: '100%',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        width: '100%',
+                      }}
+                      onClick={() => dispatch(selectCategory(name))}
+                      className={selectedCategory === name ? 'active-link' : ''}
+                      startIcon={<SwIcon className="sw-btn-icon" width="14px" />}
+                      label={name}
+                    />
+                  </ListItem>
+                );
+              })}
             </List>
           ) : (
             <Typography

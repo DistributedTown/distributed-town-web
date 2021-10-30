@@ -36,7 +36,7 @@ function CommunityCard({
               subheader={
                 <div className="car-subtitle">
                   <Typography variant="body1" color="text.secondary">
-                    {`Members: ${community.members}`}
+                    {`Members: ${community.members} / `} <small>{community.totalMembersAllowed}</small>
                   </Typography>
                   <Typography sx={{ px: 1 }} variant="body1" color="text.secondary">
                     |

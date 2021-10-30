@@ -11,16 +11,12 @@ import { Box, CircularProgress, Typography } from '@mui/material';
 import { SwButton } from 'sw-web-shared';
 import { QRCode } from 'react-qrcode-logo';
 import { generateTextileBucketUrl } from '@dito-api/textile-bucket.api';
-import { connectToEthereum, switchToEtheremNetwork } from '@dito-api/ethereum-network.api';
+import { switchToEtheremNetwork } from '@dito-api/ethereum-network.api';
 import { asyncPoll } from '@dito-utils/async-poller';
-import {
-  ClaimSkillWalletErrors,
-  EhereumNetworkErrors,
-  JoinSkillWalletErrors,
-  SkillWalletAuthenticationErrors,
-  SkillWalletNonceErrors,
-  TextileStorageErrors,
-} from '../store/model';
+import { injected } from '@dito-auth/connector';
+import { addLog } from '@dito-store/ui-reducer';
+import { AppDispatch } from '@dito-store/store.model';
+import { ClaimMembershipErrorTypes } from '../store/model';
 
 const DialogLoadingMessage = ({ message, subtitle = null, onCancel }) => {
   return (
@@ -73,13 +69,15 @@ const DialogAdditionalActionNeeded = ({ message, subtitle, actionLabel, handleAd
 };
 
 export const OnClaimMembershipHandlers = (
+  dispatch: AppDispatch,
   setDialogContent: (content: JSX.Element) => void,
   handleClose: () => void,
   handleAdditionalAction: (message: string) => void
 ) => {
-  const onEthConnection = async () => {
+  const onEthConnection = async (activate: (connector: any) => Promise<void>) => {
     setDialogContent(<DialogLoadingMessage message="Ensuring ethereum connection ..." onCancel={handleClose} />);
-    const isConnected = await connectToEthereum();
+    await activate(injected);
+    const isConnected = await injected.isAuthorized();
     if (!isConnected) {
       setDialogContent(
         <>
@@ -87,7 +85,7 @@ export const OnClaimMembershipHandlers = (
             actionLabel="Retry"
             subtitle="If this problem repeats plase make sure your metamask is connected"
             message="We could not enable the ethereum network"
-            handleAdditionalAction={() => handleAdditionalAction(EhereumNetworkErrors.Retry)}
+            handleAdditionalAction={() => handleAdditionalAction(ClaimMembershipErrorTypes.RetryNetwork)}
             onCancel={handleClose}
           />
         </>
@@ -101,7 +99,7 @@ export const OnClaimMembershipHandlers = (
       return false;
     }
     setDialogContent(<DialogLoadingMessage message="Ensuring correct network ..." onCancel={handleClose} />);
-    const isCorrectNetwork = await switchToEtheremNetwork();
+    const isCorrectNetwork = await switchToEtheremNetwork(dispatch);
 
     if (!isCorrectNetwork) {
       setDialogContent(
@@ -110,7 +108,7 @@ export const OnClaimMembershipHandlers = (
             actionLabel="Retry"
             subtitle={null}
             message="We could not set the correct network, please set it manually and try again"
-            handleAdditionalAction={() => handleAdditionalAction(EhereumNetworkErrors.Retry)}
+            handleAdditionalAction={() => handleAdditionalAction(ClaimMembershipErrorTypes.RetryNetwork)}
             onCancel={handleClose}
           />
         </>
@@ -128,13 +126,14 @@ export const OnClaimMembershipHandlers = (
     try {
       return await generateTextileBucketUrl(metadataJson);
     } catch (error) {
+      await dispatch(addLog(JSON.stringify(error)));
       setDialogContent(
         <>
           <DialogAdditionalActionNeeded
             actionLabel="Retry"
             subtitle={null}
             message="Unknown Error"
-            handleAdditionalAction={() => handleAdditionalAction(TextileStorageErrors.Retry)}
+            handleAdditionalAction={() => handleAdditionalAction(ClaimMembershipErrorTypes.RetryTextile)}
             onCancel={handleClose}
           />
         </>
@@ -161,46 +160,45 @@ export const OnClaimMembershipHandlers = (
         communityAddress,
       });
     } catch (error) {
+      await dispatch(addLog(JSON.stringify(error)));
       const message = ParseSWErrorMessage(error.data.message as string);
-      // const message = 'There is SkillWallet to be claimed by this address';
-
-      if (String(message) === String('Already a member')) {
+      if (String(message).includes('Already a member')) {
         setDialogContent(
           <>
             <DialogAdditionalActionNeeded
               actionLabel="Connect"
               subtitle="Connect to SkillWallet account to see your community"
               message={message}
-              handleAdditionalAction={() => handleAdditionalAction(JoinSkillWalletErrors.AlreadyMember)}
+              handleAdditionalAction={() => handleAdditionalAction(ClaimMembershipErrorTypes.AlreadyMember)}
               onCancel={handleClose}
             />
           </>
         );
-      } else if (String(message) === String('There is SkillWallet already registered for this address')) {
+      } else if (String(message).includes('There is SkillWallet already registered for this address')) {
         setDialogContent(
           <>
             <DialogAdditionalActionNeeded
               actionLabel="Generate QR code"
               subtitle="If you have not activated you skillwallet account then you can do so by clicking generate QR Code"
               message={message}
-              handleAdditionalAction={() => handleAdditionalAction(JoinSkillWalletErrors.SkillWalletNotActivated)}
+              handleAdditionalAction={() => handleAdditionalAction(ClaimMembershipErrorTypes.SkillWalletNotActivated)}
               onCancel={handleClose}
             />
           </>
         );
-      } else if (String(message) === String('There is SkillWallet to be claimed by this address')) {
+      } else if (String(message).includes('There is SkillWallet to be claimed by this address')) {
         setDialogContent(
           <>
             <DialogAdditionalActionNeeded
               actionLabel="Claim"
               subtitle="You are already a member of this community, but you have not claimed it yet!"
               message={message}
-              handleAdditionalAction={() => handleAdditionalAction(JoinSkillWalletErrors.SkillWalletNotClaimed)}
+              handleAdditionalAction={() => handleAdditionalAction(ClaimMembershipErrorTypes.SkillWalletNotClaimed)}
               onCancel={handleClose}
             />
           </>
         );
-      } else if (String(message) === String('No free spots left')) {
+      } else if (String(message).includes('No free spots left')) {
         setDialogContent(
           <>
             <DialogErrorMessage subtitle="Select another community and try again!" message={message} onCancel={handleClose} />
@@ -213,7 +211,7 @@ export const OnClaimMembershipHandlers = (
               actionLabel="Retry"
               subtitle="retry again"
               message={message}
-              handleAdditionalAction={() => handleAdditionalAction(JoinSkillWalletErrors.Retry)}
+              handleAdditionalAction={() => handleAdditionalAction(ClaimMembershipErrorTypes.RetryJoin)}
               onCancel={handleClose}
             />
           </>
@@ -238,16 +236,17 @@ export const OnClaimMembershipHandlers = (
     try {
       return await claimCommunityMembershipContract(communityAddress);
     } catch (error) {
+      await dispatch(addLog(JSON.stringify(error)));
       const message = ParseSWErrorMessage(error.data.message.payload as string);
 
-      if (String(message) === String('There is SkillWallet already registered for this address')) {
+      if (String(message).includes('There is SkillWallet already registered for this address')) {
         setDialogContent(
           <>
             <DialogAdditionalActionNeeded
               actionLabel="Connect"
               subtitle="Connect to SkillWallet account to see your community"
               message={message}
-              handleAdditionalAction={() => handleAdditionalAction(ClaimSkillWalletErrors.AlreadyClaimed)}
+              handleAdditionalAction={() => handleAdditionalAction(ClaimMembershipErrorTypes.AlreadyClaimed)}
               onCancel={handleClose}
             />
           </>
@@ -259,7 +258,7 @@ export const OnClaimMembershipHandlers = (
               actionLabel="Retry"
               subtitle={null}
               message={message}
-              handleAdditionalAction={() => handleAdditionalAction(ClaimSkillWalletErrors.Retry)}
+              handleAdditionalAction={() => handleAdditionalAction(ClaimMembershipErrorTypes.RetryClaim)}
               onCancel={handleClose}
             />
           </>
@@ -283,6 +282,7 @@ export const OnClaimMembershipHandlers = (
     try {
       return await getTokenIdContract(communityAddress);
     } catch (error) {
+      await dispatch(addLog(JSON.stringify(error)));
       const message = ParseSWErrorMessage(error.data.message.payload as string);
       setDialogContent(
         <>
@@ -290,7 +290,7 @@ export const OnClaimMembershipHandlers = (
             actionLabel="Retry"
             subtitle={null}
             message={message}
-            handleAdditionalAction={() => handleAdditionalAction(ClaimSkillWalletErrors.Retry)}
+            handleAdditionalAction={() => handleAdditionalAction(ClaimMembershipErrorTypes.RetryTokenId)}
             onCancel={handleClose}
           />
         </>
@@ -316,7 +316,7 @@ export const OnClaimMembershipHandlers = (
             actionLabel="Retry"
             subtitle={null}
             message="QR code was not generated successfully!"
-            handleAdditionalAction={() => handleAdditionalAction(SkillWalletNonceErrors.Retry)}
+            handleAdditionalAction={() => handleAdditionalAction(ClaimMembershipErrorTypes.RetryNonce)}
             onCancel={handleClose}
           />
         </>
@@ -376,13 +376,14 @@ export const OnClaimMembershipHandlers = (
       const { hasPendingAuth } = await asyncPoll<{ hasPendingAuth: boolean }>(fn, condition);
       return hasPendingAuth;
     } catch (error) {
+      await dispatch(addLog(JSON.stringify(error)));
       setDialogContent(
         <>
           <DialogAdditionalActionNeeded
             actionLabel="Retry"
             subtitle="Something went wrong"
             message="Authentication was unsuccessful"
-            handleAdditionalAction={() => handleAdditionalAction(SkillWalletAuthenticationErrors.Retry)}
+            handleAdditionalAction={() => handleAdditionalAction(ClaimMembershipErrorTypes.RetryAuth)}
             onCancel={handleClose}
           />
         </>

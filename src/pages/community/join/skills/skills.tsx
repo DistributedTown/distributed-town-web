@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { DitoLogoSvg, SwButton, SwQuote } from 'sw-web-shared';
 
-import { RootState } from '@dito-store/store';
+import { RootState } from '@dito-store/store.model';
 
 import { ResultState } from '@dito-store/status';
 import JoinBaseLayout from '../base/join-base';
