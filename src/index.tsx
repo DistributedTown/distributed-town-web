@@ -2,7 +2,7 @@ import './index.css';
 import { createTheme, StyledEngineProvider, ThemeOptions, ThemeProvider } from '@mui/material/styles';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, HashRouter } from 'react-router-dom';
 
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -66,13 +66,13 @@ const theme = createTheme({
 ReactDOM.render(
   <StyledEngineProvider injectFirst>
     <ThemeProvider theme={theme}>
-      <Router basename="/distributed-town-web">
+      <HashRouter basename="/">
         <Provider store={store}>
           <PersistGate persistor={persistor}>
             <App />
           </PersistGate>
         </Provider>
-      </Router>
+      </HashRouter>
     </ThemeProvider>
   </StyledEngineProvider>,
   document.getElementById('root')
