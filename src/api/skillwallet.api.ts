@@ -1579,3 +1579,11 @@ export const generateNonce = async (action: NonceActions, tokenId: string): Prom
     return null;
   }
 };
+
+export const getCommunityInfo = async (communityAddress): Promise<any> => {
+  return fetch(`${process.env.REACT_APP_PUBLIC_API_URL}/api/community/${communityAddress}`, {
+    method: 'GET',
+  })
+    .then((response) => response as any)
+    .catch(() => []);
+};

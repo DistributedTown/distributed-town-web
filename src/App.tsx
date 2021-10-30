@@ -16,10 +16,6 @@ import { resetAuthState, setAuthenticated } from './auth/auth.reducer';
 
 const svgString = encodeURIComponent(renderToStaticMarkup(<MainBackgroundSvg />));
 
-function Home() {
-  return <h2 style={{ color: 'white' }}>Test</h2>;
-}
-
 const LoadingMessage = () => (
   <div className="app-loading">
     <DitoLogoSvg width="80" height="80" />
@@ -27,11 +23,9 @@ const LoadingMessage = () => (
 );
 
 const PrivateRoutes: React.FC = (props: any) => {
-  const { path } = props.match;
   return (
     <>
-      <Route path={`${path}/community`} component={Community} {...props} />
-      <Route path={`${path}/notifications`} component={Home} {...props} />
+      <Route path="/community" component={Community} {...props} />
     </>
   );
 };
@@ -93,6 +87,12 @@ const App = (props: any) => {
       type: 'href',
       label: 'Settings',
       href: '/community/settings',
+      icon: <SvgIcon component={JoinSelSvg} />,
+    },
+    {
+      type: 'href',
+      label: 'Community',
+      href: '/community/success?communityAddress=0xC643138abBcb8396718D7040859fee7905c65B05&diToCredits=2060',
       icon: <SvgIcon component={JoinSelSvg} />,
     },
     {

@@ -1,0 +1,48 @@
+.sw-join-success-wrapper {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .sw-community-details-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sw-share-button-wrapper {
+    display: flex;
+    padding: 20px;
+    justify-content: center;
+    align-content: center;
+  }
+
+  .sw-spinner-wrapper {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+  .emoji:first-of-type {
+    margin-left: 10px;
+  }
+
+  .sw-credits-wrapper {
+    margin: 0 auto;
+    border: 5px solid white;
+    border-radius: 50%;
+    height: 250px;
+    width: 250px;
+    background: linear-gradient(0deg, #454545, transparent);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    margin-bottom: 20px;
+    svg {
+      align-self: center;
+      margin-bottom: 20px;
+    }
+  }
+}
