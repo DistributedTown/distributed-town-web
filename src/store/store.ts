@@ -8,6 +8,7 @@ import { persistReducer, PersistConfig } from 'redux-persist';
 import authSliceReducer from '../auth/auth.reducer';
 import joinCommunitySliceReducer from '../pages/community/join/store/join.reducer';
 import uiSliceReducer from './ui-reducer';
+import communitySliceReducer from '../pages/community/store/community.reducer';
 
 const persistConfig: PersistConfig<any> = {
   key: 'appState',
@@ -20,6 +21,7 @@ const reducers = combineReducers({
   joinCommunity: joinCommunitySliceReducer,
   auth: authSliceReducer,
   ui: uiSliceReducer,
+  community: communitySliceReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducers);

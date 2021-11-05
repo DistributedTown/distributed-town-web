@@ -2,6 +2,7 @@
 import { ethers } from 'ethers';
 import { communityAbi, skillWalletAbi } from 'src/abis/abis';
 import { toWei } from 'web3-utils';
+import axios from 'axios';
 import { CommunityContract, CommunityContractError, CommunityContractResponse, NonceActions } from './model';
 
 function NoEventException(value: CommunityContractError) {
@@ -118,9 +119,5 @@ export const generateNonce = async (action: NonceActions, tokenId: string): Prom
 };
 
 export const getCommunityInfo = async (communityAddress): Promise<any> => {
-  return fetch(`${process.env.REACT_APP_PUBLIC_API_URL}/api/community/${communityAddress}`, {
-    method: 'GET',
-  })
-    .then((response) => response as any)
-    .catch(() => []);
+  return axios.get(`${process.env.REACT_APP_PUBLIC_API_URL}/api/community/${communityAddress}`).then((response) => response.data);
 };

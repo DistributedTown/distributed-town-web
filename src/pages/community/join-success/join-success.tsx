@@ -1,9 +1,12 @@
-import { getCommunityInfo } from '@dito-api/skillwallet.api';
 import { CircularProgress, ThemeOptions, Typography, useMediaQuery } from '@mui/material';
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DitoCreditsSvg, SwButton } from 'sw-web-shared';
 import './join-success.scss';
 import { useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@dito-store/store.model';
+import { ResultState } from '@dito-store/status';
+import { fetchCommunity } from '../store/community.reducer';
 import ShareDialog from './community-share-dialog';
 
 const Emoji = (props) => (
@@ -13,11 +16,14 @@ const Emoji = (props) => (
 );
 
 const JoinSuccess = () => {
+  const dispatch = useDispatch();
   const largeDevice = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.up('lg'));
   const small = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.down('md'));
 
   const [open, setOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = React.useState('');
+  const [selectedValue, setSelectedValue] = useState('');
+
+  const { status, community } = useSelector((state: RootState) => state.community);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -28,24 +34,18 @@ const JoinSuccess = () => {
     setSelectedValue(value);
   };
 
-  const [community, setCommunity] = useState('');
-  const [isLoading, setLoading] = useState(true);
   const { search } = useLocation();
   const communityAddress = new URLSearchParams(search).get('communityAddress');
   const diToCredits = new URLSearchParams(search).get('diToCredits');
-  React.useEffect(() => {
-    const fetchCommunity = async () => {
-      const response = await getCommunityInfo(communityAddress);
-      const { name } = await response.json();
-      setCommunity(name);
-      setLoading(false);
-    };
-    fetchCommunity();
-  }, [communityAddress]);
+  useEffect(() => {
+    if (!community || community?.address !== communityAddress) {
+      dispatch(fetchCommunity(communityAddress));
+    }
+  }, [communityAddress, community, dispatch, search]);
   return (
     <>
       <div className="sw-join-success-wrapper">
-        {isLoading ? (
+        {status === ResultState.Loading ? (
           <div className="sw-spinner-wrapper">
             <CircularProgress sx={{ color: 'background.paper' }} />
           </div>
@@ -62,7 +62,7 @@ const JoinSuccess = () => {
               </div>
 
               <Typography sx={{ color: 'background.paper', mb: 5, textAlign: 'center' }} component="div" variant="h5">
-                You are now a member of {community}.
+                You are now a member of {community?.name}.
               </Typography>
               <Typography sx={{ color: 'background.paper', mb: 5, textAlign: 'center' }} component="div" variant="h5">
                 Your new DITO credits are now:

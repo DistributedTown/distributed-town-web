@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import './App.scss';
 import SvgIcon from '@mui/material/SvgIcon';
+import MenuIcon from '@mui/icons-material/Menu';
 import { defineCustomElements } from '@skill-wallet/auth/loader';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { withRouter, Route } from 'react-router-dom';
@@ -12,7 +13,6 @@ import {
   DitoLogoSvg,
   SwButton,
   MainBackgroundSvg,
-  LogoffSvg,
   NotificationsSvg,
   SettingsSvg,
   SkillWalletNavSvg,
@@ -25,7 +25,7 @@ import Web3Provider from '@dito-auth/Web3Provider';
 import Web3jsComponent from '@dito-auth/Web3jsComponent';
 import SWSnackbar from '@dito-components/snackbar';
 import { LogsDialog } from '@dito-components/logs-dialog';
-import { useMediaQuery, ThemeOptions } from '@mui/material';
+import { useMediaQuery, ThemeOptions, IconButton, Tooltip } from '@mui/material';
 import { addLog } from '@dito-store/ui-reducer';
 import Community from './pages/community/community';
 import Join from './pages/community/join/join';
@@ -64,14 +64,17 @@ const App = (props: any) => {
   const [isLoading, setLoading] = useState(true);
   const [logInitialized, setLogInitialized] = useState(false);
   const [open, setOpen] = useState(false);
+  const [opened, setOpened] = React.useState(true);
+
   const small = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.down('sm'));
 
   const { isAutheticated } = useSelector((state: RootState) => state.auth);
   const { logs } = useSelector((state: RootState) => state.ui);
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const isJoinFlow = props?.location?.pathname?.includes('join-community');
+
+  const handleClose = () => setOpen(false);
+  const handleToggle = () => setOpened(!opened);
 
   useEffect(() => {
     if (logInitialized) {
@@ -85,25 +88,30 @@ const App = (props: any) => {
   }, [logInitialized, dispatch]);
 
   useEffect(() => {
-    const onSWLogin = async () => {
+    const onSWLogin = async ({ detail }: any) => {
+      const isLoggedIn = !!detail;
+      const hasSkillwalletSessionStorage = sessionStorage.getItem('skillWallet');
+      if (isLoggedIn && hasSkillwalletSessionStorage) {
+        dispatch(setAuthenticated(true));
+        props.history.push('/community/dTown-hall/dashboard');
+      } else {
+        dispatch(resetAuthState());
+        props.history.push('/');
+      }
+    };
+    const onSWInit = async () => {
       setLoading(false);
       dispatch(setAuthenticated(true));
     };
     defineCustomElements(window);
+    window.addEventListener('initSkillwalletAuth', onSWInit);
     window.addEventListener('onSkillwalletLogin', onSWLogin);
 
-    // temporary
-    const timeout = setTimeout(() => {
-      if (!isAutheticated) {
-        setLoading(false);
-      }
-    }, 2000);
-
     return () => {
-      clearTimeout(timeout);
+      window.removeEventListener('initSkillwalletAuth', onSWInit);
       window.removeEventListener('onSkillwalletLogin', onSWLogin);
     };
-  }, [isAutheticated, dispatch]);
+  }, [isAutheticated, dispatch, props.history]);
 
   const menuItems: any[] = [
     {
@@ -136,20 +144,20 @@ const App = (props: any) => {
       href: '/community/success?communityAddress=0xC643138abBcb8396718D7040859fee7905c65B05&diToCredits=2060',
       icon: <SvgIcon component={JoinSelSvg} />,
     },
-    {
-      type: 'divider',
-    },
-    {
-      label: 'Log off',
-      type: 'button',
-      onClick: () => {
-        localStorage.removeItem('skillWallet');
-        dispatch(resetAuthState());
-        props.history.push('/');
-        window.location.reload();
-      },
-      icon: <SvgIcon component={LogoffSvg} />,
-    },
+    // {
+    //   type: 'divider',
+    // },
+    // {
+    //   label: 'Log off',
+    //   type: 'button',
+    //   onClick: () => {
+    //     session.removeItem('skillWallet');
+    //     dispatch(resetAuthState());
+    //     props.history.push('/');
+    //     window.location.reload();
+    //   },
+    //   icon: <SvgIcon component={LogoffSvg} />,
+    // },
   ];
 
   return (
@@ -162,19 +170,46 @@ const App = (props: any) => {
             className={isLoading ? 'loading' : ''}
             top={
               <div
-                className="wallet-btn"
+                className="top-bar"
                 style={{
-                  display: 'flex',
                   visibility: isLoading ? 'hidden' : 'visible',
                 }}
               >
-                {/* @ts-ignore */}
-                <skillwallet-auth allowCreateNewUser={false} id="walletButton" />
-                <SwButton sx={{ height: '33px', ml: 2 }} label="Open logs" onClick={() => setOpen(true)} />
+                <div className="left">
+                  {small && isAutheticated && (
+                    <Tooltip title="Open sidebar" placement="right" color="white">
+                      <IconButton className="sw-sidebar-close-button" color="secondary" onClick={handleToggle}>
+                        <MenuIcon />
+                      </IconButton>
+                    </Tooltip>
+                  )}
+                </div>
+                <div className="right">
+                  {/* @ts-ignore */}
+                  <skillwallet-auth
+                    style={{
+                      visibility: isJoinFlow ? 'hidden' : 'visible',
+                    }}
+                    allowCreateNewUser={false}
+                    id="walletButton"
+                  />
+                  <SwButton sx={{ width: '120px', height: '33px', ml: 2 }} label="Logs" onClick={() => setOpen(true)} />
+                </div>
               </div>
             }
             backgroundUrl={`url('data:image/svg+xml;utf8, ${svgString}')`}
-            drawer={isAutheticated && <SwSidebar sidebarTop={<DitoLogoSvg width="100" height="100" />} open menuItems={menuItems} />}
+            drawer={
+              isAutheticated && (
+                <SwSidebar
+                  // @ts-ignore
+                  handleToggle={() => handleToggle()}
+                  sidebarTopIcon={DitoLogoSvg}
+                  mobile={small}
+                  open={opened}
+                  menuItems={menuItems}
+                />
+              )
+            }
           >
             {isLoading ? <LoadingMessage /> : isAutheticated ? <PrivateRoutes {...props} /> : <AuthRoutes {...props} />}
           </SwLayout>

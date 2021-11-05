@@ -13,7 +13,7 @@
     "@mui/icons-material": "~5.0.1",
     "@mui/material": "~5.0.2",
     "@reduxjs/toolkit": "~1.6.2",
-    "@skill-wallet/auth": "0.0.66-alpha",
+    "@skill-wallet/auth": "0.0.67-alpha",
     "@svgr/webpack": "~5.5.0",
     "@textile/hub": "~6.3.0",
     "@web3-react/core": "^6.1.9",

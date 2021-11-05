@@ -2,7 +2,7 @@ import './index.css';
 import { createTheme, StyledEngineProvider, ThemeOptions, ThemeProvider } from '@mui/material/styles';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router, HashRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
