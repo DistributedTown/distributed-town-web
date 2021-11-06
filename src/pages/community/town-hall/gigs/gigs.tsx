@@ -12,7 +12,7 @@ const Gigs = () => {
         sx={{ height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
         variant="h3"
       >
-        Comming soon!
+        Coming soon!
       </Typography>
     </div>
   );
