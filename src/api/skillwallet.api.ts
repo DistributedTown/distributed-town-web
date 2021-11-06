@@ -26,7 +26,7 @@ export const claimCommunityMembershipContract = async (communityAddress: string)
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
   const skillWalletAddress = await getSkillWalletAddress(communityAddress);
-  const contract = new ethers.Contract(skillWalletAddress, skillWalletAbi, signer);
+  const contract = new ethers.Contract(skillWalletAddress, skillWalletAbi, signer as any);
   const claimTx = await contract.claim();
   const claimTransactionResult = await claimTx.wait();
   const { events } = claimTransactionResult;
@@ -51,7 +51,7 @@ export const getTokenIdContract = async (communityAddress: string): Promise<stri
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
   const skillwalletAddress = await getSkillWalletAddress(communityAddress);
-  const contract = new ethers.Contract(skillwalletAddress, skillWalletAbi, signer);
+  const contract = new ethers.Contract(skillwalletAddress, skillWalletAbi, signer as any);
   const isRegistered = await contract.isSkillWalletRegistered(window.ethereum.selectedAddress);
 
   console.log('isRegistered: ', isRegistered);
@@ -71,7 +71,7 @@ export const executeCommunityContract = async ({
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
 
-  const contract = new ethers.Contract(communityAddress, communityAbi, signer);
+  const contract = new ethers.Contract(communityAddress, communityAbi, signer as any);
   const createTx = await contract.joinNewMember(url, toWei(credits.toString()));
   const communityTransactionResult = await createTx.wait();
   const { events } = communityTransactionResult;

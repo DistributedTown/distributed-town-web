@@ -17,11 +17,10 @@ const Emoji = (props) => (
 
 const JoinSuccess = () => {
   const dispatch = useDispatch();
-  const largeDevice = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.up('lg'));
+  // const largeDevice = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.up('lg'));
   const small = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.down('md'));
 
   const [open, setOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState('');
 
   const { status, community } = useSelector((state: RootState) => state.community);
 
@@ -29,9 +28,8 @@ const JoinSuccess = () => {
     setOpen(true);
   };
 
-  const handleClose = (value: string) => {
+  const handleClose = () => {
     setOpen(false);
-    setSelectedValue(value);
   };
 
   const { search } = useLocation();
@@ -89,7 +87,7 @@ const JoinSuccess = () => {
                 label={small ? 'Share' : 'Share  & Invite your peers'}
                 onClick={handleClickOpen}
               />
-              {/* <ShareDialog selectedValue={selectedValue} open={open} onClose={handleClose} /> */}
+              <ShareDialog community={community} open={open} onClose={handleClose} />
             </div>
           </>
         )}
