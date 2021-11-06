@@ -12,6 +12,10 @@
     flex: 60%;
   }
 
+  .sw-skill-card + .sw-skill-card {
+    margin-top: 12px;
+  }
+
   @include media-breakpoint('lt-lg') {
     & > .sw-box {
       .sw-box-quote {

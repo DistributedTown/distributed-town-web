@@ -66,7 +66,7 @@ const App = (props: any) => {
   const [open, setOpen] = useState(false);
   const [opened, setOpened] = React.useState(true);
 
-  const small = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.down('sm'));
+  const small = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.down('md'));
 
   const { isAutheticated } = useSelector((state: RootState) => state.auth);
   const { logs } = useSelector((state: RootState) => state.ui);
@@ -90,8 +90,8 @@ const App = (props: any) => {
   useEffect(() => {
     const onSWLogin = async ({ detail }: any) => {
       const isLoggedIn = !!detail;
-      const hasSkillwalletSessionStorage = sessionStorage.getItem('skillWallet');
-      if (isLoggedIn && hasSkillwalletSessionStorage) {
+      // const hasSkillwalletSessionStorage = sessionStorage.getItem('skillWallet');
+      if (isLoggedIn) {
         dispatch(setAuthenticated(true));
         props.history.push('/community/dTown-hall/dashboard');
       } else {
@@ -101,7 +101,8 @@ const App = (props: any) => {
     };
     const onSWInit = async () => {
       setLoading(false);
-      dispatch(setAuthenticated(true));
+      onSWLogin({ detail: true });
+      // dispatch(setAuthenticated(true));
     };
     defineCustomElements(window);
     window.addEventListener('initSkillwalletAuth', onSWInit);
