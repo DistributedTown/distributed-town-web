@@ -24,6 +24,7 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "src"
-, "src/abis/generate-contract-types.ts"  ]
+    "src",
+    "src/abis/generate-contract-types.ts"
+  ]
 }

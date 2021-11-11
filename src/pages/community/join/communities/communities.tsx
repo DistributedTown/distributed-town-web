@@ -66,7 +66,7 @@ const Communities = (props) => {
       if (!authenticated) {
         return;
       }
-      props.history.push('/community/dTown-hall/dashboard');
+      props.history.push(`/community/success?communityAddress=${selectedCommunity.address}&diToCredits=${credits}`);
     };
     const {
       onEthConnection,
@@ -76,13 +76,11 @@ const Communities = (props) => {
       onJoinMembership,
       onClaimMembership,
       onQRCodeGenerate,
-      onAuthenticate,
       isQrCodeActivated,
     } = OnClaimMembershipHandlers(dispatch, setDialogContent, handleClose, async (message: ClaimMembershipErrorTypes) => {
       let tokenId = null;
       let nonce = null;
       let active = false;
-      let isAuthenticated = false;
       switch (message) {
         case ClaimMembershipErrorTypes.AlreadyMember:
           handleClose();
@@ -108,11 +106,9 @@ const Communities = (props) => {
           console.log('IsQrCodeActivated: ', active);
 
           /*
-              Step 4 - poll to authenticate
+              Step 5 - Go to success screen
           */
-          isAuthenticated = await onAuthenticate(nonce, tokenId, active);
-          console.log('IsAuthenticated: ', isAuthenticated);
-          goToSuccessScreen(isAuthenticated);
+          goToSuccessScreen(active);
           break;
         case ClaimMembershipErrorTypes.SkillWalletNotClaimed:
         case ClaimMembershipErrorTypes.RetryClaim:
@@ -140,11 +136,9 @@ const Communities = (props) => {
           console.log('IsQrCodeActivated: ', active);
 
           /*
-              Step 5 - poll to authenticate
+              Step 5 - Go to success screen
           */
-          isAuthenticated = await onAuthenticate(nonce, tokenId, active);
-          console.log('IsAuthenticated: ', isAuthenticated);
-          goToSuccessScreen(isAuthenticated);
+          goToSuccessScreen(active);
           break;
         case ClaimMembershipErrorTypes.RetryQrCode:
           /*
@@ -165,16 +159,14 @@ const Communities = (props) => {
           console.log('IsQrCodeActivated: ', active);
 
           /*
-              Step 4 - poll to authenticate
+              Step 4 - Go to success screen
           */
-          isAuthenticated = await onAuthenticate(nonce, tokenId, active);
-          console.log('IsAuthenticated: ', isAuthenticated);
-          goToSuccessScreen(isAuthenticated);
+          goToSuccessScreen(active);
           break;
-        case ClaimMembershipErrorTypes.RetryAuth:
-          isAuthenticated = await onAuthenticate(nonce, tokenId, active);
-          console.log('IsAuthenticated: ', isAuthenticated);
-          break;
+        // case ClaimMembershipErrorTypes.RetryAuth:
+        //   isAuthenticated = await onAuthenticate(nonce, tokenId, active);
+        //   console.log('IsAuthenticated: ', isAuthenticated);
+        //   break;
         case ClaimMembershipErrorTypes.RetryJoin:
         case ClaimMembershipErrorTypes.RetryNetwork:
         case ClaimMembershipErrorTypes.RetryTextile:
@@ -230,15 +222,9 @@ const Communities = (props) => {
     console.log('IsQrCodeActivated: ', active);
 
     /*
-        Step 8 - Poll until skillwallet is authenticated
+        Step 8 - Go to success screen
     */
-    const isAuthenticated = await onAuthenticate(nonce, tokenId, active);
-    console.log('IsAuthenticated: ', isAuthenticated);
-
-    /*
-        Step 9 - Go to success screen
-    */
-    goToSuccessScreen(isAuthenticated);
+    goToSuccessScreen(active);
   };
 
   useEffect(() => {
