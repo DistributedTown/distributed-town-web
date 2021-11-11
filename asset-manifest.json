@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/distributed-town-web/static/css/main.1a8e17ae.chunk.css",
-    "main.js": "/distributed-town-web/static/js/main.4cf37503.chunk.js",
-    "main.js.map": "/distributed-town-web/static/js/main.4cf37503.chunk.js.map",
+    "main.js": "/distributed-town-web/static/js/main.fefb781b.chunk.js",
+    "main.js.map": "/distributed-town-web/static/js/main.fefb781b.chunk.js.map",
     "polyfills-dom.js": "/distributed-town-web/static/js/polyfills-dom.bd5dc9a2.chunk.js",
     "polyfills-dom.js.map": "/distributed-town-web/static/js/polyfills-dom.bd5dc9a2.chunk.js.map",
     "runtime-main.js": "/distributed-town-web/static/js/runtime-main.f46a6d41.js",
@@ -19,13 +19,13 @@
     "static/css/main.1a8e17ae.chunk.css.map": "/distributed-town-web/static/css/main.1a8e17ae.chunk.css.map",
     "static/js/3.15bc0d64.chunk.js.LICENSE.txt": "/distributed-town-web/static/js/3.15bc0d64.chunk.js.LICENSE.txt",
     "static/js/4.17ed623a.chunk.js.LICENSE.txt": "/distributed-town-web/static/js/4.17ed623a.chunk.js.LICENSE.txt",
-    "static/js/main.4cf37503.chunk.js.LICENSE.txt": "/distributed-town-web/static/js/main.4cf37503.chunk.js.LICENSE.txt",
+    "static/js/main.fefb781b.chunk.js.LICENSE.txt": "/distributed-town-web/static/js/main.fefb781b.chunk.js.LICENSE.txt",
     "static/js/polyfills-dom.bd5dc9a2.chunk.js.LICENSE.txt": "/distributed-town-web/static/js/polyfills-dom.bd5dc9a2.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.f46a6d41.js",
     "static/js/3.15bc0d64.chunk.js",
     "static/css/main.1a8e17ae.chunk.css",
-    "static/js/main.4cf37503.chunk.js"
+    "static/js/main.fefb781b.chunk.js"
   ]
 }
