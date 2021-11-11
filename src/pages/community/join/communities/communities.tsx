@@ -21,7 +21,7 @@ import { OnClaimMembershipHandlers } from './claim-membership-handlers';
 import { ClaimMembershipDialog } from './claim-membership-dialog';
 import CommunityCredits from './community-credits';
 
-const Communities = () => {
+const Communities = (props) => {
   const dispatch = useAppDispatch();
   const { activate } = useWeb3React();
 
@@ -44,13 +44,9 @@ const Communities = () => {
   // function/local state
   const [open, setOpen] = useState(false);
   const [dialogContent, setDialogContent] = useState(null);
-  const [tokenId, setTokenId] = useState(null);
-  const [nonce, setNonce] = useState(null);
 
   const handleClose = () => {
     setOpen(false);
-    setNonce(null);
-    setTokenId(null);
     setDialogContent(null);
   };
 
@@ -66,6 +62,12 @@ const Communities = () => {
       },
     };
     setOpen(true);
+    const goToSuccessScreen = (authenticated: boolean) => {
+      if (!authenticated) {
+        return;
+      }
+      props.history.push('/community/dTown-hall/dashboard');
+    };
     const {
       onEthConnection,
       onEthNetworkChange,
@@ -75,7 +77,12 @@ const Communities = () => {
       onClaimMembership,
       onQRCodeGenerate,
       onAuthenticate,
+      isQrCodeActivated,
     } = OnClaimMembershipHandlers(dispatch, setDialogContent, handleClose, async (message: ClaimMembershipErrorTypes) => {
+      let tokenId = null;
+      let nonce = null;
+      let active = false;
+      let isAuthenticated = false;
       switch (message) {
         case ClaimMembershipErrorTypes.AlreadyMember:
           handleClose();
@@ -83,27 +90,94 @@ const Communities = () => {
         case ClaimMembershipErrorTypes.SkillWalletNotActivated:
         case ClaimMembershipErrorTypes.AlreadyClaimed:
         case ClaimMembershipErrorTypes.RetryNonce:
-          setTokenId(await onGetTokenId(selectedCommunity.address));
-          setNonce(await onQRCodeGenerate(tokenId));
-          await onAuthenticate(nonce, tokenId);
+          /*
+              Step 1 - get tokenId from skillwallet
+          */
+          tokenId = await onGetTokenId(selectedCommunity.address);
+          console.log('TokenId: ', tokenId);
+
+          /*
+              Step 2 - generate qr code nonce
+          */
+          nonce = await onQRCodeGenerate(tokenId);
+
+          /*
+              Step 3 - poll to check if qr code was used/activate
+          */
+          active = await isQrCodeActivated(tokenId);
+          console.log('IsQrCodeActivated: ', active);
+
+          /*
+              Step 4 - poll to authenticate
+          */
+          isAuthenticated = await onAuthenticate(nonce, tokenId, active);
+          console.log('IsAuthenticated: ', isAuthenticated);
+          goToSuccessScreen(isAuthenticated);
           break;
         case ClaimMembershipErrorTypes.SkillWalletNotClaimed:
         case ClaimMembershipErrorTypes.RetryClaim:
+          /*
+              Step 1 - Execute claim membership smart contract
+          */
           await onClaimMembership(selectedCommunity.address, true);
-          setTokenId(await onGetTokenId(selectedCommunity.address));
+
+          /*
+              Step 2 - get tokenId from skillwallet
+          */
+          tokenId = await onGetTokenId(selectedCommunity.address);
           console.log('TokenId: ', tokenId);
-          setNonce(await onQRCodeGenerate(tokenId));
+
+          /*
+              Step 3 - generate qr code nonce
+          */
+          nonce = await onQRCodeGenerate(tokenId);
           console.log('Nonce: ', nonce);
-          await onAuthenticate(nonce, tokenId);
+
+          /*
+              Step 4 - poll to check if qr code was used/activate
+          */
+          active = await isQrCodeActivated(tokenId);
+          console.log('IsQrCodeActivated: ', active);
+
+          /*
+              Step 5 - poll to authenticate
+          */
+          isAuthenticated = await onAuthenticate(nonce, tokenId, active);
+          console.log('IsAuthenticated: ', isAuthenticated);
+          goToSuccessScreen(isAuthenticated);
+          break;
+        case ClaimMembershipErrorTypes.RetryQrCode:
+          /*
+             Step 1 - get tokenId from skillwallet
+         */
+          tokenId = await onGetTokenId(selectedCommunity.address);
+          console.log('TokenId: ', tokenId);
+          /*
+            Step 2 - generate qr code nonce
+          */
+          nonce = await onQRCodeGenerate(tokenId);
+          console.log('Nonce: ', nonce);
+
+          /*
+              Step 3 - poll to check if qr code was used/activate
+          */
+          active = await isQrCodeActivated(tokenId);
+          console.log('IsQrCodeActivated: ', active);
+
+          /*
+              Step 4 - poll to authenticate
+          */
+          isAuthenticated = await onAuthenticate(nonce, tokenId, active);
+          console.log('IsAuthenticated: ', isAuthenticated);
+          goToSuccessScreen(isAuthenticated);
           break;
         case ClaimMembershipErrorTypes.RetryAuth:
-          await onAuthenticate(nonce, tokenId);
+          isAuthenticated = await onAuthenticate(nonce, tokenId, active);
+          console.log('IsAuthenticated: ', isAuthenticated);
           break;
         case ClaimMembershipErrorTypes.RetryJoin:
         case ClaimMembershipErrorTypes.RetryNetwork:
         case ClaimMembershipErrorTypes.RetryTextile:
-          setNonce(null);
-          setTokenId(null);
           setDialogContent(null);
           claimMembership();
           break;
@@ -134,7 +208,7 @@ const Communities = () => {
         Step 4 - Execute join membership smart contract
     */
     const member = await onJoinMembership(bucketUrl, selectedCommunity.address, credits);
-    setTokenId(member?.tokenId);
+    const tokenId = member?.tokenId;
     console.log('Member: ', member);
     console.log('TokenId: ', tokenId);
 
@@ -146,19 +220,25 @@ const Communities = () => {
     /*
         Step 6 - Generate nonce & show qr code
     */
-    setNonce(await onQRCodeGenerate(tokenId));
+    const nonce = await onQRCodeGenerate(tokenId);
     console.log('Nonce: ', nonce);
 
     /*
-        Step 7 - Poll until skillwallet is authenticated
+        Step 7 - poll to check if qr code was used/activate
     */
-    const isAuthenticated = await onAuthenticate(nonce, tokenId);
+    const active = await isQrCodeActivated(tokenId);
+    console.log('IsQrCodeActivated: ', active);
+
+    /*
+        Step 8 - Poll until skillwallet is authenticated
+    */
+    const isAuthenticated = await onAuthenticate(nonce, tokenId, active);
     console.log('IsAuthenticated: ', isAuthenticated);
 
     /*
-        Step 8 - Go to success screen
+        Step 9 - Go to success screen
     */
-    // TODO: Implement success navigation
+    goToSuccessScreen(isAuthenticated);
   };
 
   useEffect(() => {

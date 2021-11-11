@@ -14,6 +14,7 @@ export enum ClaimMembershipErrorTypes {
   RetryClaim = 'RetryClaim',
   RetryAuth = 'RetryAuth',
   RetryTokenId = 'RetryTokenId',
+  RetryQrCode = 'RetryQrCode',
 }
 
 export interface Category {

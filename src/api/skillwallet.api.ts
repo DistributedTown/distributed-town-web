@@ -19,7 +19,7 @@ export const getSkillWalletDescription = async () => {
 };
 
 export const getSkillWalletAddress = async (communityAddress = null) => {
-  return '0x1e79bE396CE37F7eB43aF0Ef0ffb3124F3fD23eF';
+  return process.env.REACT_APP_SKILLWALLET_ADDRESS;
 };
 
 export const claimCommunityMembershipContract = async (communityAddress: string): Promise<string> => {
@@ -61,6 +61,19 @@ export const getTokenIdContract = async (communityAddress: string): Promise<stri
     return tokenId?.toString();
   }
   return null;
+};
+
+export const isQrCodeActive = async (): Promise<boolean> => {
+  try {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const skillwalletAddress = await getSkillWalletAddress(null);
+    const contract = new ethers.Contract(skillwalletAddress, skillWalletAbi, signer as any);
+    const tokenId = await contract.getSkillWalletIdByOwner(window.ethereum.selectedAddress);
+    return await contract.isSkillWalletActivated(tokenId);
+  } catch (error) {
+    return false;
+  }
 };
 
 export const executeCommunityContract = async ({

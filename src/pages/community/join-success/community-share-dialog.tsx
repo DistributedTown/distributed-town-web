@@ -27,7 +27,7 @@ function ShareDialog(props: SimpleDialogProps) {
     <Dialog onClose={handleClose} open={open}>
       <List sx={{ p: '15px' }}>
         <ListItem>
-          <TwitterShareButton url={url} height="100px" className="social-button" title={`I just joined the ${community?.name} community!`}>
+          <TwitterShareButton url={url} className="social-button" title={`I just joined the ${community?.name} community!`}>
             <TwitterIcon className="social-icon" />
             <div className="social-name">Twitter</div>
           </TwitterShareButton>
@@ -36,8 +36,6 @@ function ShareDialog(props: SimpleDialogProps) {
         <ListItem>
           <FacebookShareButton
             url={url}
-            height="100px"
-            width="150px"
             className="social-button"
             quote={`I just joined the ${community?.name} community!`}
             hashtag="#DistributedTown"
@@ -47,7 +45,7 @@ function ShareDialog(props: SimpleDialogProps) {
           </FacebookShareButton>
         </ListItem>
         <ListItem>
-          <LinkedinShareButton url={url} height="100px" className="social-button">
+          <LinkedinShareButton url={url} className="social-button">
             <LinkedInIcon className="social-icon" />
             <div className="social-name">LinkedIn</div>
           </LinkedinShareButton>

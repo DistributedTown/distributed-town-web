@@ -1,6 +1,7 @@
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
+      REACT_APP_SKILLWALLET_ADDRESS: string;
       REACT_APP_PUBLIC_API_URL: string;
       REACT_APP_PUBLIC_SKILL_WALLET_API_URL: string;
       REACT_APP_PUBLIC_COMMUNITIES_REGISTRY_ADDRESS: string;

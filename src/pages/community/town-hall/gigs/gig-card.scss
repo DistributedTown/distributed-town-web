@@ -1,0 +1,43 @@
+@import 'sw-web-shared/lib/styles/variables';
+@import 'sw-web-shared/lib/styles/breakpoints';
+
+.sw-gig-card {
+  border: 1px solid $border-color-base;
+  box-sizing: border-box;
+  min-height: 260px;
+
+  .car-subtitle {
+    display: flex;
+  }
+
+  .sw-progress-bar {
+    position: relative;
+    min-width: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 17px;
+
+    .sw-progress-bar-label {
+      height: 15px;
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+
+  @include media-breakpoint('lt-sm') {
+    .MuiCardContent-root {
+      .MuiCardHeader-root {
+        flex-direction: column;
+        text-align: center;
+
+        .MuiCardHeader-avatar {
+          margin: 0;
+        }
+      }
+    }
+  }
+}

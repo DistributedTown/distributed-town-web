@@ -7,15 +7,15 @@ import './dashboard.scss';
 import { SwitchTransition, CSSTransition } from 'react-transition-group';
 import { Link } from 'react-router-dom';
 
+const defaultHoverContent = {
+  title: 'The Dark DiTo',
+  icon: OpenGigsSvg,
+  description:
+    // eslint-disable-next-line max-len
+    'The greatest Description you could think of. A story about passion, cooperation, conflict & chaos - unveiling, word by word, a deeper truth about humankind.',
+};
 const Dashboard = () => {
   const largeDevice = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.up('lg'));
-  const defaultHoverContent = {
-    title: 'The Dark DiTo',
-    icon: OpenGigsSvg,
-    description:
-      // eslint-disable-next-line max-len
-      'The greatest Description you could think of. A story about passion, cooperation, conflict & chaos - unveiling, word by word, a deeper truth about humankind.',
-  };
 
   const [hoveredContent, setHoveredContent] = useState(defaultHoverContent);
   const debouncedHoverHandler = useMemo(() => {

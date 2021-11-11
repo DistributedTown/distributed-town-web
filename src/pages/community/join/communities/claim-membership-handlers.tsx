@@ -5,6 +5,7 @@ import {
   generateNonce,
   getTokenIdContract,
   hasPendingAuthentication,
+  isQrCodeActive,
 } from '@dito-api/skillwallet.api';
 import { ParseSWErrorMessage } from '@dito-utils/parse-smart-contact-error';
 import { Box, CircularProgress, Typography } from '@mui/material';
@@ -162,19 +163,20 @@ export const OnClaimMembershipHandlers = (
     } catch (error) {
       await dispatch(addLog(JSON.stringify(error)));
       const message = ParseSWErrorMessage(error.data.message as string);
-      if (String(message).includes('Already a member')) {
-        setDialogContent(
-          <>
-            <DialogAdditionalActionNeeded
-              actionLabel="Connect"
-              subtitle="Connect to SkillWallet account to see your community"
-              message={message}
-              handleAdditionalAction={() => handleAdditionalAction(ClaimMembershipErrorTypes.AlreadyMember)}
-              onCancel={handleClose}
-            />
-          </>
-        );
-      } else if (String(message).includes('There is SkillWallet already registered for this address')) {
+      // if (String(message).includes('Already a member')) {
+      //   setDialogContent(
+      //     <>
+      //       <DialogAdditionalActionNeeded
+      //         actionLabel="Connect"
+      //         subtitle="Connect to SkillWallet account to see your community"
+      //         message={message}
+      //         handleAdditionalAction={() => handleAdditionalAction(ClaimMembershipErrorTypes.AlreadyMember)}
+      //         onCancel={handleClose}
+      //       />
+      //     </>
+      //   );
+      // }
+      if (String(message).includes('There is SkillWallet already registered for this address')) {
         setDialogContent(
           <>
             <DialogAdditionalActionNeeded
@@ -186,7 +188,10 @@ export const OnClaimMembershipHandlers = (
             />
           </>
         );
-      } else if (String(message).includes('There is SkillWallet to be claimed by this address')) {
+      } else if (
+        String(message).includes('There is SkillWallet to be claimed by this address') ||
+        String(message).includes('Already a member')
+      ) {
         setDialogContent(
           <>
             <DialogAdditionalActionNeeded
@@ -269,6 +274,7 @@ export const OnClaimMembershipHandlers = (
   };
 
   const onGetTokenId = async (communityAddress: string) => {
+    console.log(communityAddress, 'communityAddress');
     if (!communityAddress) {
       return null;
     }
@@ -283,6 +289,9 @@ export const OnClaimMembershipHandlers = (
       return await getTokenIdContract(communityAddress);
     } catch (error) {
       await dispatch(addLog(JSON.stringify(error)));
+      // @ts-ignore
+      // eslint-disable-next-line no-debugger
+      debugger;
       const message = ParseSWErrorMessage(error.data.message.payload as string);
       setDialogContent(
         <>
@@ -361,8 +370,33 @@ export const OnClaimMembershipHandlers = (
     return nonce;
   };
 
-  const onAuthenticate = async (nonce: string, tokenId: string) => {
-    if (!nonce || !tokenId) {
+  const isQrCodeActivated = async (tokenId: string) => {
+    if (!tokenId) {
+      return false;
+    }
+    const fn = () => isQrCodeActive();
+    const condition = (active: boolean) => !active;
+    const isActive = await asyncPoll<boolean>(fn, condition);
+
+    if (!isActive) {
+      setDialogContent(
+        <>
+          <DialogAdditionalActionNeeded
+            actionLabel="Retry"
+            subtitle="QR Code was not approved!"
+            message="Activate your skillwallet account by using skillwallet app."
+            handleAdditionalAction={() => handleAdditionalAction(ClaimMembershipErrorTypes.RetryQrCode)}
+            onCancel={handleClose}
+          />
+        </>
+      );
+    }
+
+    return isActive;
+  };
+
+  const onAuthenticate = async (nonce: string, tokenId: string, isActive: boolean) => {
+    if (!nonce || !tokenId || !isActive) {
       return false;
     }
 
@@ -402,5 +436,6 @@ export const OnClaimMembershipHandlers = (
     onQRCodeGenerate,
     onAuthenticate,
     onGetTokenId,
+    isQrCodeActivated,
   };
 };

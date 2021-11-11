@@ -25,5 +25,5 @@
   },
   "include": [
     "src"
-  ]
+, "src/abis/generate-contract-types.ts"  ]
 }

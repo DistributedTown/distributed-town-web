@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
 import Categories from './categories/categories';
 import Skills from './skills/skills';
@@ -18,12 +18,12 @@ const Join = (props) => {
     [dispatch]
   );
   return (
-    <div className="sw-join-community-container">
+    <Switch>
       <Route path="/join-community/user-info" component={UserInfo} {...props} />
       <Route path="/join-community/categories" component={Categories} {...props} />
       <Route path="/join-community/skills" component={Skills} {...props} />
       <Route path="/join-community/communities" component={Communities} {...props} />
-    </div>
+    </Switch>
   );
 };
 
