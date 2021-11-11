@@ -16,9 +16,10 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    height: 17px;
 
     .sw-progress-bar-label {
-      line-height: 22px;
+      height: 15px;
       position: absolute;
       z-index: 1;
       top: 0;
@@ -29,8 +30,6 @@
 
   @include media-breakpoint('lt-sm') {
     .MuiCardContent-root {
-      flex-direction: column-reverse;
-
       .MuiCardHeader-root {
         flex-direction: column;
         text-align: center;

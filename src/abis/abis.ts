@@ -1,4 +1,6 @@
-export const skillWalletAbi = [
+import { JsonFragment } from '@dito-api/model';
+
+export const skillWalletAbi: JsonFragment[] = [
   {
     inputs: [
       {
@@ -1024,7 +1026,7 @@ export const skillWalletAbi = [
     type: 'function',
   },
 ];
-export const communityAbi = [
+export const communityAbi: JsonFragment[] = [
   {
     inputs: [
       {

@@ -4,6 +4,7 @@ export const ClaimMembershipDialog = ({ open, handleClose, dialogContent, fullSc
   const dialogSize = fullScreen
     ? {}
     : {
+        maxWidth: '400px',
         minWidth: '400px',
         minHeight: '400px',
       };

@@ -6,7 +6,8 @@ export const asyncPoll = async <T>(fn: () => Promise<T>, fnCondition: (result: T
   while (fnCondition(result) && maxRetries > 0) {
     await wait(ms);
     result = await fn();
-    maxRetries = -maxRetries;
+    // eslint-disable-next-line no-plusplus
+    --maxRetries;
   }
   return result;
 };
