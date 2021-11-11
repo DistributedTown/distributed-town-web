@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { DitoLogoSvg, SwButton } from 'sw-web-shared';
 
+import { setAuthenticated } from '@dito-auth/auth.reducer';
 import { useWeb3React } from '@web3-react/core';
 import JoinBaseLayout from '../base/join-base';
 import { ClaimMembershipErrorTypes, CommunityCategory } from '../store/model';
@@ -66,6 +67,7 @@ const Communities = (props) => {
       if (!authenticated) {
         return;
       }
+      dispatch(setAuthenticated(true));
       props.history.push(`/community/success?communityAddress=${selectedCommunity.address}&diToCredits=${credits}`);
     };
     const {
