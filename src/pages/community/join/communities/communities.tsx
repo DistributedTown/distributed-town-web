@@ -67,7 +67,12 @@ const Communities = (props) => {
       if (!authenticated) {
         return;
       }
-      dispatch(setAuthenticated(true));
+      dispatch(
+        setAuthenticated({
+          isAuthenticated: true,
+          userInfo,
+        })
+      );
       props.history.push(`/community/success?communityAddress=${selectedCommunity.address}&diToCredits=${credits}`);
     };
     const {

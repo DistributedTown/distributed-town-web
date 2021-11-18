@@ -1,7 +1,19 @@
+.sw-container {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+}
+
+.sw-user-container {
+  display: flex;
+  padding: 20px;
+}
+
 .sw-gigs-container {
+  flex: 70%;
   padding: 20px;
   display: flex;
-  justify-content: center;
+  justify-content: start;
   flex-direction: column;
 
   .sw-box-right-inner {
