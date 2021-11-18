@@ -34,7 +34,7 @@ const NoBorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 function GigCard({ gig }: { gig: Gig }) {
   const small = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.down('sm'));
   return (
-    <Card className="sw-gig-card" sx={{ bgcolor: 'background.paper', display: 'flex', flexDirection: 'column', boxShadow: 4 }}>
+    <Card className="sw-gig-card" sx={{ bgcolor: 'text.primary', display: 'flex', flexDirection: 'column', boxShadow: 4 }}>
       <CardContent sx={{ flex: '1', display: 'flex', flexDirection: 'column' }}>
         <Box>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -81,10 +81,10 @@ function GigCard({ gig }: { gig: Gig }) {
             </SwQuote>
           </div>
           <div className="sw-progress-bar">
-            <NoBorderLinearProgress sx={{ borderColor: 'secondary.main' }} variant="determinate" value={gig.props.commitment} />
+            <NoBorderLinearProgress sx={{ borderColor: 'text.primary' }} variant="determinate" value={gig.props.commitment} />
             <Typography
               className="sw-progress-bar-label"
-              sx={{ color: 'secondary.main', textAlign: 'center' }}
+              sx={{ color: 'text.primary', textAlign: 'center' }}
               component="span"
               variant="body2"
             >

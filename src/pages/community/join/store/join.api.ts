@@ -122,7 +122,7 @@ export const getCategories = async (): Promise<Category[]> =>
           icon: 'Blockchain',
         },
       ]);
-    }, 2000);
+    }, 500);
   });
 
 export const getSkills = async (categoryId: string): Promise<SkillCategory[]> => {

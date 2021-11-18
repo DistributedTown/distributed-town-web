@@ -1,117 +1,93 @@
-import {
-  Card,
-  CardContent,
-  Typography,
-  List,
-  ListItem,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Badge,
-  Tooltip,
-  Stack,
-  Slider,
-  Box,
-} from '@mui/material';
-import { SwButton } from 'sw-web-shared';
+import { Card, CardContent, Typography, List, ListItem, Badge, Tooltip, Stack } from '@mui/material';
+import { SwSlider } from 'sw-web-shared';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import './skill-card.scss';
 
-function SkillCard({ category, skills, credits, selectedSkills, toggleSkill, updateSkill }) {
+function SkillCard({ skills, selectedSkills, updateSkill, expanded }) {
   return (
-    <Card className="sw-skill-card" sx={{ display: 'flex' }}>
-      <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-        <CardContent sx={{ flex: '1 0 auto' }}>
-          <Typography component="div" variant="h6">
-            {category} <small>({credits} Credits)</small>
+    <Card className="sw-skill-card" sx={{ display: 'flex', boxShadow: 0, backgroundColor: 'transparent' }}>
+      <CardContent sx={{ flex: '1 0 auto', width: '100%', p: '16px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div style={{ flex: '1' }} />
+          <Typography
+            sx={{ flex: '1', display: 'flex', justifyContent: 'center', mb: 2 }}
+            color={expanded ? 'text.primary' : 'primary.main'}
+            component="div"
+            variant="body2"
+            align="right"
+          >
+            <Badge
+              sx={{
+                padding: '0 8px',
+              }}
+              badgeContent={
+                <Tooltip title="Tell your community about the Experience you have." arrow>
+                  <HelpOutlineIcon
+                    sx={{
+                      fontSize: '1rem',
+                      position: 'absolute',
+                    }}
+                  />
+                </Tooltip>
+              }
+            >
+              Select your XP Level
+            </Badge>
           </Typography>
-        </CardContent>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            pl: '16px',
-            pr: '16px',
-          }}
-        >
-          <List className="sw-skill-list">
-            {skills.map((skill: string, index: number) => {
-              const currentSkill = selectedSkills.find((x) => x.skill === skill);
-              return (
-                <ListItem key={index} sx={{ minHeight: '45px', alignItems: 'flex-start' }} disablePadding>
-                  <Accordion disableGutters elevation={0} square sx={{ p: 0, m: 0, width: '100%' }} expanded={!!currentSkill}>
-                    <AccordionSummary>
-                      <SwButton
-                        label={skill}
-                        sx={{
-                          height: '100%',
-                          whiteSpace: 'nowrap',
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          width: '100%',
-                        }}
-                        disabled={selectedSkills.length === 3 && !currentSkill}
-                        className={currentSkill ? 'active-link' : ''}
-                        onClick={() => toggleSkill(skill)}
-                      />
-                    </AccordionSummary>
-                    <AccordionDetails sx={{ padding: '16px' }}>
-                      <Typography color="primary.main" component="div" variant="subtitle1" align="center">
-                        <Badge
-                          sx={{
-                            padding: '0 8px',
-                          }}
-                          badgeContent={
-                            <Tooltip title="Tell your community about the Experience you have." arrow>
-                              <HelpOutlineIcon
-                                sx={{
-                                  fontSize: '1.2rem',
-                                  position: 'absolute',
-                                }}
-                              />
-                            </Tooltip>
-                          }
-                        >
-                          Your XP Level
-                        </Badge>
-                      </Typography>
-
-                      <Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
-                        <Typography color="primary.main" component="div" variant="subtitle2">
-                          1
-                        </Typography>
-                        <Slider
-                          key={`slider-${currentSkill?.xp}`}
-                          valueLabelDisplay="auto"
-                          step={1}
-                          marks
-                          min={1}
-                          max={10}
-                          defaultValue={currentSkill?.xp}
-                          onChangeCommitted={(_, value: number) => {
-                            updateSkill({
-                              xp: value,
-                              skill,
-                            });
-                          }}
-                          sx={{
-                            '& .MuiSlider-thumb': {
-                              borderRadius: '0px',
-                            },
-                          }}
-                        />
-                        <Typography color="primary.main" component="div" variant="subtitle2">
-                          10
-                        </Typography>
-                      </Stack>
-                    </AccordionDetails>
-                  </Accordion>
-                </ListItem>
-              );
-            })}
-          </List>
-        </Box>
-      </Box>
+        </div>
+        <List className="sw-skill-list">
+          {skills.map((skill: string, index: number) => {
+            const currentSkill = selectedSkills.find((x) => x.skill === skill);
+            const disabled = !currentSkill && selectedSkills.length === 3;
+            const isActive = currentSkill?.xp > 0;
+            return (
+              <ListItem
+                key={index}
+                disabled={disabled}
+                sx={{
+                  height: '50px',
+                  opacity: 1,
+                  alignItems: 'center',
+                  borderColor: isActive ? 'background.paper' : 'primary.main',
+                  bgcolor: disabled ? 'currentColor' : isActive ? 'primary.main' : 'background.paper',
+                  boxShadow: isActive ? 1 : 0,
+                  '&.Mui-disabled': {
+                    opacity: 1,
+                  },
+                }}
+              >
+                <Stack sx={{ width: '100%' }} direction="row" spacing={2} justifyContent="space-between" alignItems="center">
+                  <Typography
+                    sx={{ width: '100%' }}
+                    color={isActive ? 'text.primary' : 'primary.main'}
+                    component="div"
+                    variant="body1"
+                    align="left"
+                  >
+                    {skill}
+                  </Typography>
+                  <SwSlider
+                    key={`slider-${currentSkill?.xp}`}
+                    step={1}
+                    mode={isActive ? 'white' : 'black'}
+                    marks
+                    min={0}
+                    max={10}
+                    disabled={disabled}
+                    defaultValue={currentSkill?.xp || 0}
+                    onChangeCommitted={(_, value: number) => {
+                      updateSkill({
+                        xp: value,
+                        skill,
+                      });
+                    }}
+                  />
+                </Stack>
+              </ListItem>
+            );
+          })}
+        </List>
+      </CardContent>
     </Card>
   );
 }

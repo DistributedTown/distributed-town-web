@@ -26,5 +26,9 @@
   "include": [
     "src",
     "src/abis/generate-contract-types.ts"
+  ],
+  "exclude": [
+    "**/node_modules",
+    "**/.*/"
   ]
 }

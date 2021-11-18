@@ -1,42 +1,44 @@
-import { ResultState } from '@dito-store/status';
 import { useAppDispatch, RootState } from '@dito-store/store.model';
 import { getSkillWalletDescription } from '@dito-api/skillwallet.api';
 import { TextileBucketMetadata } from 'src/api/model';
-import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import { Box, ThemeOptions, Typography } from '@mui/material';
+import { CircularProgress, ThemeOptions, Typography } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { DitoLogoSvg, SwButton } from 'sw-web-shared';
-
 import { setAuthenticated } from '@dito-auth/auth.reducer';
 import { useWeb3React } from '@web3-react/core';
-import JoinBaseLayout from '../base/join-base';
+import { ResultState } from '@dito-store/status';
 import { ClaimMembershipErrorTypes, CommunityCategory } from '../store/model';
 import './communities.scss';
-import { fetchCommunities, getCommunity, getCredits, getFormattedSkills, getSkillCredits, selectCommunity } from '../store/join.reducer';
+import {
+  fetchCommunities,
+  getCommunity,
+  getCredits,
+  getFormattedSkills,
+  getSkillCredits,
+  selectCommunity,
+  setCurrentStep,
+} from '../store/join.reducer';
 import CommunityCard from './community-card';
 import { OnClaimMembershipHandlers } from './claim-membership-handlers';
 import { ClaimMembershipDialog } from './claim-membership-dialog';
 import CommunityCredits from './community-credits';
 
+const LeftSide = ({ credits, creditSkills }) => <CommunityCredits key="communities-1" totalCredits={credits} creditSkills={creditSkills} />;
+
 const Communities = (props) => {
   const dispatch = useAppDispatch();
   const { activate } = useWeb3React();
 
-  // responsiveness
-  const largeDevice = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.up('lg'));
-  const small = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.down('md'));
   const extraSmall = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.down('sm'));
 
   // selectors
+  const { activeStep } = useSelector((state: RootState) => state.joinCommunity.currentStep);
   const { isAutheticated } = useSelector((state: RootState) => state.auth);
   const { selectedCategory } = useSelector((state: RootState) => state.joinCommunity.category);
   const { selectedSkills } = useSelector((state: RootState) => state.joinCommunity.skills);
   const userInfo = useSelector((state: RootState) => state.joinCommunity.userInfo);
-  const { entities, status, selectedCommunityName } = useSelector((state: RootState) => state.joinCommunity.community);
+  const { entities, selectedCommunityName, status } = useSelector((state: RootState) => state.joinCommunity.community);
   const selectedCommunity = useSelector(getCommunity);
   const formattedSkills = useSelector(getFormattedSkills);
   const credits = useSelector(getCredits);
@@ -178,7 +180,7 @@ const Communities = (props) => {
         case ClaimMembershipErrorTypes.RetryNetwork:
         case ClaimMembershipErrorTypes.RetryTextile:
           setDialogContent(null);
-          claimMembership();
+          // claimMembership();
           break;
         default:
           console.error('Not handled!');
@@ -246,28 +248,33 @@ const Communities = (props) => {
     }
   }, [dispatch, isAutheticated]);
 
+  useEffect(() => {
+    if (activeStep !== 2) {
+      dispatch(
+        setCurrentStep({
+          activeStep: 2,
+          stepperText: 'Welcome to Distributed Town 🏙',
+          title: 'Step 3 - Pick your Community',
+          description:
+            'Here is a few comminities for you (Based on your Skills). Choose one that inspires you the most & start adding Value to it 🙌',
+          toPrevBtnPath: '/join-community/skills',
+          left: <LeftSide credits={credits} creditSkills={creditSkills} />,
+        })
+      );
+    }
+  }, [dispatch, credits, creditSkills, activeStep]);
+
   return (
     <>
-      <ClaimMembershipDialog fullScreen={extraSmall} open={open} onClose={() => setOpen(false)} dialogContent={dialogContent} />
-      <JoinBaseLayout
-        status={status}
-        className="sw-communities-container"
-        left={
-          <>
-            <Box className="sw-box-logo">
-              <DitoLogoSvg width={largeDevice ? '100px' : '80px'} />
-            </Box>
-            <CommunityCredits totalCredits={credits} creditSkills={creditSkills} />
-          </>
-        }
-        right={
+      {status === ResultState.Loading ? (
+        <CircularProgress sx={{ color: 'text.primary', mt: 2 }} />
+      ) : (
+        <>
+          <ClaimMembershipDialog fullScreen={extraSmall} open={open} onClose={() => setOpen(false)} dialogContent={dialogContent} />
           <div className="sw-communties-wrapper">
-            <Typography sx={{ color: 'background.paper', textAlign: 'center', pb: 2 }} component="div" variant="h6">
-              Here is a few comminities for you (Based on your Skills). Choose one that inspires you the most & start adding Value to it
-            </Typography>
             {selectedCategory && selectedSkills.length ? (
               !entities?.length ? (
-                <Typography sx={{ color: 'background.paper', textAlign: 'center', pb: 2, mt: 4 }} component="div" variant="h6">
+                <Typography sx={{ color: 'text.primary', textAlign: 'center', pb: 2, mt: 4 }} component="div" variant="h6">
                   We could not find any communities for {selectedCategory} category, please go back and select a different category!
                 </Typography>
               ) : (
@@ -283,7 +290,7 @@ const Communities = (props) => {
             ) : (
               <Typography
                 className="no-item-selected"
-                sx={{ color: 'background.paper', textAlign: 'center', pb: 2 }}
+                sx={{ color: 'text.primary', textAlign: 'center', pb: 2 }}
                 component="div"
                 variant="h6"
               >
@@ -291,18 +298,8 @@ const Communities = (props) => {
               </Typography>
             )}
           </div>
-        }
-        prevBtn={<SwButton startIcon={<NavigateBeforeIcon />} component={Link} to="/join-community/skills" label="Prev" />}
-        nextBtn={
-          <SwButton
-            disabled={selectedCommunityName === null || status === ResultState.Loading}
-            endIcon={<NavigateNextIcon />}
-            onClick={() => claimMembership()}
-            to="/join-community/Community"
-            label={small ? 'Next' : 'Next: Claim your membership'}
-          />
-        }
-      />
+        </>
+      )}
     </>
   );
 };

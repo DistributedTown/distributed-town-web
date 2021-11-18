@@ -20,7 +20,7 @@ function CommunityCredits({ totalCredits, creditSkills }) {
   const small = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.down('sm'));
   return (
     <Box className="sw-community-credits">
-      <Typography sx={{ color: 'background.paper', textAlign: 'center', mb: 2 }} component="div" variant="h6">
+      <Typography sx={{ color: 'text.primary', textAlign: 'center', mb: 2 }} component="div" variant="h6">
         DITO credits you will earn with your skills
       </Typography>
       <SwQuote mobile={small} mobileStartText={<p>Credits...</p>}>
@@ -39,7 +39,7 @@ function CommunityCredits({ totalCredits, creditSkills }) {
               </Tooltip>
             }
           >
-            <Typography sx={{ color: 'background.paper', textAlign: 'start', mb: 2 }} component="div" variant="h6">
+            <Typography sx={{ color: 'text.primary', textAlign: 'start', mb: 2 }} component="div" variant="h6">
               Total credits: {totalCredits}
             </Typography>
           </Badge>
@@ -49,14 +49,14 @@ function CommunityCredits({ totalCredits, creditSkills }) {
                 <div className="credit-content">
                   <div className="credit-label">
                     <TokenomicsSvg width="14px" />
-                    <Typography sx={{ color: 'background.paper', textAlign: 'start', ml: 1 }} component="div" variant="body2">
+                    <Typography sx={{ color: 'text.primary', textAlign: 'start', ml: 1 }} component="div" variant="body2">
                       {name}
                     </Typography>
                   </div>
                   <SwProgressBar percentage={percentage}> </SwProgressBar>
                 </div>
                 <div className="credit-amount">
-                  <Typography sx={{ color: 'background.paper', textAlign: 'start', mr: 1 }} component="div" variant="body2">
+                  <Typography sx={{ color: 'text.primary', textAlign: 'start', mr: 1 }} component="div" variant="body2">
                     {credits}
                   </Typography>
                   <DitoCreditsSvg width="14px" />

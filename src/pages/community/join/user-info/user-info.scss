@@ -1,68 +1,59 @@
 @import 'sw-web-shared/lib/styles/breakpoints';
 @import 'sw-web-shared/lib/styles/variables';
 
-.sw-join-base-container.sw-user-info-container {
-  .sw-box-logo {
-    display: flex;
-    width: 90%;
-    justify-content: flex-start;
-  }
-
-  .sw-user-info-wrapper {
-    width: 100%;
-  }
-
-  .sw-box-quote {
-    width: 90%;
-    flex: 60%;
-  }
+.sw-user-info-wrapper {
+  width: 100%;
 
   .sw-form-field + .sw-form-field {
     margin-top: 20px;
   }
 
   .sw-form-field-content {
-    border: 2px solid $border-color-base;
-    background: rgba($primary-color, 0.8);
+    // border: 2px solid $border-color-base;
+    // background: rgba($primary-color, 0.8);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 20px;
+    grid-gap: 20px;
 
-    .MuiInput-root {
-      color: white;
-      min-width: 250px;
+    .MuiTypography-root,
+    .sw-field-upload,
+    .MuiFormControl-root {
+      flex: 1;
+    }
 
-      &::before, &::after {
-        border-bottom: 2px solid #fff;
+    .sw-field-upload {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      margin-top: 20px;
+      align-items: center;
+    }
+
+    .MuiFormHelperText-root {
+      text-align: end;
+      margin-right: 0;
+    }
+
+    .MuiInputBase-root {
+      color: $primary-color;
+      height: 50px;
+      background-color: $foreground-color;
+
+      &::before,
+      &::after {
+        border-bottom: 2px solid $foreground-color;
       }
+
+      .MuiOutlinedInput-notchedOutline {
+        border: none;
+      }
+
+      
     }
   }
 
   .sw-image-upload {
     min-height: 60px;
-  }
-
-  @include media-breakpoint('lt-lg') {
-    & > .sw-box {
-      .sw-box-quote {
-        flex: auto;
-        width: 100%;
-      }
-
-      .sw-box-logo {
-        justify-content: center;
-        width: 100%;
-      }
-    }
-  }
-
-  @include media-breakpoint('lt-md') {
-    & > .sw-box {
-      .sw-form-field-content {
-        flex-direction: column;
-        grid-gap: 10px;
-      }
-    }
   }
 }

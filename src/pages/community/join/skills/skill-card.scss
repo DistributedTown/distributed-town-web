@@ -3,24 +3,19 @@
 
 .sw-skill-card {
   display: flex;
-  border: 2px solid $border-color-base;
-  background: rgba($primary-color, 0.8);
-  .MuiButtonBase-root {
-    padding: 0;
-    .MuiAccordionSummary-content {
-      margin: 0;
-      padding: 0;
-      height: 48px;
-    }
-  }
+  // border: 2px solid $border-color-base;
+  // background: rgba($primary-color, 0.8);
 
   .sw-skill-list {
     width: 100%;
-    display: grid;
-    grid-gap: 8px;
+    display: flex;
+    flex-direction: column;
+    grid-gap: 12px;
     padding: 0;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    grid-auto-rows: minmax(60px, auto);
+
+    .MuiListItem-root {
+      border: 1px solid;
+    }
   }
 
   @include media-breakpoint('lt-sm') {

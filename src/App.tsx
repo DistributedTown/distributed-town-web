@@ -10,6 +10,7 @@ import {
   SwLayout,
   JoinSelSvg,
   SwSidebar,
+  SwMenuItems,
   DitoLogoSvg,
   SwButton,
   MainBackgroundSvg,
@@ -78,7 +79,7 @@ const App = (props: any) => {
   const [isLoading, setLoading] = useState(true);
   const [logInitialized, setLogInitialized] = useState(false);
   const [open, setOpen] = useState(false);
-  const [opened, setOpened] = React.useState(true);
+  const [opened, setOpened] = useState(true);
 
   const small = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.down('md'));
 
@@ -129,6 +130,14 @@ const App = (props: any) => {
       window.removeEventListener('onSkillwalletLogin', onSWLogin);
     };
   }, [isAutheticated, dispatch, props.history]);
+
+  useEffect(() => {
+    if (small) {
+      setOpened(false);
+    } else {
+      setOpened(true);
+    }
+  }, [small]);
 
   const menuItems: any[] = [
     {
@@ -184,7 +193,10 @@ const App = (props: any) => {
           <LogsDialog open={open} handleClose={handleClose} logs={logs} fullScreen={small} />
           <SWSnackbar />
           <SwLayout
+            hideTop={isJoinFlow}
             className={isLoading ? 'loading' : ''}
+            disableGutters={isJoinFlow}
+            scrollbarStyles={{ height: isJoinFlow ? `100%` : `calc(100% - 50px)` }}
             top={
               <div
                 className="top-bar"
@@ -195,7 +207,7 @@ const App = (props: any) => {
                 <div className="left">
                   {small && isAutheticated && (
                     <Tooltip title="Open sidebar" placement="right" color="white">
-                      <IconButton className="sw-sidebar-close-button" color="secondary" onClick={handleToggle}>
+                      <IconButton className="sw-sidebar-close-button" color="info" onClick={handleToggle}>
                         <MenuIcon />
                       </IconButton>
                     </Tooltip>
@@ -218,13 +230,15 @@ const App = (props: any) => {
             drawer={
               isAutheticated && (
                 <SwSidebar
-                  // @ts-ignore
-                  handleToggle={() => handleToggle()}
+                  handleToggle={handleToggle}
                   sidebarTopIcon={DitoLogoSvg}
                   mobile={small}
                   open={opened}
-                  menuItems={menuItems}
-                />
+                  mode="close"
+                  preventClose={false}
+                >
+                  <SwMenuItems handleToggle={() => handleToggle()} mobile={small} open={opened} menuItems={menuItems} />
+                </SwSidebar>
               )
             }
           >

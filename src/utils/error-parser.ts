@@ -7,6 +7,7 @@ export const ErrorParser = (error: any, dispatch?: any): string | void => {
     const errResponse = error.response as AxiosResponse<any>;
     if (errResponse && errResponse.status !== 500) {
       message = errResponse.data.error;
+      debugger;
     }
   } catch (err) {
     message = 'Server error';

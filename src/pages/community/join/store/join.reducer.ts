@@ -12,6 +12,14 @@ interface Skill {
 }
 
 export interface JoinCommunityState {
+  currentStep: {
+    activeStep: number;
+    title: string;
+    description: string;
+    toPrevBtnPath: string;
+    stepperText: string;
+    left: JSX.Element;
+  };
   userInfo: {
     name: string;
     avatar: string;
@@ -36,7 +44,13 @@ export interface JoinCommunityState {
 }
 
 export const fetchCategories = createAsyncThunk('category/entities', async () => getCategories());
-export const fetchSkills = createAsyncThunk('skills/entities', async (categoryId: string) => getSkills(categoryId));
+export const fetchSkills = createAsyncThunk('skills/entities', async (categoryId: string, { dispatch }) => {
+  try {
+    return await getSkills(categoryId);
+  } catch (error) {
+    return ErrorParser(error, dispatch);
+  }
+});
 export const fetchCommunities = createAsyncThunk('community/entities', async (categoryId: string, { dispatch }) => {
   try {
     return await getCommunties(categoryId);
@@ -46,6 +60,7 @@ export const fetchCommunities = createAsyncThunk('community/entities', async (ca
 });
 
 const initialState: JoinCommunityState = {
+  currentStep: {} as any,
   userInfo: {
     name: null,
     avatar: null,
@@ -73,6 +88,9 @@ export const joinCommunitySlice = createSlice({
   name: 'joinCommunity',
   initialState,
   reducers: {
+    setCurrentStep(state, action) {
+      state.currentStep = action.payload;
+    },
     updateName(state, action) {
       state.userInfo.name = action.payload;
     },
@@ -86,9 +104,16 @@ export const joinCommunitySlice = createSlice({
       state.community.selectedCommunityName = action.payload;
     },
     updateSkill(state, action) {
-      const { skill } = action.payload;
+      const { skill, xp } = action.payload;
       const index = state.skills.selectedSkills.findIndex((x) => x.skill === skill);
-      state.skills.selectedSkills.splice(index, 1, action.payload);
+
+      if (xp === 0 && index !== -1) {
+        state.skills.selectedSkills.splice(index, 1);
+      } else if (index === -1 && xp > 0) {
+        state.skills.selectedSkills = [...state.skills.selectedSkills, action.payload];
+      } else if (xp > 0) {
+        state.skills.selectedSkills.splice(index, 1, action.payload);
+      }
     },
     toggleSkill(state, action) {
       const index = state.skills.selectedSkills.findIndex((x) => x.skill === action.payload);
@@ -124,6 +149,11 @@ export const joinCommunitySlice = createSlice({
         state.skills.skillSelectedCategory = state.category.selectedCategory;
         state.skills.status = ResultState.Idle;
       })
+      .addCase(fetchSkills.rejected, (state) => {
+        state.skills.entities = [];
+        state.skills.skillSelectedCategory = null;
+        state.skills.status = ResultState.Failed;
+      })
       .addCase(fetchCommunities.pending, (state) => {
         state.community.status = ResultState.Loading;
       })
@@ -140,8 +170,16 @@ export const joinCommunitySlice = createSlice({
   },
 });
 
-export const { selectCategory, resetJoinCommunityState, toggleSkill, updateSkill, selectCommunity, updateAvatarUrl, updateName } =
-  joinCommunitySlice.actions;
+export const {
+  selectCategory,
+  resetJoinCommunityState,
+  toggleSkill,
+  updateSkill,
+  selectCommunity,
+  updateAvatarUrl,
+  updateName,
+  setCurrentStep,
+} = joinCommunitySlice.actions;
 
 export const getCommunity = createSelector(selectCommunity, (x1) => {
   const { entities, selectedCommunityName } = x1.payload.joinCommunity.community;

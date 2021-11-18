@@ -40,7 +40,7 @@ export const LogsDialog = ({ open, handleClose, logs, fullScreen = false }: any)
       >
         {logs.map((log, index) => {
           return (
-            <Typography key={index} sx={{ color: 'background.paper', textAlign: 'center', pb: 1 }} component="div" variant="h6">
+            <Typography key={index} sx={{ color: 'text.primary', textAlign: 'center', pb: 1 }} component="div" variant="h6">
               {log}
             </Typography>
           );

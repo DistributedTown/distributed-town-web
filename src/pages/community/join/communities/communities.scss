@@ -11,25 +11,7 @@
   justify-content: center;
 }
 
-
-.sw-join-base-container.sw-communities-container {
-  .sw-box-logo {
-    display: flex;
-    width: 90%;
-    justify-content: flex-start;
-  }
-
-  .sw-communties-wrapper {
-    display: grid;
-    grid-gap: 15px;
-  }
-
-  @include media-breakpoint("lt-lg") {
-    & > .sw-box {
-      .sw-box-logo {
-        justify-content: center;
-        width: 100%;
-      }
-    }
-  }
+.sw-communties-wrapper {
+  display: grid;
+  grid-gap: 15px;
 }

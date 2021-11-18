@@ -2,7 +2,7 @@ import HelpIcon from '@mui/icons-material/Help';
 import { Badge, Box, ThemeOptions, Tooltip, Typography } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Link } from 'react-router-dom';
-import { DitoLogoSvg, SwButton, SwDivider, SwQuote } from 'sw-web-shared';
+import { DitoLogoSvg, JoinUnselSvg, SwButton, SwDivider, SwQuote } from 'sw-web-shared';
 import './get-started.scss';
 
 const GetStarted = () => {
@@ -31,18 +31,24 @@ const GetStarted = () => {
       <SwDivider orientation={largeDevice ? 'vertical' : 'horizontal'} />
       <Box sx={{ p: 0, m: 0 }} className="sw-box">
         <Box className="sw-box-title">
-          <Typography color="text.primary" component="div" variant={largeDevice ? 'h4' : 'h5'}>
+          <Typography color="info" component="div" variant={largeDevice ? 'h4' : 'h5'}>
             This is <span className="underline">your Community</span>
           </Typography>
         </Box>
         <Box className="sw-box-actions">
-          <SwButton label="Join a community" component={Link} to="/join-community/user-info" />
+          <SwButton
+            label="Join a community"
+            endIcon={<JoinUnselSvg className="sw-btn-icon" width="30px" />}
+            component={Link}
+            to="/join-community/categories"
+          />
           <Badge
             badgeContent={
               <Tooltip title="Coming soon!" arrow>
                 <HelpIcon
                   sx={{
                     bgcolor: 'text.primary',
+                    color: 'primary.main',
                     borderRadius: '50%',
                     fontSize: '1.2rem',
                     position: 'absolute',

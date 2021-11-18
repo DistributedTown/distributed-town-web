@@ -1,26 +1,40 @@
-import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import { Box, ThemeOptions, Typography } from '@mui/material';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useEffect } from 'react';
+import { Accordion, AccordionDetails, AccordionSummary, CircularProgress, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { DitoLogoSvg, SwButton, SwQuote } from 'sw-web-shared';
-
+import { SwButton, SwQuote } from 'sw-web-shared';
 import { RootState } from '@dito-store/store.model';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { ResultState } from '@dito-store/status';
-import JoinBaseLayout from '../base/join-base';
-import { fetchSkills, toggleSkill, updateSkill } from '../store/join.reducer';
+import { fetchSkills, setCurrentStep, updateSkill } from '../store/join.reducer';
 import './skills.scss';
 import SkillCard from './skill-card';
 
+const LeftSide = () => (
+  <SwQuote key="skills-1">
+    <>
+      <p>
+        Have you ever thought, <br />
+        "I would like to contribute, but ..."
+      </p>
+      <p className="mt-4 mb-4">Distributed Town (DiTo) lets you create or join a community with one click.</p>
+
+      <p>Just select what you are best at - and we will match with the best communities that need you the most.</p>
+    </>
+  </SwQuote>
+);
+
 const Skills = () => {
   const dispatch = useDispatch();
-  const largeDevice = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.up('lg'));
-  const small = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.down('md'));
+  const { activeStep } = useSelector((state: RootState) => state.joinCommunity.currentStep);
   const { entities, status, selectedSkills, skillSelectedCategory } = useSelector((state: RootState) => state.joinCommunity.skills);
   const { selectedCategory } = useSelector((state: RootState) => state.joinCommunity.category);
+  const [expanded, setExpanded] = useState<number | false>(false);
+
+  const handleChange = (panel: number) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+    setExpanded(isExpanded ? panel : false);
+  };
 
   useEffect(() => {
     if (selectedCategory && selectedCategory !== skillSelectedCategory) {
@@ -28,74 +42,103 @@ const Skills = () => {
     }
   }, [dispatch, skillSelectedCategory, selectedCategory]);
 
-  return (
-    <JoinBaseLayout
-      status={status}
-      className="sw-skill-container"
-      left={
-        <>
-          <Box className="sw-box-logo">
-            <DitoLogoSvg width={largeDevice ? '100px' : '80px'} />
-          </Box>
-          <SwQuote mobile={small} mobileStartText={<p>Have you ever thought...</p>}>
-            <>
-              <p>
-                Have you ever thought, <br />
-                "I would like to contribute, but ..."
-              </p>
-              <p className="mt-4 mb-4">Distributed Town (DiTo) lets you create or join a community with one click.</p>
+  useEffect(() => {
+    if (activeStep !== 1) {
+      dispatch(
+        setCurrentStep({
+          activeStep: 1,
+          stepperText: 'Welcome to Distributed Town 🏙',
+          title: 'Step 2 - Pick your Skills',
+          description: 'Pick your skills (1-to-3) that you want to offer, & recieve the Credits you deserve!',
+          toPrevBtnPath: '/join-community/user-info',
+          left: LeftSide,
+        })
+      );
+    }
+  }, [dispatch, activeStep]);
 
-              <p>Just select what you are best at - and we will match with the best communities that need you the most.</p>
-            </>
-          </SwQuote>
-        </>
-      }
-      right={
-        <div className="sw-skill-wrapper">
-          <Typography sx={{ color: 'background.paper', textAlign: 'center', pb: 2 }} component="div" variant="h6">
-            Pick your skills (1-to-3) that you want to offer, & recieve the Credits you deserve!
-          </Typography>
-          {skillSelectedCategory ? (
-            !entities?.length ? (
-              <Typography sx={{ color: 'background.paper', textAlign: 'center', pb: 2, mt: 4 }} component="div" variant="h6">
-                We could not find any skills for {skillSelectedCategory} category, please go back and select a different category!
-              </Typography>
+  return (
+    <>
+      {status === ResultState.Loading ? (
+        <CircularProgress sx={{ color: 'text.primary', mt: 2 }} />
+      ) : (
+        <>
+          <div className="sw-skill-wrapper">
+            {skillSelectedCategory ? (
+              !entities?.length ? (
+                <Typography sx={{ color: 'text.primary', textAlign: 'center', pb: 2, mt: 4 }} component="div" variant="h6">
+                  We could not find any skills for {skillSelectedCategory} category, please go back and select a different category!
+                </Typography>
+              ) : (
+                entities.map(({ credits, skills, subCat }, index: number) => {
+                  const maxSkillsSelected = selectedSkills.length === 3;
+                  const areSkillSelectedWithinGroup = selectedSkills.some(({ skill }) => skills.indexOf(skill) !== -1);
+                  return (
+                    <Accordion
+                      key={`acc-${index}`}
+                      disableGutters
+                      elevation={0}
+                      disabled={!areSkillSelectedWithinGroup && maxSkillsSelected}
+                      square
+                      expanded={expanded === index}
+                      sx={{ p: 0, mt: 3, width: '100%' }}
+                      onChange={handleChange(index)}
+                    >
+                      <AccordionSummary sx={{ m: 0 }} expandIcon={<ExpandMoreIcon />}>
+                        <Typography
+                          sx={{ m: 0 }}
+                          component="div"
+                          variant="body1"
+                          color={expanded === index ? 'text.primary' : 'primary.main'}
+                        >
+                          {subCat} <small>({credits} Credits)</small>
+                        </Typography>
+                        <Typography
+                          sx={{ m: 0, pr: 3 }}
+                          component="div"
+                          variant="body2"
+                          color={expanded === index ? 'text.primary' : 'primary.main'}
+                        >
+                          {skills.length} skills available
+                        </Typography>
+                      </AccordionSummary>
+                      <AccordionDetails sx={{ p: 0 }}>
+                        {expanded === index && (
+                          <SkillCard
+                            key={subCat}
+                            expanded={expanded === index}
+                            selectedSkills={selectedSkills}
+                            skills={skills}
+                            updateSkill={(skill) => dispatch(updateSkill(skill))}
+                          />
+                        )}
+                      </AccordionDetails>
+                    </Accordion>
+                  );
+                })
+              )
             ) : (
-              entities.map(({ credits, skills, subCat }) => (
-                <SkillCard
-                  key={subCat}
-                  selectedSkills={selectedSkills}
-                  category={subCat}
-                  credits={credits}
-                  skills={skills}
-                  updateSkill={(skill) => dispatch(updateSkill(skill))}
-                  toggleSkill={(skill) => dispatch(toggleSkill(skill))}
-                />
-              ))
-            )
-          ) : (
-            <Typography
-              className="no-item-selected"
-              sx={{ color: 'background.paper', textAlign: 'center', pb: 2 }}
-              component="div"
-              variant="h6"
-            >
-              No category was selected, go back to select one!
-            </Typography>
-          )}
-        </div>
-      }
-      prevBtn={<SwButton startIcon={<NavigateBeforeIcon />} component={Link} to="/join-community/categories" label="Prev" />}
-      nextBtn={
-        <SwButton
-          disabled={selectedSkills.length === 0 || status === ResultState.Loading}
-          endIcon={<NavigateNextIcon />}
-          component={Link}
-          to="/join-community/communities"
-          label={small ? 'Next' : 'Next: Join your community'}
-        />
-      }
-    />
+              <Typography
+                className="no-item-selected"
+                sx={{ color: 'text.primary', textAlign: 'center', pb: 2 }}
+                component="div"
+                variant="h6"
+              >
+                No category was selected, go back to select one!
+              </Typography>
+            )}
+          </div>
+          <div className="bottom-action">
+            <SwButton
+              disabled={selectedSkills.length === 0 || status === ResultState.Loading}
+              component={Link}
+              to="/join-community/communities"
+              label="Next: Pick your Comminity"
+            />
+          </div>
+        </>
+      )}
+    </>
   );
 };
 

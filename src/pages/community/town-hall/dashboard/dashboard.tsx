@@ -43,7 +43,7 @@ const Dashboard = () => {
         }}
         className="sw-box"
       >
-        <Typography sx={{ color: 'background.paper', textAlign: 'center', pb: 2 }} component="div" variant="h4">
+        <Typography sx={{ color: 'text.primary', textAlign: 'center', pb: 2 }} component="div" variant="h4">
           Welcome to diTown Hall <br />
           <small>where everything happes</small>
         </Typography>
@@ -109,7 +109,7 @@ const Dashboard = () => {
               addEndListener={(node: any, done: any) => node.addEventListener('transitionend', done, false)}
               classNames="fade"
             >
-              <Card sx={{ bgcolor: 'secondary.main' }}>
+              <Card sx={{ bgcolor: 'text.primary' }}>
                 <CardHeader
                   avatar={
                     <Avatar sx={{ boxShadow: 3, bgcolor: 'primary.main', width: 60, height: 60, borderRadius: 0 }} aria-label="recipe">

@@ -45,13 +45,13 @@ const JoinSuccess = () => {
       <div className="sw-join-success-wrapper">
         {status === ResultState.Loading ? (
           <div className="sw-spinner-wrapper">
-            <CircularProgress sx={{ color: 'background.paper' }} />
+            <CircularProgress sx={{ color: 'text.primary' }} />
           </div>
         ) : (
           <>
             <div className="sw-community-details-wrapper">
               <div className="sw-congrats-wrapper">
-                <Typography sx={{ color: 'background.paper', mb: 5, textAlign: 'center' }} component="div" variant="h4">
+                <Typography sx={{ color: 'text.primary', mb: 5, textAlign: 'center' }} component="div" variant="h4">
                   Congrats!
                   <Emoji symbol="🎉" label="congratulations" />
                   <Emoji symbol="🎉" label="congratulations" />
@@ -59,17 +59,17 @@ const JoinSuccess = () => {
                 </Typography>
               </div>
 
-              <Typography sx={{ color: 'background.paper', mb: 5, textAlign: 'center' }} component="div" variant="h5">
+              <Typography sx={{ color: 'text.primary', mb: 5, textAlign: 'center' }} component="div" variant="h5">
                 You are now a member of {community?.name}.
               </Typography>
-              <Typography sx={{ color: 'background.paper', mb: 5, textAlign: 'center' }} component="div" variant="h5">
+              <Typography sx={{ color: 'text.primary', mb: 5, textAlign: 'center' }} component="div" variant="h5">
                 Your new DITO credits are now:
               </Typography>
               <div className="sw-credits-wrapper">
                 <DitoCreditsSvg height="50px" width="75px" />
                 <Typography
                   sx={{
-                    color: 'background.paper',
+                    color: 'text.primary',
                     mb: 1,
                     textAlign: 'center',
                     fontWeight: 'bold',

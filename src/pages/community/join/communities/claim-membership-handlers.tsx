@@ -27,7 +27,7 @@ const DialogLoadingMessage = ({ message, subtitle = null, onCancel }) => {
         <Typography sx={{ textAlign: 'center', mt: 2 }} component="div" variant="h6">
           {message}
         </Typography>
-        <Typography sx={{ color: 'secondary.main', textAlign: 'center', mt: 2 }} component="div" variant="body2">
+        <Typography sx={{ color: 'text.primary', textAlign: 'center', mt: 2 }} component="div" variant="body2">
           {subtitle}
         </Typography>
       </div>
@@ -43,7 +43,7 @@ const DialogErrorMessage = ({ message, subtitle = null, onCancel }) => {
         <Typography sx={{ textAlign: 'center', mt: 2 }} component="div" variant="h6">
           {message}
         </Typography>
-        <Typography sx={{ color: 'secondary.main', textAlign: 'center', mt: 2 }} component="div" variant="body2">
+        <Typography sx={{ color: 'text.primary', textAlign: 'center', mt: 2 }} component="div" variant="body2">
           {subtitle}
         </Typography>
       </div>
@@ -59,7 +59,7 @@ const DialogAdditionalActionNeeded = ({ message, subtitle, actionLabel, handleAd
         <Typography sx={{ textAlign: 'center', mt: 2 }} component="div" variant="h6">
           {message}
         </Typography>
-        <Typography sx={{ color: 'secondary.main', textAlign: 'center', mt: 2 }} component="div" variant="body2">
+        <Typography sx={{ color: 'text.primary', textAlign: 'center', mt: 2 }} component="div" variant="body2">
           {subtitle}
         </Typography>
         <SwButton color="primary" onClick={handleAdditionalAction} sx={{ mt: 4, width: '200px', height: '45px' }} label={actionLabel} />
@@ -352,7 +352,7 @@ export const OnClaimMembershipHandlers = (
               justifyContent: 'center',
               px: 2,
               bgcolor: 'white',
-              width: '230px',
+              width: '255px',
               height: '60px',
               marginTop: '14px',
             }}

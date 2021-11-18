@@ -3,35 +3,37 @@
 
 .sw-community-card {
   display: flex;
-  border: 2px solid $border-color-base;
-  background: rgba($primary-color, 0.8);
+  border: 1px solid $border-color-base;
+  // background: rgba($primary-color, 0.8);
   transition: $transition;
+  box-sizing: border-box;
 
-  &:not(.inactive):hover,
-  &:not(.inactive).active {
-    background-color: white !important;
-    .MuiCardHeader-root {
-      background-color: $primary-color;
+  // &:not(.inactive):hover,
+  // &:not(.inactive).active {
+  //   background-color: white !important;
+  //   .MuiCardHeader-root {
+  //     background-color: $primary-color;
 
-      .MuiTypography-root {
-        color: white;
-      }
-    }
+  //     .MuiTypography-root {
+  //       color: white;
+  //     }
+  //   }
 
-    .card-description {
-      color: $primary-color;
-    }
+  //   .card-description {
+  //     color: $primary-color;
+  //   }
 
-    .can-accept-in .MuiTypography-root {
-      color: $primary-color;
-    }
-  }
+  //   .can-accept-in .MuiTypography-root {
+  //     color: $primary-color;
+  //   }
+  // }
 
   .can-accept-in {
     display: flex;
     align-items: center;
-    flex-direction: column;
     text-align: center;
+    grid-gap: 20px;
+    padding: 16px;
   }
 
   .car-subtitle {

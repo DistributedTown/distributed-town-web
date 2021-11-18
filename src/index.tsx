@@ -6,6 +6,8 @@ import { HashRouter } from 'react-router-dom';
 
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
+import { CssBaseline } from '@mui/material';
+import createShadows from '@dito-utils/shadows';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import store from './store/store';
@@ -14,6 +16,13 @@ const persistor = persistStore(store);
 
 const theme = createTheme({
   components: {
+    MuiCssBaseline: {
+      styleOverrides: `
+        .Mui-disabled {
+          color: #CCCCCC;
+        }
+      `,
+    },
     MuiUseMediaQuery: {
       defaultProps: {
         noSsr: true,
@@ -41,27 +50,29 @@ const theme = createTheme({
   palette: {
     type: 'dark',
     text: {
-      primary: '#fff',
       secondary: '#D8D8D8',
+      primary: '#FFFFFF',
     },
     primary: {
       main: '#161615',
     },
     secondary: {
-      main: '#D8D8D8',
+      main: '#8F37AA',
     },
-    // background: {
-    //   default: "#161615",
-    //   paper: "#D8D8D8",
-    // },
+    info: {
+      main: '#FFFFFF',
+    },
   },
   shape: {
     borderRadius: 0,
   },
+  shadows: createShadows('#8F37AA') as any,
   typography: {
     fontFamily: ['Josefin Sans', ' sans-serif'].join(','),
   },
 } as ThemeOptions);
+
+console.log(theme, 'theme');
 
 ReactDOM.render(
   <StyledEngineProvider injectFirst>
@@ -69,6 +80,7 @@ ReactDOM.render(
       <HashRouter basename="/">
         <Provider store={store}>
           <PersistGate persistor={persistor}>
+            <CssBaseline />
             <App />
           </PersistGate>
         </Provider>

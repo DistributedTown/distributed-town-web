@@ -65,6 +65,7 @@
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",
     "import/no-unresolved": "off",
+    "no-debugger":"off",
     "no-param-reassign": "off",
     "react/no-unescaped-entities": "off"
   }
