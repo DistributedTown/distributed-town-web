@@ -4,6 +4,7 @@ import Web3 from 'web3';
 export interface AuthState {
   isAutheticated: boolean;
   web3jsInstance: Web3;
+  userInfo: any;
   userAddress: string;
 }
 
@@ -11,6 +12,7 @@ const initialState: AuthState = {
   isAutheticated: false,
   web3jsInstance: null,
   userAddress: null,
+  userInfo: null,
 };
 
 export const authSlice = createSlice({
@@ -18,7 +20,9 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     setAuthenticated(state, action) {
-      state.isAutheticated = action.payload;
+      const { isAuthenticated, userInfo } = action.payload;
+      state.isAutheticated = isAuthenticated;
+      state.userInfo = userInfo;
     },
     setWeb3jsInstance(state, action) {
       state.web3jsInstance = action.payload;

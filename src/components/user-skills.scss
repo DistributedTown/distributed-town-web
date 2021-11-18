@@ -1,0 +1,28 @@
+.sw-user {
+  width: 90%;
+  flex: 90%;
+}
+
+.sw-user-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.sw-skills-widget {
+  display: flex;
+
+  + .sw-skills-widget {
+    margin-top: 16px;
+  }
+
+  .skill-content {
+    width: 230px;
+
+    .skill-label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+  }
+}

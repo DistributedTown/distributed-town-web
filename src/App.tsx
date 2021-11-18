@@ -106,7 +106,13 @@ const App = (props: any) => {
       const isLoggedIn = !!detail;
       const hasSkillwalletSessionStorage = sessionStorage.getItem('skillWallet');
       if (isLoggedIn && hasSkillwalletSessionStorage) {
-        dispatch(setAuthenticated(true));
+        // eslint-disable-next-line no-debugger
+        dispatch(
+          setAuthenticated({
+            isAuthenticated: isLoggedIn,
+            userInfo: JSON.parse(hasSkillwalletSessionStorage),
+          })
+        );
         props.history.push('/community/dTown-hall/dashboard');
       } else {
         dispatch(resetAuthState());

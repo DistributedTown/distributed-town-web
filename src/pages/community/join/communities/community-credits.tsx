@@ -1,22 +1,20 @@
-import { Badge, Box, styled, ThemeOptions, Tooltip, Typography, useMediaQuery } from '@mui/material';
-import { SwQuote, DitoCreditsSvg, TokenomicsSvg } from 'sw-web-shared';
+import { Badge, Box, ThemeOptions, Tooltip, Typography, useMediaQuery } from '@mui/material';
+import { SwQuote, DitoCreditsSvg, TokenomicsSvg, SwProgressBar } from 'sw-web-shared';
 import HelpIcon from '@mui/icons-material/Help';
 import './community-credits.scss';
 
-import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
-
-const NoBorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
-  height: '15px',
-  borderRadius: 0,
-  border: `1px solid ${theme.palette.background.paper}`,
-  [`&.${linearProgressClasses.colorPrimary}`]: {
-    backgroundColor: theme.palette.background.paper,
-  },
-  [`& .${linearProgressClasses.bar}`]: {
-    borderRadius: 0,
-    backgroundColor: theme.palette.primary.main,
-  },
-}));
+// const NoBorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
+//   height: '15px',
+//   borderRadius: 0,
+//   border: `1px solid ${theme.palette.background.paper}`,
+//   [`&.${linearProgressClasses.colorPrimary}`]: {
+//     backgroundColor: theme.palette.background.paper,
+//   },
+//   [`& .${linearProgressClasses.bar}`]: {
+//     borderRadius: 0,
+//     backgroundColor: theme.palette.primary.main,
+//   },
+// }));
 
 function CommunityCredits({ totalCredits, creditSkills }) {
   const small = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.down('sm'));
@@ -55,17 +53,7 @@ function CommunityCredits({ totalCredits, creditSkills }) {
                       {name}
                     </Typography>
                   </div>
-                  <div className="sw-progress-bar">
-                    <NoBorderLinearProgress variant="determinate" value={percentage} />
-                    <Typography
-                      className="sw-progress-bar-label"
-                      sx={{ color: 'secondary.main', textAlign: 'center' }}
-                      component="span"
-                      variant="body2"
-                    >
-                      {percentage}%
-                    </Typography>
-                  </div>
+                  <SwProgressBar percentage={percentage}> </SwProgressBar>
                 </div>
                 <div className="credit-amount">
                   <Typography sx={{ color: 'background.paper', textAlign: 'start', mr: 1 }} component="div" variant="body2">

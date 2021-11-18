@@ -42,7 +42,7 @@ const theme = createTheme({
     type: 'dark',
     text: {
       primary: '#fff',
-      // secondary: "rgba(255, 255, 255, 0.7)",
+      secondary: '#D8D8D8',
     },
     primary: {
       main: '#161615',
