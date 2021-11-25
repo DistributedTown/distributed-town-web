@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
   SwButton,
-  SwQuote,
   ManagementSvg,
   ArchitectureSvg,
   BackendSvg,
@@ -36,43 +35,37 @@ import { fetchCategories, selectCategory, setCurrentStep } from '../store/join.r
 
 import './categories.scss';
 
-const Icons = {
+export const CategoryIcons = {
   Management: ManagementSvg,
   Network: NetworkSvg,
+  NetworkDesign: NetworkSvg,
   TrainSport: TrainSportSvg,
+  TrainingSport: TrainSportSvg,
   WebDev: WebDevSvg,
-  Defi: DefiSvg,
+  DeFi: DefiSvg,
   Tokenomics: TokenomicsSvg,
   Painting: PaintingSvg,
   Consensus: ConsensusSvg,
   Photography: PhotographySvg,
   Community: CommunitySvg,
   Governance: GovernanceSvg,
+  GovernanceConsensus: GovernanceSvg,
   Teaching: TeachingSvg,
   Architecture: ArchitectureSvg,
   Frontend: FrontendSvg,
   Gardening: GardeningSvg,
   Mobile: MobileSvg,
+  MobileDev: MobileSvg,
   Video: VideoSvg,
+  VideoMaking: VideoSvg,
   Legal: LegalSvg,
   SmartContracts: SmartContractsSvg,
   GameTheory: GameTheorySvg,
   HouseHolding: HouseHoldingSvg,
   Backend: BackendSvg,
   Blockchain: BlockchainSvg,
+  BlockchainInfrastructure: BlockchainSvg,
 };
-
-export const LeftSide = () => (
-  <SwQuote key="categories-1">
-    <>
-      <p>
-        Have you ever thought, <br />
-        "I would like to contribute, but ..."
-      </p>
-      <p className="mt-4 mb-4">Distributed Town (DiTo) lets you create or join a community with one click.</p>
-    </>
-  </SwQuote>
-);
 
 const Categories = () => {
   const dispatch = useDispatch();
@@ -92,9 +85,9 @@ const Categories = () => {
         setCurrentStep({
           activeStep: -1,
           title: 'Pick your interest',
-          description: 'Just select what you are best at - and we will match with the best communities that need you the most 🙌',
+          description: 'Just select what you are best at - and we will match with the best communities that need you the most',
           toPrevBtnPath: '/join-community/categories',
-          left: LeftSide,
+          left: null,
         })
       );
     }
@@ -107,26 +100,28 @@ const Categories = () => {
       ) : (
         <div className="sw-category-wrapper">
           <List
+            className="grid"
             sx={{
+              padding: 0,
               display: 'grid',
               width: '100%',
               gridGap: '15px',
-              padding: 0,
-              gridTemplateColumns: 'repeat(auto-fit, minmax(175px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
               gridAutoRows: 'minmax(60px, auto)',
             }}
           >
             {entities.map(({ id, name, icon }) => {
-              const SwIcon = Icons[icon];
+              const SwIcon = CategoryIcons[icon];
               return (
-                <ListItem key={id} sx={{ height: '45px' }} disablePadding>
+                <ListItem key={id} sx={{ height: '45px', width: 'auto' }} disablePadding>
                   <SwButton
+                    key={id}
                     sx={{
-                      height: '100%',
+                      height: '45px',
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
-                      width: '100%',
+                      fontSize: '14px',
                     }}
                     onClick={async () => {
                       await dispatch(selectCategory(name));

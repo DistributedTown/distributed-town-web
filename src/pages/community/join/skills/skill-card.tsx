@@ -1,45 +1,19 @@
-import { Card, CardContent, Typography, List, ListItem, Badge, Tooltip, Stack } from '@mui/material';
+import { Card, CardContent, Typography, List, ListItem, Stack } from '@mui/material';
 import { SwSlider } from 'sw-web-shared';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import './skill-card.scss';
+import { toPascalCase } from '@dito-utils/pascal-case';
+import { CategoryIcons } from '../categories/categories';
 
-function SkillCard({ skills, selectedSkills, updateSkill, expanded }) {
+function SkillCard({ skills, selectedSkills, updateSkill }) {
   return (
     <Card className="sw-skill-card" sx={{ display: 'flex', boxShadow: 0, backgroundColor: 'transparent' }}>
       <CardContent sx={{ flex: '1 0 auto', width: '100%', p: '16px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <div style={{ flex: '1' }} />
-          <Typography
-            sx={{ flex: '1', display: 'flex', justifyContent: 'center', mb: 2 }}
-            color={expanded ? 'text.primary' : 'primary.main'}
-            component="div"
-            variant="body2"
-            align="right"
-          >
-            <Badge
-              sx={{
-                padding: '0 8px',
-              }}
-              badgeContent={
-                <Tooltip title="Tell your community about the Experience you have." arrow>
-                  <HelpOutlineIcon
-                    sx={{
-                      fontSize: '1rem',
-                      position: 'absolute',
-                    }}
-                  />
-                </Tooltip>
-              }
-            >
-              Select your XP Level
-            </Badge>
-          </Typography>
-        </div>
         <List className="sw-skill-list">
           {skills.map((skill: string, index: number) => {
             const currentSkill = selectedSkills.find((x) => x.skill === skill);
             const disabled = !currentSkill && selectedSkills.length === 3;
             const isActive = currentSkill?.xp > 0;
+            const SwIcon = CategoryIcons[toPascalCase(skill)];
             return (
               <ListItem
                 key={index}
@@ -57,11 +31,12 @@ function SkillCard({ skills, selectedSkills, updateSkill, expanded }) {
                 }}
               >
                 <Stack sx={{ width: '100%' }} direction="row" spacing={2} justifyContent="space-between" alignItems="center">
+                  <SwIcon className={`sw-skill-icon ${isActive ? 'active' : ''}`} height="26px" />
                   <Typography
-                    sx={{ width: '100%' }}
+                    sx={{ width: '100%', ml: '14px' }}
                     color={isActive ? 'text.primary' : 'primary.main'}
                     component="div"
-                    variant="body1"
+                    variant="subtitle2"
                     align="left"
                   >
                     {skill}

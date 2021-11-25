@@ -55,7 +55,7 @@ const createShadows = (hexColor: string) => {
 
   const shadows = [
     'none',
-    `-1px 1px 0px ${hexColor}`,
+    `2px 2px 0px ${hexColor}`,
     // createShadow(r, g, b, 0, 1, 3, 0, 0, 1, 1, 0, 0, 2, 1, -1),
     createShadow(r, g, b, 0, 1, 5, 0, 0, 2, 2, 0, 0, 3, 1, -2),
     createShadow(r, g, b, 0, 1, 8, 0, 0, 3, 4, 0, 0, 3, 3, -2),

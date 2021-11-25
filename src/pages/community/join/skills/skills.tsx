@@ -2,7 +2,7 @@ import { Accordion, AccordionDetails, AccordionSummary, CircularProgress, Typogr
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { SwButton, SwQuote } from 'sw-web-shared';
+import { SwButton } from 'sw-web-shared';
 import { RootState } from '@dito-store/store.model';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
@@ -10,20 +10,6 @@ import { ResultState } from '@dito-store/status';
 import { fetchSkills, setCurrentStep, updateSkill } from '../store/join.reducer';
 import './skills.scss';
 import SkillCard from './skill-card';
-
-const LeftSide = () => (
-  <SwQuote key="skills-1">
-    <>
-      <p>
-        Have you ever thought, <br />
-        "I would like to contribute, but ..."
-      </p>
-      <p className="mt-4 mb-4">Distributed Town (DiTo) lets you create or join a community with one click.</p>
-
-      <p>Just select what you are best at - and we will match with the best communities that need you the most.</p>
-    </>
-  </SwQuote>
-);
 
 const Skills = () => {
   const dispatch = useDispatch();
@@ -47,11 +33,11 @@ const Skills = () => {
       dispatch(
         setCurrentStep({
           activeStep: 1,
-          stepperText: 'Welcome to Distributed Town 🏙',
+          stepperText: 'Welcome to Distributed Town',
           title: 'Step 2 - Pick your Skills',
           description: 'Pick your skills (1-to-3) that you want to offer, & recieve the Credits you deserve!',
           toPrevBtnPath: '/join-community/user-info',
-          left: LeftSide,
+          descriptionTooltip: 'Tell your community about the Experience you have.',
         })
       );
     }
@@ -85,28 +71,22 @@ const Skills = () => {
                       onChange={handleChange(index)}
                     >
                       <AccordionSummary sx={{ m: 0 }} expandIcon={<ExpandMoreIcon />}>
-                        <Typography
-                          sx={{ m: 0 }}
-                          component="div"
-                          variant="body1"
-                          color={expanded === index ? 'text.primary' : 'primary.main'}
-                        >
+                        <Typography sx={{ m: 0 }} component="div" variant="h6" color={expanded === index ? 'text.primary' : 'primary.main'}>
                           {subCat} <small>({credits} Credits)</small>
                         </Typography>
-                        <Typography
+                        {/* <Typography
                           sx={{ m: 0, pr: 3 }}
                           component="div"
-                          variant="body2"
+                          variant="subtitle2"
                           color={expanded === index ? 'text.primary' : 'primary.main'}
                         >
                           {skills.length} skills available
-                        </Typography>
+                        </Typography> */}
                       </AccordionSummary>
                       <AccordionDetails sx={{ p: 0 }}>
                         {expanded === index && (
                           <SkillCard
                             key={subCat}
-                            expanded={expanded === index}
                             selectedSkills={selectedSkills}
                             skills={skills}
                             updateSkill={(skill) => dispatch(updateSkill(skill))}
@@ -133,7 +113,7 @@ const Skills = () => {
               disabled={selectedSkills.length === 0 || status === ResultState.Loading}
               component={Link}
               to="/join-community/communities"
-              label="Next: Pick your Comminity"
+              label="Next: Claim your Memebership!"
             />
           </div>
         </>

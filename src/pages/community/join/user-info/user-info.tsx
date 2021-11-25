@@ -62,10 +62,10 @@ const UserInfo = () => {
   return (
     <div className="sw-user-info-wrapper">
       <div className="sw-form-field">
-        <Typography sx={{ color: 'text.primary', mb: '4px' }} fontWeight="bold" component="div" variant="body1">
+        <Typography sx={{ color: 'text.primary', mb: '4px' }} fontWeight="bold" component="div" variant="subtitle1">
           Nickname
         </Typography>
-        <Typography sx={{ color: 'text.primary', mb: '4px' }} component="div" variant="body2">
+        <Typography sx={{ color: 'text.primary', mb: '4px' }} component="div" variant="subtitle2">
           What would you like your community to call you?
         </Typography>
         <div className="sw-form-field-content">
@@ -87,10 +87,10 @@ const UserInfo = () => {
       </div>
 
       <div className="sw-form-field">
-        <Typography sx={{ color: 'text.primary', mb: '4px' }} fontWeight="bold" component="div" variant="body1">
+        <Typography sx={{ color: 'text.primary', mb: '4px' }} fontWeight="bold" component="div" variant="subtitle1">
           Avatar
         </Typography>
-        <Typography sx={{ color: 'text.primary', mb: '4px' }} component="div" variant="body2">
+        <Typography sx={{ color: 'text.primary', mb: '4px' }} component="div" variant="subtitle2">
           A public image - that's how others will see you.
         </Typography>
         <div className="sw-form-field-content sw-image-upload">

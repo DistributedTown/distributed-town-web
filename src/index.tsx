@@ -68,11 +68,43 @@ const theme = createTheme({
   },
   shadows: createShadows('#8F37AA') as any,
   typography: {
+    fontSize: 16,
+    button: {
+      fontSize: '1.25rem',
+    },
+    body1: {
+      fontSize: '1.25rem',
+    },
+    body2: {
+      fontSize: '1rem',
+    },
+    subtitle1: {
+      fontSize: '1rem',
+    },
+    subtitle2: {
+      fontSize: '0.875rem',
+    },
+    h1: {
+      fontSize: '2rem',
+    },
+    h2: {
+      fontSize: '1.875rem',
+    },
+    h3: {
+      fontSize: '1.75rem',
+    },
+    h4: {
+      fontSize: '1.5rem',
+    },
+    h5: {
+      fontSize: '1.375rem',
+    },
+    h6: {
+      fontSize: '1.25rem',
+    },
     fontFamily: ['Josefin Sans', ' sans-serif'].join(','),
   },
 } as ThemeOptions);
-
-console.log(theme, 'theme');
 
 ReactDOM.render(
   <StyledEngineProvider injectFirst>

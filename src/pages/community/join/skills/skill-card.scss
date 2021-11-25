@@ -18,6 +18,13 @@
     }
   }
 
+  .sw-skill-icon {
+    fill: $primary-color;
+    &.active {
+      fill: $foreground-color;
+    }
+  }
+
   @include media-breakpoint('lt-sm') {
     .sw-skill-list {
       grid-template-columns: 1fr;

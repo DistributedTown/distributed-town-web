@@ -1,4 +1,4 @@
-import { Box, IconButton, MobileStepper, ThemeOptions, Tooltip, Button, Typography } from '@mui/material';
+import { Box, IconButton, MobileStepper, ThemeOptions, Tooltip, Button, Typography, Badge } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Fragment, useEffect, useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -10,23 +10,24 @@ import { Link, Route, Switch } from 'react-router-dom';
 import { KeyboardArrowLeft } from '@mui/icons-material';
 import { RootState } from '@dito-store/store.model';
 import { useDispatch, useSelector } from 'react-redux';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { resetJoinCommunityState } from './store/join.reducer';
 import Categories from './categories/categories';
 import Communities from './communities/communities';
 import Skills from './skills/skills';
 import UserInfo from './user-info/user-info';
-
-const TopIcon = () => <DitoLogoSvg width="70" height="70" />;
+import CategoriesLeftSide from './categories/categories-left';
+import UserInfoLeftSide from './user-info/user-info-left';
+import SkillsLeftSide from './skills/skills-left';
 
 const Join = (props) => {
   const dispatch = useDispatch();
-  const { description, title, activeStep, left, toPrevBtnPath, stepperText } = useSelector(
+  const { description, title, activeStep, descriptionTooltip, toPrevBtnPath, stepperText } = useSelector(
     (state: RootState) => state.joinCommunity.currentStep
   );
   const small = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.down('md'));
   const [steps] = useState([...Array(3)]);
   const [opened, setOpened] = useState(true);
-  const [leftSide, setLeftSide] = useState(null);
 
   const handleToggle = () => setOpened(!opened);
 
@@ -38,10 +39,6 @@ const Join = (props) => {
     }
   }, [small]);
 
-  useEffect(() => {
-    setLeftSide(left);
-  }, [left]);
-
   useEffect(
     () => () => {
       dispatch(resetJoinCommunityState());
@@ -52,45 +49,51 @@ const Join = (props) => {
   return (
     <div className="sw-join-base-container">
       <SwLayout
-        hideTop={false}
-        scrollbarStyles={{ height: `100%` }}
+        hideTop
+        scrollbarStyles={{ height: `calc(100%)` }}
         top={
-          <>
-            <div>
-              {small && (
-                <Tooltip title="Open sidebar" placement="right" color="white">
-                  <IconButton className="sw-toolbar-button" color="info" onClick={handleToggle}>
-                    <MenuIcon />
-                  </IconButton>
-                </Tooltip>
-              )}
-            </div>
-            <Tooltip title="Exit join flow" placement="left" color="white">
-              <IconButton className="sw-toolbar-button" color="info" component={Link} to="/">
-                <ClearIcon />
-              </IconButton>
-            </Tooltip>
-          </>
+          null
+          // <>
+          //   <div>
+          //     {small && (
+          //       <Tooltip title="Open sidebar" placement="right" color="white">
+          //         <IconButton className="sw-toolbar-button" color="info" onClick={handleToggle}>
+          //           <MenuIcon />
+          //         </IconButton>
+          //       </Tooltip>
+          //     )}
+          //   </div>
+          //   <Tooltip title="Exit join flow" placement="left" color="white">
+          //     <IconButton className="sw-toolbar-button" color="info" component={Link} to="/">
+          //       <ClearIcon />
+          //     </IconButton>
+          //   </Tooltip>
+          // </>
         }
         drawer={
           <SwSidebar
-            width="30%"
+            width="530px"
             mode="close"
             preventClose
             handleToggle={handleToggle}
-            sidebarTopIcon={TopIcon}
+            sidebarTopIcon={null}
             mobile={small}
             open={opened}
             sx={{ paddingX: 0 }}
           >
             <Box
               sx={{
-                px: 4,
+                height: '100%',
+                px: 7,
               }}
               className="sw-box"
-              key={activeStep}
             >
-              {leftSide}
+              <Switch>
+                <Route path="/join-community/categories" component={CategoriesLeftSide} {...props} />
+                <Route path="/join-community/user-info" component={UserInfoLeftSide} {...props} />
+                <Route path="/join-community/skills" component={SkillsLeftSide} {...props} />
+                <Route path="/join-community/communities" component={SkillsLeftSide} {...props} />
+              </Switch>
             </Box>
           </SwSidebar>
         }
@@ -142,11 +145,29 @@ const Join = (props) => {
                     );
                   })}
                 </div>
-                <Typography sx={{ color: 'text.primary', textAlign: 'center', pb: 2 }} component="div" variant="h6">
+                <Typography sx={{ color: 'text.primary', textAlign: 'center', pb: 2 }} component="div" variant="h4">
                   {title}
                 </Typography>
                 <Typography sx={{ color: 'text.primary', textAlign: 'center', pb: 2 }} component="div" variant="body2">
-                  {description}
+                  <Badge
+                    sx={{
+                      padding: '0 8px',
+                    }}
+                    badgeContent={
+                      descriptionTooltip && (
+                        <Tooltip title={descriptionTooltip} arrow>
+                          <HelpOutlineIcon
+                            sx={{
+                              fontSize: '1rem',
+                              position: 'absolute',
+                            }}
+                          />
+                        </Tooltip>
+                      )
+                    }
+                  >
+                    {description}
+                  </Badge>
                 </Typography>
               </Box>
             </Box>

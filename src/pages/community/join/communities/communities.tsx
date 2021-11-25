@@ -24,8 +24,6 @@ import { OnClaimMembershipHandlers } from './claim-membership-handlers';
 import { ClaimMembershipDialog } from './claim-membership-dialog';
 import CommunityCredits from './community-credits';
 
-const LeftSide = ({ credits, creditSkills }) => <CommunityCredits key="communities-1" totalCredits={credits} creditSkills={creditSkills} />;
-
 const Communities = (props) => {
   const dispatch = useAppDispatch();
   const { activate } = useWeb3React();
@@ -253,12 +251,12 @@ const Communities = (props) => {
       dispatch(
         setCurrentStep({
           activeStep: 2,
-          stepperText: 'Welcome to Distributed Town 🏙',
+          stepperText: 'Welcome to Distributed Town',
           title: 'Step 3 - Pick your Community',
           description:
-            'Here is a few comminities for you (Based on your Skills). Choose one that inspires you the most & start adding Value to it 🙌',
+            'Here is a few comminities for you (Based on your Skills). Choose one that inspires you the most & start adding Value to it',
           toPrevBtnPath: '/join-community/skills',
-          left: <LeftSide credits={credits} creditSkills={creditSkills} />,
+          left: null,
         })
       );
     }
