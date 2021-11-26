@@ -52,7 +52,7 @@ const Skills = () => {
           <div className="sw-skill-wrapper">
             {skillSelectedCategory ? (
               !entities?.length ? (
-                <Typography sx={{ color: 'text.primary', textAlign: 'center', pb: 2, mt: 4 }} component="div" variant="h6">
+                <Typography sx={{ color: 'text.secondary', textAlign: 'center', pb: 2, mt: 4 }} component="div" variant="body1">
                   We could not find any skills for {skillSelectedCategory} category, please go back and select a different category!
                 </Typography>
               ) : (
@@ -71,8 +71,11 @@ const Skills = () => {
                       onChange={handleChange(index)}
                     >
                       <AccordionSummary sx={{ m: 0 }} expandIcon={<ExpandMoreIcon />}>
-                        <Typography sx={{ m: 0 }} component="div" variant="h6" color={expanded === index ? 'text.primary' : 'primary.main'}>
-                          {subCat} <small>({credits} Credits)</small>
+                        <Typography sx={{ m: 0 }} component="div" variant="h3" color={expanded === index ? 'text.primary' : 'primary.main'}>
+                          {subCat}
+                          <Typography sx={{ ml: 1 }} component="span" variant="subtitle1" color="info.dark">
+                            <small>({credits} Credits)</small>
+                          </Typography>
                         </Typography>
                         {/* <Typography
                           sx={{ m: 0, pr: 3 }}
@@ -100,9 +103,9 @@ const Skills = () => {
             ) : (
               <Typography
                 className="no-item-selected"
-                sx={{ color: 'text.primary', textAlign: 'center', pb: 2 }}
+                sx={{ color: 'text.secondary', textAlign: 'center', pb: 2 }}
                 component="div"
-                variant="h6"
+                variant="body1"
               >
                 No category was selected, go back to select one!
               </Typography>

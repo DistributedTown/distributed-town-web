@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { DitoLogoSvg, SwQuote } from 'sw-web-shared';
+import { DitoLogoSvg } from 'sw-web-shared';
 import CommunityCredits from '../communities/community-credits';
 
 export const SkillsLeftSide = ({ largeDevice }) => (

@@ -8,11 +8,9 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { withRouter, Route, Switch } from 'react-router-dom';
 import {
   SwLayout,
-  JoinSelSvg,
   SwSidebar,
   SwMenuItems,
   DitoLogoSvg,
-  SwButton,
   MainBackgroundSvg,
   NotificationsSvg,
   SettingsSvg,
@@ -27,7 +25,6 @@ import Web3jsComponent from '@dito-auth/Web3jsComponent';
 import SWSnackbar from '@dito-components/snackbar';
 import { LogsDialog } from '@dito-components/logs-dialog';
 import { useMediaQuery, ThemeOptions, IconButton, Tooltip, Typography } from '@mui/material';
-import { addLog } from '@dito-store/ui-reducer';
 import Community from './pages/community/community';
 import Join from './pages/community/join/join';
 import GetStarted from './pages/get-started/get-started';
@@ -72,7 +69,7 @@ const AuthRoutes: React.FC = (props: any) => {
   );
 };
 
-const originalConsoleError = console.error;
+// const originalConsoleError = console.error;
 
 const App = (props: any) => {
   const dispatch = useAppDispatch();
@@ -96,10 +93,10 @@ const App = (props: any) => {
       return;
     }
     setLogInitialized(true);
-    console.error = (...args: any[]) => {
-      dispatch(addLog(args));
-      originalConsoleError.apply(console, args);
-    };
+    // console.error = (...args: any[]) => {
+    //   dispatch(addLog(args));
+    //   originalConsoleError.apply(console, args);
+    // };
   }, [logInitialized, dispatch]);
 
   useEffect(() => {
@@ -164,12 +161,12 @@ const App = (props: any) => {
       href: '/community/settings',
       icon: <SvgIcon component={SettingsSvg} />,
     },
-    {
-      type: 'href',
-      label: 'Community',
-      href: '/community/success?communityAddress=0xC643138abBcb8396718D7040859fee7905c65B05&diToCredits=2060',
-      icon: <SvgIcon component={JoinSelSvg} />,
-    },
+    // {
+    //   type: 'href',
+    //   label: 'Community',
+    //   href: '/community/success?communityAddress=0xC643138abBcb8396718D7040859fee7905c65B05&diToCredits=2060',
+    //   icon: <SvgIcon component={JoinSelSvg} />,
+    // },
     // {
     //   type: 'divider',
     // },
@@ -213,6 +210,17 @@ const App = (props: any) => {
                     </Tooltip>
                   )}
                 </div>
+                {!isAutheticated && (
+                  <div
+                    className="border-middle"
+                    style={{
+                      width: '1px',
+                      height: '50px',
+                      opacity: '0.8',
+                      backgroundColor: 'white',
+                    }}
+                  />
+                )}
                 <div className="right">
                   {/* @ts-ignore */}
                   <skillwallet-auth
@@ -222,7 +230,7 @@ const App = (props: any) => {
                     allowCreateNewUser={false}
                     id="walletButton"
                   />
-                  <SwButton sx={{ width: '120px', height: '33px', ml: 2 }} label="Logs" onClick={() => setOpen(true)} />
+                  {/* <SwButton sx={{ width: '120px', height: '33px', ml: 2 }} label="Logs" onClick={() => setOpen(true)} /> */}
                 </div>
               </div>
             }

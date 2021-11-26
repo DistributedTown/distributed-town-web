@@ -1,9 +1,7 @@
-import { Box, IconButton, MobileStepper, ThemeOptions, Tooltip, Button, Typography, Badge } from '@mui/material';
+import { Box, MobileStepper, ThemeOptions, Tooltip, Button, Typography, Badge } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Fragment, useEffect, useState } from 'react';
-import MenuIcon from '@mui/icons-material/Menu';
-import ClearIcon from '@mui/icons-material/Clear';
-import { SwLayout, SwSidebar, DitoLogoSvg } from 'sw-web-shared';
+import { SwLayout, SwSidebar } from 'sw-web-shared';
 import CheckIcon from '@mui/icons-material/Check';
 import './join.scss';
 import { Link, Route, Switch } from 'react-router-dom';
@@ -107,9 +105,9 @@ const Join = (props) => {
           className="sw-box"
         >
           <Box sx={{ maxWidth: activeStep !== -1 ? '650px' : '100%', flexGrow: 1 }} className="sw-box-right-inner">
-            <Box sx={{ width: '100%' }}>
+            <Box sx={{ width: '100%', position: 'relative' }}>
               {stepperText && (
-                <Typography className="stepper-top" sx={{ color: 'text.primary' }} component="div" variant="h6" align="center">
+                <Typography className="stepper-top" sx={{ color: 'text.primary' }} component="div" variant="h1" align="center">
                   {stepperText}
                 </Typography>
               )}
@@ -145,17 +143,17 @@ const Join = (props) => {
                     );
                   })}
                 </div>
-                <Typography sx={{ color: 'text.primary', textAlign: 'center', pb: 2 }} component="div" variant="h4">
+                <Typography sx={{ color: 'text.primary', textAlign: 'center', pb: 1 }} component="div" variant="h2">
                   {title}
                 </Typography>
-                <Typography sx={{ color: 'text.primary', textAlign: 'center', pb: 2 }} component="div" variant="body2">
+                <Typography sx={{ color: 'text.primary', textAlign: 'center', pb: 2 }} component="div" variant="subtitle1">
                   <Badge
                     sx={{
                       padding: '0 8px',
                     }}
                     badgeContent={
                       descriptionTooltip && (
-                        <Tooltip title={descriptionTooltip} arrow>
+                        <Tooltip title={descriptionTooltip}>
                           <HelpOutlineIcon
                             sx={{
                               fontSize: '1rem',

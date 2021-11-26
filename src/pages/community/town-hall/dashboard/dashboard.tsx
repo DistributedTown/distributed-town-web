@@ -92,7 +92,7 @@ const Dashboard = () => {
           onMouseLeave={() => debouncedHoverHandler(null)}
         />
       </Box>
-      <SwDivider width=".1px" orientation={largeDevice ? 'vertical' : 'horizontal'} />
+      <SwDivider width="1px" orientation={largeDevice ? 'vertical' : 'horizontal'} />
       <Box
         sx={{
           p: 0,

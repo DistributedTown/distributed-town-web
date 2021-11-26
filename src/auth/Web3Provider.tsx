@@ -2,7 +2,7 @@ import React from 'react';
 import { Web3ReactProvider } from '@web3-react/core';
 import { Web3Provider as EthersWeb3Provider } from '@ethersproject/providers';
 
-const ETHERS_POLLING_INTERVAL = 1000;
+const ETHERS_POLLING_INTERVAL = 4000;
 
 const getLibrary = (provider: any) => {
   const library = new EthersWeb3Provider(provider);

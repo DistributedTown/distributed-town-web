@@ -20,6 +20,8 @@
 
   .sw-skill-icon {
     fill: $primary-color;
+    margin-bottom: 4px;
+    width: 18px;
     &.active {
       fill: $foreground-color;
     }

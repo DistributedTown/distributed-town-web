@@ -7,6 +7,16 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  .sw-total-credits {
+    display: flex;
+    align-items: center;
+    position: relative;
+    justify-content: center;
+    .MuiBadge-badge {
+      right: -13px;
+    }
+  }
   .sw-credit-widget {
     display: flex;
     align-items: flex-end;
@@ -19,7 +29,8 @@
       color: $foreground-color;
       fill: $foreground-color;
       margin-right: 16px;
-      width: 16px;
+      width: 18px;
+      margin-bottom: 4px;
     }
 
     .credit-amount {
@@ -36,6 +47,8 @@
         display: flex;
         align-items: center;
         margin-bottom: 14px;
+        height: 25px;
+        line-height: 25px;
       }
       .sw-progress-bar {
         position: relative;

@@ -8,7 +8,7 @@ export const UserInfoLeftSide = ({ largeDevice }) => (
     </Box>
     <SwQuote className="sw-box-user-info">
       <>
-        <Typography sx={{ color: 'text.primary', mb: 1 }} fontWeight="bold" component="div" variant="h4" align="center">
+        <Typography sx={{ color: 'text.primary', mb: 6 }} fontWeight="bold" component="div" variant="h2" align="center">
           <p>Welcome to Distributed Town</p>
         </Typography>
 

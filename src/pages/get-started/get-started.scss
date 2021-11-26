@@ -25,7 +25,7 @@
     display: flex;
     flex: 40%;
     align-items: flex-end;
-    justify-content: flex-end;
+    justify-content: center;
   }
 
   .sw-box-actions {
@@ -49,11 +49,6 @@
         text-align: center;
       }
     }
-  }
-
-  .sw-divider {
-    width: 4px;
-    margin: 0 40px;
   }
 
   .sw-box {
@@ -80,6 +75,7 @@
 
       .sw-box-logo {
         justify-content: center;
+        margin-bottom: 32px;
       }
 
       .sw-box-actions {

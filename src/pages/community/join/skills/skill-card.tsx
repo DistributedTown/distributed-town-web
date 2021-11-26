@@ -31,7 +31,11 @@ function SkillCard({ skills, selectedSkills, updateSkill }) {
                 }}
               >
                 <Stack sx={{ width: '100%' }} direction="row" spacing={2} justifyContent="space-between" alignItems="center">
-                  <SwIcon className={`sw-skill-icon ${isActive ? 'active' : ''}`} height="26px" />
+                  {SwIcon === undefined ? (
+                    <div className="sw-skill-icon" />
+                  ) : (
+                    <SwIcon className={`sw-skill-icon ${isActive ? 'active' : ''}`} height="18px" />
+                  )}
                   <Typography
                     sx={{ width: '100%', ml: '14px' }}
                     color={isActive ? 'text.primary' : 'primary.main'}

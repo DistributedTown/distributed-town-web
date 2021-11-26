@@ -27,10 +27,10 @@ const GetStarted = () => {
           </>
         </SwQuote>
       </Box>
-      <SwDivider orientation={largeDevice ? 'vertical' : 'horizontal'} />
+      <SwDivider width="1px" orientation={largeDevice ? 'vertical' : 'horizontal'} />
       <Box sx={{ p: 0, m: 0 }} className="sw-box">
         <Box className="sw-box-title">
-          <Typography color="info" component="div" variant="h1">
+          <Typography color="info" component="div" align="center" variant="h1">
             This is <span className="underline">your Community</span>
           </Typography>
         </Box>
