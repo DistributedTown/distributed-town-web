@@ -170,6 +170,12 @@ const App = (props: any) => {
       href: '/community/success?communityAddress=0xC643138abBcb8396718D7040859fee7905c65B05&diToCredits=2060',
       icon: <SvgIcon component={JoinSelSvg} />,
     },
+    {
+      type: 'href',
+      label: 'Cards',
+      href: '/community/carousel',
+      icon: <SvgIcon component={JoinSelSvg} />,
+    },
     // {
     //   type: 'divider',
     // },

@@ -1,0 +1,86 @@
+.sw-card-tilt {
+  animation: sw-card-tilt 1.25s infinite;
+  animation-direction: normal;
+}
+
+@keyframes sw-card-tilt {
+  0% {
+    transform: rotateY(0);
+    transformstyle: 'preserve-3d';
+  }
+  25% {
+    transform: rotateY(20deg);
+    transformstyle: 'preserve-3d';
+  }
+  50% {
+    transform: rotateY(10deg);
+    transformstyle: 'preserve-3d';
+  }
+  75% {
+    transform: rotateY(20deg);
+    transformstyle: 'preserve-3d';
+  }
+  100% {
+    transform: rotateY(0);
+    transformstyle: 'preserve-3d';
+  }
+}
+
+.sw-card-front,
+.sw-card-back {
+  position: relative;
+  border-radius: 5px;
+  width: 330px;
+  height: 350px;
+}
+
+.sw-card-front {
+  border: 7px solid transparent;
+  .sw-card-container {
+    .flip-icon {
+      color: black;
+    }
+  }
+}
+
+.sw-card-back {
+  border: 7px solid #eeeeee;
+
+  .sw-card-container {
+    .flip-icon {
+      color: white;
+    }
+  }
+}
+
+.sw-card-container {
+  padding: 10px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
+  .community-logo {
+    height: 100px;
+    width: 100px;
+  }
+
+  .flip-icon-wrapper {
+    width: 40px;
+    height: 40px;
+    padding: 20px;
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.25s ease;
+
+    &:hover {
+      transform: rotate(180deg);
+    }
+  }
+}
