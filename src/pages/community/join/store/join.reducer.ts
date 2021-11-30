@@ -216,7 +216,7 @@ export const getSkillCredits = createSelector(updateSkill, toggleSkill, (x1): st
     prev = [
       ...prev,
       {
-        percentage: (curr.xp / 10) * 100,
+        value: (curr.xp / 10) * 100,
         name: curr.skill,
         credits: (entity?.credits || 0) * curr.xp,
       },
@@ -232,7 +232,7 @@ export const getSkillCredits = createSelector(updateSkill, toggleSkill, (x1): st
   };
   for (let i = totalSkills.length; i < maxTotal; i += 1) {
     totalSkills.push({
-      percentage: 0,
+      value: 0,
       name: `Skill ${emptySkillNames[i]}`,
       credits: 0,
     });

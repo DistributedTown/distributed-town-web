@@ -1,14 +1,14 @@
-import { Box, MobileStepper, ThemeOptions, Tooltip, Button, Typography, Badge } from '@mui/material';
+import { Box, MobileStepper, ThemeOptions, Tooltip, Button, Typography, Badge, IconButton } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Fragment, useEffect, useState } from 'react';
 import { SwLayout, SwSidebar } from 'sw-web-shared';
 import CheckIcon from '@mui/icons-material/Check';
-import './join.scss';
 import { Link, Route, Switch } from 'react-router-dom';
 import { KeyboardArrowLeft } from '@mui/icons-material';
 import { RootState } from '@dito-store/store.model';
 import { useDispatch, useSelector } from 'react-redux';
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import InfoIcon from '@mui/icons-material/Info';
+import MenuIcon from '@mui/icons-material/Menu';
 import { resetJoinCommunityState } from './store/join.reducer';
 import Categories from './categories/categories';
 import Communities from './communities/communities';
@@ -17,6 +17,7 @@ import UserInfo from './user-info/user-info';
 import CategoriesLeftSide from './categories/categories-left';
 import UserInfoLeftSide from './user-info/user-info-left';
 import SkillsLeftSide from './skills/skills-left';
+import './join.scss';
 
 const Join = (props) => {
   const dispatch = useDispatch();
@@ -48,26 +49,8 @@ const Join = (props) => {
     <div className="sw-join-base-container">
       <SwLayout
         hideTop
-        scrollbarStyles={{ height: `calc(100%)` }}
-        top={
-          null
-          // <>
-          //   <div>
-          //     {small && (
-          //       <Tooltip title="Open sidebar" placement="right" color="white">
-          //         <IconButton className="sw-toolbar-button" color="info" onClick={handleToggle}>
-          //           <MenuIcon />
-          //         </IconButton>
-          //       </Tooltip>
-          //     )}
-          //   </div>
-          //   <Tooltip title="Exit join flow" placement="left" color="white">
-          //     <IconButton className="sw-toolbar-button" color="info" component={Link} to="/">
-          //       <ClearIcon />
-          //     </IconButton>
-          //   </Tooltip>
-          // </>
-        }
+        scrollbarStyles={{ height: '100%' }}
+        top={null}
         drawer={
           <SwSidebar
             width="530px"
@@ -104,6 +87,15 @@ const Join = (props) => {
           }}
           className="sw-box"
         >
+          <div className="sw-menu-icon">
+            {small && (
+              <Tooltip title="Open sidebar" placement="right" color="white">
+                <IconButton className="sw-toolbar-button" color="info" onClick={handleToggle}>
+                  <MenuIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+          </div>
           <Box sx={{ maxWidth: activeStep !== -1 ? '650px' : '100%', flexGrow: 1 }} className="sw-box-right-inner">
             <Box sx={{ width: '100%', position: 'relative' }}>
               {stepperText && (
@@ -136,7 +128,7 @@ const Join = (props) => {
                     return (
                       <Fragment key={index}>
                         <div className={`stepper-dot ${index === activeStep ? 'active' : ''}`}>
-                          {index < activeStep && <CheckIcon color="secondary" />}
+                          {index < activeStep && <CheckIcon color="info" />}
                         </div>
                         {steps.length - 1 !== index && <div className="stepper-line" />}
                       </Fragment>
@@ -154,7 +146,7 @@ const Join = (props) => {
                     badgeContent={
                       descriptionTooltip && (
                         <Tooltip title={descriptionTooltip}>
-                          <HelpOutlineIcon
+                          <InfoIcon
                             sx={{
                               fontSize: '1rem',
                               position: 'absolute',

@@ -6,61 +6,6 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-
-  .sw-total-credits {
-    display: flex;
-    align-items: center;
-    position: relative;
-    justify-content: center;
-    .MuiBadge-badge {
-      right: -13px;
-    }
-  }
-  .sw-credit-widget {
-    display: flex;
-    align-items: flex-end;
-    margin-bottom: 16px;
-    + .sw-credit-widget {
-      margin-top: 16px;
-    }
-
-    .sw-credit-icon {
-      color: $foreground-color;
-      fill: $foreground-color;
-      margin-right: 16px;
-      width: 18px;
-      margin-bottom: 4px;
-    }
-
-    .credit-amount {
-      width: 75px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .credit-content {
-      flex: 1;
-
-      .credit-label {
-        display: flex;
-        align-items: center;
-        margin-bottom: 14px;
-        height: 25px;
-        line-height: 25px;
-      }
-      .sw-progress-bar {
-        position: relative;
-
-        .sw-progress-bar-label {
-          position: absolute;
-          z-index: 1;
-          top: 0;
-          left: 50%;
-          transform: translateX(-50%);
-        }
-      }
-    }
-  }
+  justify-content: flex-start;
+  margin-top: 12px;
 }

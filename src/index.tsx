@@ -6,31 +6,58 @@ import { HashRouter } from 'react-router-dom';
 
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
-import { CssBaseline } from '@mui/material';
+import { CssBaseline, Fade, PaletteOptions, SimplePaletteColorOptions } from '@mui/material';
 import createShadows from '@dito-utils/shadows';
+import { Shadows } from '@mui/material/styles/shadows';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import store from './store/store';
 
 const persistor = persistStore(store);
 
+const palette: PaletteOptions & { type: string } = {
+  type: 'dark',
+  background: {
+    default: '#161615',
+    paper: '#FFFFFF',
+  },
+  text: {
+    secondary: '#D8D8D8',
+    primary: '#FFFFFF',
+    disabled: '#CCCCCC',
+  },
+  primary: {
+    main: '#161615',
+  },
+  secondary: {
+    main: '#8F37AA',
+  },
+  info: {
+    main: '#FFFFFF',
+    dark: '#7C7C7C',
+  },
+};
+
 const theme = createTheme({
   components: {
     MuiCssBaseline: {
       styleOverrides: `
         .Mui-disabled {
-          color: #CCCCCC;
+          color: ${palette.text.disabled};
         }
       `,
     },
     MuiTooltip: {
+      defaultProps: {
+        TransitionComponent: Fade,
+      },
       styleOverrides: {
         tooltip: {
           border: '3px solid',
-          borderColor: 'text.primary',
+          borderColor: palette.text.primary,
           borderRadius: '4px',
-          backgroundColor: 'black',
-          padding: '16px',
+          backgroundColor: palette.background.default,
+          boxSizing: 'border-box',
         },
       },
     },
@@ -44,7 +71,7 @@ const theme = createTheme({
         root: {
           borderStyle: 'solid',
           borderWidth: '1px',
-          borderColor: 'text.primary',
+          borderColor: palette.text.primary,
         },
       },
     },
@@ -58,27 +85,11 @@ const theme = createTheme({
       xl: 1920,
     },
   },
-  palette: {
-    type: 'dark',
-    text: {
-      secondary: '#D8D8D8',
-      primary: '#FFFFFF',
-    },
-    primary: {
-      main: '#161615',
-    },
-    secondary: {
-      main: '#8F37AA',
-    },
-    info: {
-      main: '#FFFFFF',
-      dark: '#7C7C7C',
-    },
-  },
+  palette,
   shape: {
     borderRadius: 0,
   },
-  shadows: createShadows('#8F37AA') as any,
+  shadows: createShadows((palette.secondary as SimplePaletteColorOptions).main) as Shadows,
   typography: {
     fontSize: 16,
     button: {
@@ -134,7 +145,4 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-// // If you want to start measuring performance in your app, pass a function
-// // to log results (for example: reportWebVitals(console.log))
-// // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();

@@ -1,8 +1,8 @@
 import { Typography } from '@mui/material';
 import { Route, Switch } from 'react-router-dom';
-import './community.scss';
 import JoinSuccess from './join-success/join-success';
 import TownHall from './town-hall/townhall';
+import './community.scss';
 
 function Topic() {
   return (

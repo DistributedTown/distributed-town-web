@@ -12,9 +12,8 @@ import { Box, CircularProgress, Typography } from '@mui/material';
 import { SwButton } from 'sw-web-shared';
 import { QRCode } from 'react-qrcode-logo';
 import { generateTextileBucketUrl } from '@dito-api/textile-bucket.api';
-import { switchToEtheremNetwork } from '@dito-api/ethereum-network.api';
+import { connectToEthereum, switchToEtheremNetwork } from '@dito-api/ethereum-network.api';
 import { asyncPoll } from '@dito-utils/async-poller';
-import { injected } from '@dito-auth/connector';
 import { addLog } from '@dito-store/ui-reducer';
 import { AppDispatch } from '@dito-store/store.model';
 import { ClaimMembershipErrorTypes } from '../store/model';
@@ -75,10 +74,9 @@ export const OnClaimMembershipHandlers = (
   handleClose: () => void,
   handleAdditionalAction: (message: string) => void
 ) => {
-  const onEthConnection = async (activate: (connector: any) => Promise<void>) => {
+  const onEthConnection = async () => {
     setDialogContent(<DialogLoadingMessage message="Ensuring ethereum connection ..." onCancel={handleClose} />);
-    await activate(injected);
-    const isConnected = await injected.isAuthorized();
+    const isConnected = await connectToEthereum(dispatch);
     if (!isConnected) {
       setDialogContent(
         <>

@@ -1,8 +1,8 @@
 import { Card, CardContent, Typography, List, ListItem, Stack } from '@mui/material';
 import { SwSlider } from 'sw-web-shared';
-import './skill-card.scss';
 import { toPascalCase } from '@dito-utils/pascal-case';
 import { CategoryIcons } from '../categories/categories';
+import './skill-card.scss';
 
 function SkillCard({ skills, selectedSkills, updateSkill }) {
   return (
@@ -19,7 +19,7 @@ function SkillCard({ skills, selectedSkills, updateSkill }) {
                 key={index}
                 disabled={disabled}
                 sx={{
-                  height: '50px',
+                  height: '48px',
                   opacity: 1,
                   alignItems: 'center',
                   borderColor: isActive ? 'background.paper' : 'primary.main',
