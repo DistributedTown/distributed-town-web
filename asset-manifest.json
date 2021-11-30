@@ -1,30 +1,30 @@
 {
   "files": {
-    "main.css": "/distributed-town-web/static/css/main.a6cf375d.chunk.css",
-    "main.js": "/distributed-town-web/static/js/main.0127a3aa.chunk.js",
-    "main.js.map": "/distributed-town-web/static/js/main.0127a3aa.chunk.js.map",
-    "polyfills-dom.js": "/distributed-town-web/static/js/polyfills-dom.cf0fee34.chunk.js",
-    "polyfills-dom.js.map": "/distributed-town-web/static/js/polyfills-dom.cf0fee34.chunk.js.map",
-    "runtime-main.js": "/distributed-town-web/static/js/runtime-main.9ef0663b.js",
-    "runtime-main.js.map": "/distributed-town-web/static/js/runtime-main.9ef0663b.js.map",
-    "static/js/3.4f55627a.chunk.js": "/distributed-town-web/static/js/3.4f55627a.chunk.js",
-    "static/js/3.4f55627a.chunk.js.map": "/distributed-town-web/static/js/3.4f55627a.chunk.js.map",
-    "static/js/4.73503735.chunk.js": "/distributed-town-web/static/js/4.73503735.chunk.js",
-    "static/js/4.73503735.chunk.js.map": "/distributed-town-web/static/js/4.73503735.chunk.js.map",
-    "static/js/5.b483f9d0.chunk.js": "/distributed-town-web/static/js/5.b483f9d0.chunk.js",
-    "static/js/5.b483f9d0.chunk.js.map": "/distributed-town-web/static/js/5.b483f9d0.chunk.js.map",
-    "static/js/6.4950db0c.chunk.js": "/distributed-town-web/static/js/6.4950db0c.chunk.js",
-    "static/js/6.4950db0c.chunk.js.map": "/distributed-town-web/static/js/6.4950db0c.chunk.js.map",
+    "main.css": "/distributed-town-web/static/css/main.a0cba8f0.chunk.css",
+    "main.js": "/distributed-town-web/static/js/main.096109cb.chunk.js",
+    "main.js.map": "/distributed-town-web/static/js/main.096109cb.chunk.js.map",
+    "polyfills-dom.js": "/distributed-town-web/static/js/polyfills-dom.06dc0a25.chunk.js",
+    "polyfills-dom.js.map": "/distributed-town-web/static/js/polyfills-dom.06dc0a25.chunk.js.map",
+    "runtime-main.js": "/distributed-town-web/static/js/runtime-main.d0339aa1.js",
+    "runtime-main.js.map": "/distributed-town-web/static/js/runtime-main.d0339aa1.js.map",
+    "static/js/3.92713220.chunk.js": "/distributed-town-web/static/js/3.92713220.chunk.js",
+    "static/js/3.92713220.chunk.js.map": "/distributed-town-web/static/js/3.92713220.chunk.js.map",
+    "static/js/4.5fa882b3.chunk.js": "/distributed-town-web/static/js/4.5fa882b3.chunk.js",
+    "static/js/4.5fa882b3.chunk.js.map": "/distributed-town-web/static/js/4.5fa882b3.chunk.js.map",
+    "static/js/5.86b8da48.chunk.js": "/distributed-town-web/static/js/5.86b8da48.chunk.js",
+    "static/js/5.86b8da48.chunk.js.map": "/distributed-town-web/static/js/5.86b8da48.chunk.js.map",
+    "static/js/6.77efd99f.chunk.js": "/distributed-town-web/static/js/6.77efd99f.chunk.js",
+    "static/js/6.77efd99f.chunk.js.map": "/distributed-town-web/static/js/6.77efd99f.chunk.js.map",
     "index.html": "/distributed-town-web/index.html",
-    "static/css/main.a6cf375d.chunk.css.map": "/distributed-town-web/static/css/main.a6cf375d.chunk.css.map",
-    "static/js/3.4f55627a.chunk.js.LICENSE.txt": "/distributed-town-web/static/js/3.4f55627a.chunk.js.LICENSE.txt",
-    "static/js/4.73503735.chunk.js.LICENSE.txt": "/distributed-town-web/static/js/4.73503735.chunk.js.LICENSE.txt",
-    "static/js/polyfills-dom.cf0fee34.chunk.js.LICENSE.txt": "/distributed-town-web/static/js/polyfills-dom.cf0fee34.chunk.js.LICENSE.txt"
+    "static/css/main.a0cba8f0.chunk.css.map": "/distributed-town-web/static/css/main.a0cba8f0.chunk.css.map",
+    "static/js/3.92713220.chunk.js.LICENSE.txt": "/distributed-town-web/static/js/3.92713220.chunk.js.LICENSE.txt",
+    "static/js/4.5fa882b3.chunk.js.LICENSE.txt": "/distributed-town-web/static/js/4.5fa882b3.chunk.js.LICENSE.txt",
+    "static/js/polyfills-dom.06dc0a25.chunk.js.LICENSE.txt": "/distributed-town-web/static/js/polyfills-dom.06dc0a25.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.9ef0663b.js",
-    "static/js/3.4f55627a.chunk.js",
-    "static/css/main.a6cf375d.chunk.css",
-    "static/js/main.0127a3aa.chunk.js"
+    "static/js/runtime-main.d0339aa1.js",
+    "static/js/3.92713220.chunk.js",
+    "static/css/main.a0cba8f0.chunk.css",
+    "static/js/main.096109cb.chunk.js"
   ]
 }
