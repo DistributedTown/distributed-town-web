@@ -28,7 +28,7 @@ export const getCategories = async (): Promise<Category[]> =>
         {
           id: 4,
           name: 'DeFi',
-          icon: 'Defi',
+          icon: 'DeFi',
         },
         {
           id: 5,

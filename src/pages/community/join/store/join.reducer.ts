@@ -18,7 +18,7 @@ export interface JoinCommunityState {
     description: string;
     toPrevBtnPath: string;
     stepperText: string;
-    left: JSX.Element;
+    descriptionTooltip: string;
   };
   userInfo: {
     name: string;
@@ -211,7 +211,7 @@ export const getCredits = createSelector(updateSkill, toggleSkill, (x1): string 
 
 export const getSkillCredits = createSelector(updateSkill, toggleSkill, (x1): string => {
   const { selectedSkills, entities } = x1.payload.joinCommunity.skills;
-  return selectedSkills.reduce((prev: any[], curr: Skill) => {
+  const totalSkills = selectedSkills.reduce((prev: any[], curr: Skill) => {
     const entity = entities.find(({ skills }) => skills.some((s) => s === curr.skill));
     prev = [
       ...prev,
@@ -223,6 +223,24 @@ export const getSkillCredits = createSelector(updateSkill, toggleSkill, (x1): st
     ];
     return prev;
   }, []);
+
+  const maxTotal = 3;
+  const emptySkillNames = {
+    0: 'One',
+    1: 'Two',
+    2: 'Three',
+  };
+  for (let i = totalSkills.length; i < maxTotal; i += 1) {
+    totalSkills.push({
+      percentage: 0,
+      name: `Skill ${emptySkillNames[i]}`,
+      credits: 0,
+    });
+  }
+
+  console.log('totalSkills: ', totalSkills);
+
+  return totalSkills;
 });
 
 export default joinCommunitySlice.reducer;

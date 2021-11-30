@@ -2,4 +2,11 @@
 
 .sw-category-wrapper {
   width: 100%;
+
+  .sw-button {
+    & > .sw-btn-label {
+      margin-top: 2px !important
+    }
+  }
+
 }

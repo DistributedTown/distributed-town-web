@@ -32,6 +32,14 @@
     <title>DiTo</title>
   </head>
   <body>
+    <script type="module">
+      // load and display confetti
+      // if masonry grid layout is supported
+      if (CSS.supports("grid-template-rows", "masonry")) {
+        import('https://cdn.skypack.dev/canvas-confetti')
+          .then(({default: confetti}) => confetti())
+      }
+    </script>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <!--

@@ -23,6 +23,17 @@ const theme = createTheme({
         }
       `,
     },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          border: '3px solid',
+          borderColor: 'text.primary',
+          borderRadius: '4px',
+          backgroundColor: 'black',
+          padding: '16px',
+        },
+      },
+    },
     MuiUseMediaQuery: {
       defaultProps: {
         noSsr: true,
@@ -61,6 +72,7 @@ const theme = createTheme({
     },
     info: {
       main: '#FFFFFF',
+      dark: '#7C7C7C',
     },
   },
   shape: {
@@ -68,11 +80,43 @@ const theme = createTheme({
   },
   shadows: createShadows('#8F37AA') as any,
   typography: {
+    fontSize: 16,
+    button: {
+      fontSize: '1.25rem', // 20px
+    },
+    body1: {
+      fontSize: '0.875rem', // 14px
+    },
+    body2: {
+      fontSize: '0.75rem', // 12px
+    },
+    subtitle1: {
+      fontSize: '1rem', // 16px
+    },
+    subtitle2: {
+      fontSize: '0.875rem', // 14px
+    },
+    h1: {
+      fontSize: '1.875rem', // 30px
+    },
+    h2: {
+      fontSize: '1.25rem', // 20px
+    },
+    h3: {
+      fontSize: '1.125rem', // 18px
+    },
+    h4: {
+      fontSize: '0.875rem', // 14px
+    },
+    h5: {
+      fontSize: '0.75rem', // 12px
+    },
+    h6: {
+      fontSize: '0.625rem', // 10px
+    },
     fontFamily: ['Josefin Sans', ' sans-serif'].join(','),
   },
 } as ThemeOptions);
-
-console.log(theme, 'theme');
 
 ReactDOM.render(
   <StyledEngineProvider injectFirst>

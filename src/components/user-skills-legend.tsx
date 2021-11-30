@@ -1,6 +1,5 @@
-import { Box, Typography, Avatar, useMediaQuery } from '@mui/material';
-import { margin, ThemeOptions } from '@mui/system';
-import { TokenomicsSvg, SwProgressBar, NetworkDesignSvg, GameTheorySvg, DefiSvg, SwDivider } from 'sw-web-shared';
+import { Box, Typography, Avatar } from '@mui/material';
+import { TokenomicsSvg, SwProgressBar, NetworkDesignSvg, GameTheorySvg } from 'sw-web-shared';
 import './user-skills.scss';
 
 export const SwUserSkillsLegend = ({ user }) => {

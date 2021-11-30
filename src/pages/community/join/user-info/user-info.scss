@@ -1,11 +1,18 @@
 @import 'sw-web-shared/lib/styles/breakpoints';
 @import 'sw-web-shared/lib/styles/variables';
 
+.sw-box-user-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
 .sw-user-info-wrapper {
   width: 100%;
+  max-width: 310px;
 
   .sw-form-field + .sw-form-field {
-    margin-top: 20px;
+    margin-top: 14px;
   }
 
   .sw-form-field-content {
@@ -26,7 +33,6 @@
       display: flex;
       justify-content: center;
       flex-direction: column;
-      margin-top: 20px;
       align-items: center;
     }
 
@@ -48,8 +54,6 @@
       .MuiOutlinedInput-notchedOutline {
         border: none;
       }
-
-      
     }
   }
 
