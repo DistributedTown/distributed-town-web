@@ -9,12 +9,6 @@ import { ResultState } from '@dito-store/status';
 import { fetchCommunity } from '../store/community.reducer';
 import ShareDialog from './community-share-dialog';
 
-const Emoji = (props) => (
-  <span className="emoji" role="img" aria-label={props.label ? props.label : ''} aria-hidden={props.label ? 'false' : 'true'}>
-    {props.symbol}
-  </span>
-);
-
 const JoinSuccess = () => {
   const dispatch = useDispatch();
   // const largeDevice = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.up('lg'));
@@ -51,39 +45,33 @@ const JoinSuccess = () => {
           <>
             <div className="sw-community-details-wrapper">
               <div className="sw-congrats-wrapper">
-                <Typography sx={{ color: 'text.primary', mb: 5, textAlign: 'center' }} component="div" variant="h4">
-                  Congrats!
-                  <Emoji symbol="🎉" label="congratulations" />
-                  <Emoji symbol="🎉" label="congratulations" />
-                  <Emoji symbol="🎉" label="congratulations" />
+                <Typography sx={{ color: 'text.primary', mb: '45px', textAlign: 'center' }} component="div" variant="h1">
+                  Congratulations
                 </Typography>
               </div>
 
-              <Typography sx={{ color: 'text.primary', mb: 5, textAlign: 'center' }} component="div" variant="h5">
+              <Typography sx={{ color: 'text.primary', mb: 2, textAlign: 'center' }} component="div" variant="h2">
                 You are now a member of {community?.name}.
               </Typography>
-              <Typography sx={{ color: 'text.primary', mb: 5, textAlign: 'center' }} component="div" variant="h5">
+              <Typography sx={{ color: 'text.primary', mb: 5, textAlign: 'center' }} component="div" variant="h2">
                 Your new DITO credits are now:
               </Typography>
-              <div className="sw-credits-wrapper">
-                <DitoCreditsSvg height="50px" width="75px" />
-                <Typography
-                  sx={{
-                    color: 'text.primary',
-                    mb: 1,
-                    textAlign: 'center',
-                    fontWeight: 'bold',
-                  }}
-                  component="div"
-                  variant="h4"
-                >
-                  {diToCredits}
-                </Typography>
-              </div>
+              <Typography
+                sx={{
+                  color: 'text.primary',
+                  mb: 1,
+                  textAlign: 'center',
+                  fontWeight: 'bold',
+                }}
+                component="div"
+                variant="xl"
+              >
+                {diToCredits}
+              </Typography>
             </div>
             <div className="sw-share-button-wrapper">
               <SwButton
-                sx={{ width: small ? '200px' : '300px' }}
+                sx={{ width: '310px', height: '50px' }}
                 label={small ? 'Share' : 'Share  & Invite your peers'}
                 onClick={handleClickOpen}
               />
