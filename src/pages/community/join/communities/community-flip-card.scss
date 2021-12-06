@@ -1,0 +1,124 @@
+@import 'sw-web-shared/lib/styles/variables';
+@import 'sw-web-shared/lib/styles/breakpoints';
+
+.sw-card-tilt {
+  animation: sw-card-tilt 1.5s infinite;
+  animation-direction: normal;
+  border-radius: 10px;
+}
+
+@keyframes sw-card-tilt {
+  0% {
+    transform: perspective(1200px) rotate3d(0, -0.5, 0, 0deg);
+    transformstyle: 'preserve-3d';
+  }
+  25% {
+    transform: perspective(1200px) rotate3d(0, -1, 0, 15deg);
+    transformstyle: 'preserve-3d';
+  }
+  50% {
+    transform: perspective(1200px) rotate3d(0, -0.5, 0, 0deg);
+    transformstyle: 'preserve-3d';
+  }
+  75% {
+    transform: perspective(1200px) rotate3d(0, -1, 0, 15deg);
+    transformstyle: 'preserve-3d';
+  }
+  100% {
+    transform: perspective(1200px) rotate3d(0, -1, 0, 0deg);
+    transformstyle: 'preserve-3d';
+  }
+}
+
+.sw-card-front,
+.sw-card-back {
+  position: relative;
+  width: 330px;
+  height: 350px;
+  border-radius: 10px;
+}
+
+.sw-card-front {
+  border: 2px solid $primary-color;
+  .sw-card-container {
+    .flip-icon {
+      color: $primary-color;
+    }
+  }
+}
+
+.sw-card-back {
+  border: 8px solid $foreground-color;
+
+  .sw-card-container {
+    .flip-icon {
+      color: $foreground-color;
+    }
+  }
+}
+
+.sw-card-container {
+  padding: 10px 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &.front {
+    justify-content: space-between;
+  }
+
+  &.back {
+    justify-content: flex-start;
+    cursor: pointer;
+  }
+
+  .community-logo {
+    height: 100px;
+    width: 100px;
+  }
+
+  .flip-icon-wrapper {
+    width: 40px;
+    height: 40px;
+    padding: 20px;
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.25s ease;
+
+    &:hover {
+      transform: rotate(180deg);
+    }
+  }
+
+  .sw-community-summary-wrapper {
+    display: flex;
+    width: 100%;
+
+    .sw-community-image-wrapper {
+      margin-right: 16px;
+    }
+
+    .sw-community-summary {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      height: 100%;
+    }
+  }
+
+  .sw-description-wrapper {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    margin-bottom: 16px;
+  }
+}

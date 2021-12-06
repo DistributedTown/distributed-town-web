@@ -14,9 +14,9 @@ import {
   MainBackgroundSvg,
   NotificationsSvg,
   SettingsSvg,
-  JoinSelSvg,
   SkillWalletNavSvg,
   TownhallNavSvg,
+  JoinSelSvg,
 } from 'sw-web-shared';
 
 import { useSelector } from 'react-redux';
