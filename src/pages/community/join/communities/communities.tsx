@@ -2,13 +2,14 @@ import { useAppDispatch, RootState } from '@dito-store/store.model';
 import { getSkillWalletDescription } from '@dito-api/skillwallet.api';
 import { TextileBucketMetadata } from 'src/api/model';
 import { CircularProgress, ThemeOptions, Typography } from '@mui/material';
+import { CardCarousel } from '@dito-components/card-carousel';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { setAuthenticated } from '@dito-auth/auth.reducer';
 import { useWeb3React } from '@web3-react/core';
 import { ResultState } from '@dito-store/status';
-import { ClaimMembershipErrorTypes, CommunityCategory } from '../store/model';
+import { ClaimMembershipErrorTypes } from '../store/model';
 import './communities.scss';
 import {
   fetchCommunities,
@@ -19,10 +20,13 @@ import {
   selectCommunity,
   setCurrentStep,
 } from '../store/join.reducer';
+
 import CommunityCard from './community-card';
 import { OnClaimMembershipHandlers } from './claim-membership-handlers';
 import { ClaimMembershipDialog } from './claim-membership-dialog';
 import CommunityCredits from './community-credits';
+
+import CommunityFlipCard from './community-flip-card';
 
 const Communities = (props) => {
   const dispatch = useAppDispatch();
@@ -51,7 +55,8 @@ const Communities = (props) => {
     setDialogContent(null);
   };
 
-  const claimMembership = async () => {
+  const claimMembership = async (communityName) => {
+    await dispatch(selectCommunity(communityName));
     const description = await getSkillWalletDescription();
     const metadataJson: TextileBucketMetadata = {
       name: `${userInfo?.name}'s SkillWallet`,
@@ -234,6 +239,14 @@ const Communities = (props) => {
     goToSuccessScreen(active);
   };
 
+  const flipcards = () => {
+    return entities?.map((c) => (
+      <div style={{ height: '350px', width: '330px', marginTop: '10px', marginBottom: '10px' }}>
+        <CommunityFlipCard community={c} onSelect={claimMembership} selectedCommunityName={selectedCommunityName} />
+      </div>
+    ));
+  };
+
   useEffect(() => {
     if (selectedSkills.length && selectedCategory) {
       dispatch(fetchCommunities(selectedCategory));
@@ -276,16 +289,18 @@ const Communities = (props) => {
                   We could not find any communities for {selectedCategory} category, please go back and select a different category!
                 </Typography>
               ) : (
-                entities.map((community: CommunityCategory, index) => (
-                  <CommunityCard
-                    onSelect={(name) => dispatch(selectCommunity(name))}
-                    selectedCommunityName={selectedCommunityName}
-                    community={community}
-                    key={`community-${index}`}
-                  />
-                ))
+                <CardCarousel slides={flipcards()} />
               )
             ) : (
+              // entities.map((community: CommunityCategory, index) => (
+              //   <CommunityCard
+              //     onSelect={(name) => dispatch(selectCommunity(name))}
+              //     selectedCommunityName={selectedCommunityName}
+              //     community={community}
+              //     key={`community-${index}`}
+              //   />
+              // )
+
               <Typography
                 className="no-item-selected"
                 sx={{ color: 'text.primary', textAlign: 'center', pb: 2 }}

@@ -1,9 +1,9 @@
+// eslint-disable import/named
 import './index.css';
 import { createTheme, StyledEngineProvider, ThemeOptions, ThemeProvider } from '@mui/material/styles';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
-
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
 import { CssBaseline } from '@mui/material';
