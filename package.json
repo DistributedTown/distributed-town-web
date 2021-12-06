@@ -37,7 +37,7 @@
     "redux-logger": "~3.0.6",
     "redux-persist": "~6.0.0",
     "simplebar-react": "^2.3.6",
-    "sw-web-shared": "0.0.1"
+    "sw-web-shared": "git+https://github.com/DistributedTown/sw-web-shared.git#master"
   },
   "scripts": {
     "start": "react-app-rewired start",
