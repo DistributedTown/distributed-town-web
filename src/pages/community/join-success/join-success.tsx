@@ -56,6 +56,7 @@ const JoinSuccess = () => {
               <Typography sx={{ color: 'text.primary', mb: 5, textAlign: 'center' }} component="div" variant="h2">
                 Your new DITO credits are now:
               </Typography>
+              <DitoCreditsSvg className="sw-dito-credits" height="113px" width="166px" />
               <Typography
                 sx={{
                   color: 'text.primary',
