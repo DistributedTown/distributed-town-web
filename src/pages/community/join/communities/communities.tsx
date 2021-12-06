@@ -7,7 +7,6 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { setAuthenticated } from '@dito-auth/auth.reducer';
-import { useWeb3React } from '@web3-react/core';
 import { ResultState } from '@dito-store/status';
 import { ClaimMembershipErrorTypes } from '../store/model';
 import './communities.scss';
@@ -30,7 +29,6 @@ import CommunityFlipCard from './community-flip-card';
 
 const Communities = (props) => {
   const dispatch = useAppDispatch();
-  const { activate } = useWeb3React();
 
   const extraSmall = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.down('sm'));
 
@@ -193,7 +191,7 @@ const Communities = (props) => {
     /*
         Step 1 - Connect to ethereum / metamask
     */
-    const isConnected = await onEthConnection(activate);
+    const isConnected = await onEthConnection();
     console.log('IsConnected: ', isConnected);
 
     /*
@@ -266,8 +264,8 @@ const Communities = (props) => {
           activeStep: 2,
           stepperText: 'Welcome to Distributed Town',
           title: 'Step 3 - Pick your Community',
-          description:
-            'Here is a few comminities for you (Based on your Skills). Choose one that inspires you the most & start adding Value to it',
+          // eslint-disable-next-line max-len
+          description: `Here's a few comminities for you (based on your skills). Choose one that inspires you the most & start adding Value to it`,
           toPrevBtnPath: '/join-community/skills',
           left: null,
         })

@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { ethers } from 'ethers';
+import { Contract, ethers } from 'ethers';
 import { communityAbi, skillWalletAbi } from 'src/abis/abis';
 import { toWei } from 'web3-utils';
 import axios from 'axios';
 import { CommunityContract, CommunityContractError, CommunityContractResponse, NonceActions } from './model';
+import { SWContractEventType } from './sw-types';
 
 function NoEventException(value: CommunityContractError) {
   this.value = value;
@@ -26,11 +27,10 @@ export const claimCommunityMembershipContract = async (communityAddress: string)
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
   const skillWalletAddress = await getSkillWalletAddress(communityAddress);
-  const contract = new ethers.Contract(skillWalletAddress, skillWalletAbi, signer as any);
+  const contract = new ethers.Contract(skillWalletAddress, skillWalletAbi, signer);
   const claimTx = await contract.claim();
-  const claimTransactionResult = await claimTx.wait();
-  const { events } = claimTransactionResult;
-  const claimedEvent = events.find((e) => e.event === 'SkillWalletClaimed');
+  const { events } = await claimTx.wait();
+  const claimedEvent = events.find((e) => e.event === SWContractEventType.SkillWalletClaimed);
 
   if (!claimedEvent) {
     throw new NoEventException({
@@ -68,9 +68,10 @@ export const isQrCodeActive = async (): Promise<boolean> => {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const skillwalletAddress = await getSkillWalletAddress(null);
-    const contract = new ethers.Contract(skillwalletAddress, skillWalletAbi, signer as any);
+    const contract = new ethers.Contract(skillwalletAddress, skillWalletAbi, signer);
     const tokenId = await contract.getSkillWalletIdByOwner(window.ethereum.selectedAddress);
-    return await contract.isSkillWalletActivated(tokenId);
+    const { status } = await contract.isSkillWalletActivated(tokenId);
+    return status;
   } catch (error) {
     return false;
   }
@@ -85,10 +86,10 @@ export const executeCommunityContract = async ({
   const signer = provider.getSigner();
 
   const contract = new ethers.Contract(communityAddress, communityAbi, signer as any);
-  const createTx = await contract.joinNewMember(url, toWei(credits.toString()));
+  const createTx = await contract.joinNewMember(url, toWei(credits.toString()) as any);
   const communityTransactionResult = await createTx.wait();
   const { events } = communityTransactionResult;
-  const memberJoinedEvent = events.find(({ event }) => event === 'MemberAdded');
+  const memberJoinedEvent = events.find(({ event }) => event === SWContractEventType.MemberAdded);
 
   if (!memberJoinedEvent) {
     throw new NoEventException({

@@ -8,8 +8,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { ResultState } from '@dito-store/status';
 import { fetchSkills, setCurrentStep, updateSkill } from '../store/join.reducer';
-import './skills.scss';
 import SkillCard from './skill-card';
+import './skills.scss';
 
 const Skills = () => {
   const dispatch = useDispatch();
@@ -67,11 +67,23 @@ const Skills = () => {
                       disabled={!areSkillSelectedWithinGroup && maxSkillsSelected}
                       square
                       expanded={expanded === index}
-                      sx={{ p: 0, mt: 3, width: '100%' }}
+                      sx={{
+                        p: 0,
+                        mt: 3,
+                        width: '100%',
+                        '.MuiAccordionSummary-root': {
+                          minHeight: '43px',
+                        },
+                      }}
                       onChange={handleChange(index)}
                     >
-                      <AccordionSummary sx={{ m: 0 }} expandIcon={<ExpandMoreIcon />}>
-                        <Typography sx={{ m: 0 }} component="div" variant="h3" color={expanded === index ? 'text.primary' : 'primary.main'}>
+                      <AccordionSummary sx={{ m: 0, height: '43px' }} expandIcon={<ExpandMoreIcon />}>
+                        <Typography
+                          sx={{ m: 0, lineHeight: '43px' }}
+                          component="div"
+                          variant="h3"
+                          color={expanded === index ? 'text.primary' : 'primary.main'}
+                        >
                           {subCat}
                           <Typography sx={{ ml: 1 }} component="span" variant="subtitle1" color="info.dark">
                             <small>({credits} Credits)</small>

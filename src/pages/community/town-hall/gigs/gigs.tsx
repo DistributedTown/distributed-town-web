@@ -23,7 +23,12 @@ const Gigs = () => {
   return (
     <div className="sw-container">
       <div className="sw-user-container">
-        <SwUserSkillsLegend user={userInfo} />
+        <SwUserSkillsLegend
+          username={userInfo?.nickname}
+          avatar={userInfo?.imageUrl}
+          creditSkills={userInfo?.skills}
+          totalCredits={userInfo?.totalCredits}
+        />
       </div>
       <div className="sw-gigs-container">
         <div className="sw-gigs-top">

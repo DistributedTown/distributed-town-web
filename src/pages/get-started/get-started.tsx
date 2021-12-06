@@ -1,4 +1,4 @@
-import HelpIcon from '@mui/icons-material/Help';
+import InfoIcon from '@mui/icons-material/Info';
 import { Badge, Box, ThemeOptions, Tooltip, Typography } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Link } from 'react-router-dom';
@@ -43,8 +43,8 @@ const GetStarted = () => {
           />
           <Badge
             badgeContent={
-              <Tooltip title="Coming soon!" arrow>
-                <HelpIcon
+              <Tooltip title="Coming soon!">
+                <InfoIcon
                   sx={{
                     bgcolor: 'text.primary',
                     color: 'primary.main',
