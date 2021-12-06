@@ -39,7 +39,11 @@ const CommunityFlipCard = ({
       onClick={handleClickTilt}
       containerClassName={`${isTilted ? 'sw-card-tilt' : ''} ${closed ? 'closed' : ''}`}
     >
-      <div className="sw-card-front" style={{ background: theme.palette.background.paper }} onClick={handleClickTilt}>
+      <div
+        className="sw-card-front"
+        style={{ background: theme.palette.background.paper, boxShadow: theme.shadows[1] }}
+        onClick={handleClickTilt}
+      >
         <div className="sw-card-container front">
           <img className="community-logo" alt="community-logo" src={community.image} />
           <Typography
