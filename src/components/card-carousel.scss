@@ -62,14 +62,14 @@ $mode: cubic-bezier(0.17, 0.57, 0.45, 1);
         &.preactive {
           z-index: 1;
           .slider-single-content {
-            opacity: 0.8;
+            opacity: 0.5;
             transform: translateX(-25%) scale(0.8);
           }
         }
         &.proactive {
           z-index: 1;
           .slider-single-content {
-            opacity: 0.8;
+            opacity: 0.5;
             transform: translateX(25%) scale(0.8);
           }
         }
