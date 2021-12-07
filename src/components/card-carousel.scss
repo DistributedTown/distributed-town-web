@@ -1,6 +1,6 @@
-$time: 500ms;
-$delay: 250ms;
-$mode: cubic-bezier(0.17, 0.67, 0.55, 1.43);
+$time: 350ms;
+$delay: 50ms;
+$mode: cubic-bezier(0.17, 0.57, 0.45, 1);
 
 .react-3d-carousel {
   position: relative;
@@ -62,14 +62,14 @@ $mode: cubic-bezier(0.17, 0.67, 0.55, 1.43);
         &.preactive {
           z-index: 1;
           .slider-single-content {
-            opacity: 0.6;
+            opacity: 0.8;
             transform: translateX(-25%) scale(0.8);
           }
         }
         &.proactive {
           z-index: 1;
           .slider-single-content {
-            opacity: 0.6;
+            opacity: 0.8;
             transform: translateX(25%) scale(0.8);
           }
         }

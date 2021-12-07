@@ -2,7 +2,7 @@
 @import 'sw-web-shared/lib/styles/breakpoints';
 
 .sw-card-tilt {
-  animation: sw-card-tilt 1.5s infinite;
+  animation: sw-card-tilt 1.5s linear;
   animation-direction: normal;
   border-radius: 10px;
 }
@@ -45,6 +45,9 @@
       color: $primary-color;
     }
   }
+  &.closed {
+    background-color: #cccccc;
+  }
 }
 
 .sw-card-back {
@@ -66,16 +69,27 @@
 
   &.front {
     justify-content: space-between;
+    cursor: pointer;
   }
 
   &.back {
     justify-content: flex-start;
     cursor: pointer;
+    padding: 20px 34px;
+  }
+
+  &.closed {
+    cursor: unset;
   }
 
   .community-logo {
     height: 100px;
     width: 100px;
+  }
+
+  .community-logo-small {
+    height: 90px;
+    width: 90px;
   }
 
   .flip-icon-wrapper {
@@ -102,6 +116,8 @@
 
     .sw-community-image-wrapper {
       margin-right: 16px;
+      width: 106px;
+      height: 90px;
     }
 
     .sw-community-summary {
@@ -114,11 +130,10 @@
   }
 
   .sw-description-wrapper {
-    margin-top: 8px;
+    margin-top: 16px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     height: 100%;
-    margin-bottom: 16px;
   }
 }
