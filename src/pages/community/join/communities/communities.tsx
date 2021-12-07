@@ -276,7 +276,7 @@ const Communities = (props) => {
   }, [dispatch, isAutheticated]);
 
   useEffect(() => {
-    setInterval(() => {
+    const interval = setInterval(() => {
       const slides = document.querySelectorAll('.slider-single');
 
       [...(slides as unknown as any[])].forEach((el: HTMLElement) => {
@@ -295,6 +295,8 @@ const Communities = (props) => {
         }
       });
     }, 8000);
+
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
