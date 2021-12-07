@@ -18,7 +18,6 @@ const CommunityFlipCard = ({
   onSelect: (communityName: string) => any;
 }) => {
   const [isFlipped, setFlipped] = useState(false);
-  const [isTilted, setTilted] = useState(false);
 
   const theme = useTheme();
   const closed = community.members >= community.totalMembersAllowed;
@@ -27,24 +26,22 @@ const CommunityFlipCard = ({
     event.stopPropagation();
     setFlipped(!isFlipped);
   };
-
-  const handleClickTilt = () => {
-    setTilted(true);
-    setTimeout(() => setTilted(false), 1500);
+  const returnNull = () => {
+    return null;
   };
 
   return (
     <Flipcard
       isFlipped={isFlipped}
-      onClick={handleClickTilt}
-      containerClassName={`${isTilted ? 'sw-card-tilt' : ''} ${closed ? 'closed' : ''}`}
+      onClick={closed ? returnNull : handleClickFlip}
+      containerClassName={`${isFlipped ? 'flipped' : ''} ${closed ? 'closed' : ''}`}
     >
       <div
-        className="sw-card-front"
+        className={`sw-card-front ${isFlipped ? 'flipped' : ''} ${closed ? 'closed' : ''}`}
         style={{ background: theme.palette.background.paper, boxShadow: theme.shadows[1] }}
-        onClick={handleClickTilt}
+        onClick={closed ? returnNull : handleClickFlip}
       >
-        <div className="sw-card-container front">
+        <div className={`sw-card-container front${closed ? ' closed' : ''}`}>
           <img className="community-logo" alt="community-logo" src={community.image} />
           <Typography
             sx={{ color: 'black', textAlign: 'center', pb: 1, mt: 1 }}
@@ -53,21 +50,25 @@ const CommunityFlipCard = ({
           >
             {community.name}
           </Typography>
-          <Typography sx={{ color: 'primary.main', textAlign: 'center' }} component="div" variant="body1">
+          <Typography sx={{ color: 'primary.main', textAlign: 'center' }} component="div" variant="body2">
             {+community.totalMembersAllowed - +community.members}/{community.totalMembersAllowed} Spaces Available
           </Typography>
-          <Typography sx={{ color: 'primary.main', textAlign: 'center' }} component="div" variant="body1">
+          <Typography sx={{ color: 'primary.main', textAlign: 'center' }} component="div" variant="body2">
             80% Skill Match
           </Typography>
-          <Typography sx={{ color: 'primary.main', textAlign: 'center', mt: 1, fontSize: '2.5rem' }} component="div">
+          <Typography sx={{ color: 'primary.main', textAlign: 'center', mt: 1 }} variant="xl" component="div">
             {closed ? 'Closed' : 'Open'}
           </Typography>
-          <Typography sx={{ color: 'primary.main', textAlign: 'center' }} component="div" variant="body1">
-            Flip to read more
-          </Typography>
-          <div className="flip-icon-wrapper">
-            <RotateRightIcon className="flip-icon" onClick={handleClickFlip} />
-          </div>
+          {!closed && (
+            <>
+              <Typography sx={{ color: 'primary.main', textAlign: 'center' }} component="div" variant="body2">
+                Click to read more
+              </Typography>
+              <div className="flip-icon-wrapper">
+                <RotateRightIcon className="flip-icon" />
+              </div>
+            </>
+          )}
         </div>
       </div>
       <div
@@ -78,22 +79,22 @@ const CommunityFlipCard = ({
         <div className="sw-card-container back">
           <div className="sw-community-summary-wrapper">
             <div className="sw-community-image-wrapper">
-              <img className="community-logo" alt="community-logo" src={community.image} />
+              <img className="community-logo-small" alt="community-logo" src={community.image} />
             </div>
             <div className="sw-community-summary">
-              <Typography sx={{ color: 'background.paper', textAlign: 'center' }} component="div" variant="h4">
+              <Typography sx={{ color: 'background.paper', textAlign: 'left' }} component="div" variant="h3">
                 {community.name}
               </Typography>
-              <Typography sx={{ color: 'background.paper', textAlign: 'center' }} component="div" variant="body2">
+              <Typography sx={{ color: 'background.paper', textAlign: 'left' }} component="div" variant="body2">
                 {+community.totalMembersAllowed - +community.members} Spaces Available
               </Typography>
-              <Typography sx={{ color: 'background.paper', textAlign: 'center' }} component="div" variant="body2">
+              <Typography sx={{ color: 'background.paper', textAlign: 'left' }} component="div" variant="body2">
                 80% Skill Match
               </Typography>
             </div>
           </div>
           <div className="sw-description-wrapper">
-            <Typography sx={{ color: 'background.paper' }} component="div" variant="body1">
+            <Typography sx={{ color: 'background.paper' }} component="div" variant="body2">
               {community.description}
             </Typography>
             <SwButton

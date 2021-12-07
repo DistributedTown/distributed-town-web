@@ -138,7 +138,7 @@ const Join = (props) => {
                 <Typography sx={{ color: 'text.primary', textAlign: 'center', pb: 1 }} component="div" variant="h2">
                   {title}
                 </Typography>
-                <Typography sx={{ color: 'text.primary', textAlign: 'center', pb: 2 }} component="div" variant="subtitle1">
+                <Typography sx={{ color: 'text.primary', textAlign: 'center', pb: 2, m: '0 -20px' }} component="div" variant="subtitle1">
                   <Badge
                     sx={{
                       padding: '0 8px',

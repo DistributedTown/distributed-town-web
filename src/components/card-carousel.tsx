@@ -4,13 +4,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-plusplus */
 /* eslint-disable prefer-destructuring */
-import { useState, useEffect } from 'react';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { useSwipeable } from 'react-swipeable';
 import PropTypes from 'prop-types';
 import './card-carousel.scss';
 import { ThemeOptions, useMediaQuery } from '@mui/material';
+import React, { useState, useEffect } from 'react';
 
 // const isEqual = require("react-fast-compare");
 
@@ -57,6 +57,7 @@ export function CardCarousel(props) {
 
       preactiveSlide.class = 'slider-single preactive';
       activeSlide.class = activeClass;
+
       proactiveSlide.class = 'slider-single proactive';
       setSlides(slide);
       setSlideCurrent(slideCurrentLoc);
@@ -93,6 +94,7 @@ export function CardCarousel(props) {
         proactiveSlide = slide[0];
       }
       const activeSlide = slide[slideCurrentLoc];
+
       if (slideCurrentLoc > 0) {
         preactiveSlide = slide[slideCurrentLoc - 1];
       } else {

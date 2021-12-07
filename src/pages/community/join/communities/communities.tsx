@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-expressions */
 import { useAppDispatch, RootState } from '@dito-store/store.model';
 import { getSkillWalletDescription } from '@dito-api/skillwallet.api';
 import { TextileBucketMetadata } from 'src/api/model';
@@ -238,11 +240,27 @@ const Communities = (props) => {
   };
 
   const flipcards = () => {
-    return entities?.map((c) => (
-      <div style={{ height: '350px', width: '330px', marginTop: '10px', marginBottom: '10px' }}>
-        <CommunityFlipCard community={c} onSelect={claimMembership} selectedCommunityName={selectedCommunityName} />
-      </div>
-    ));
+    const fakeEntities = [
+      ...entities,
+      {
+        name: 'Test Closed Community',
+        address: '0xC643138abBcb8396718D7040859fee7905c65B05',
+        description:
+          'For researchers & web3, open-source teams, that innovate in a liberal fashion - for a more sustainable, meritocratic world.',
+        template: 'Open-Source & DeFi',
+        image: 'https://hub.textile.io/ipfs/bafkreiaks3kjggtxqaj3ixk6ce2difaxj5r6lbemx5kcqdkdtub5vwv5mi',
+        isDiToNativeCommunity: false,
+        members: 24,
+        totalMembersAllowed: 24,
+      },
+    ];
+    return fakeEntities?.map((c) => {
+      return (
+        <div style={{ height: '350px', width: '330px', marginTop: '10px', marginBottom: '10px' }}>
+          <CommunityFlipCard community={c} onSelect={claimMembership} selectedCommunityName={selectedCommunityName} />
+        </div>
+      );
+    });
   };
 
   useEffect(() => {
@@ -258,6 +276,28 @@ const Communities = (props) => {
   }, [dispatch, isAutheticated]);
 
   useEffect(() => {
+    setInterval(() => {
+      const slides = document.querySelectorAll('.slider-single');
+
+      [...(slides as unknown as any[])].forEach((el: HTMLElement) => {
+        const cardFront = el.querySelector('.sw-card-front');
+        if (!cardFront) {
+          return;
+        }
+        if (el.classList.contains('active') && !cardFront.classList.contains('closed') && !cardFront.classList.contains('flipped')) {
+          cardFront.classList.add('sw-card-tilt');
+
+          setTimeout(() => {
+            cardFront.classList.remove('sw-card-tilt');
+          }, 1500);
+        } else {
+          cardFront.classList.remove('sw-card-tilt');
+        }
+      });
+    }, 8000);
+  }, []);
+
+  useEffect(() => {
     if (activeStep !== 2) {
       dispatch(
         setCurrentStep({
@@ -265,7 +305,7 @@ const Communities = (props) => {
           stepperText: 'Welcome to Distributed Town',
           title: 'Step 3 - Pick your Community',
           // eslint-disable-next-line max-len
-          description: `Here's a few comminities for you (based on your skills). Choose one that inspires you the most & start adding Value to it`,
+          description: `Here's a few communities for you (based on your skills). Choose one that inspires you the most & start adding Value to it`,
           toPrevBtnPath: '/join-community/skills',
           left: null,
         })
@@ -303,7 +343,7 @@ const Communities = (props) => {
                 className="no-item-selected"
                 sx={{ color: 'text.primary', textAlign: 'center', pb: 2 }}
                 component="div"
-                variant="h6"
+                variant="body2"
               >
                 No skills were selected, go back and select some skills before selecting a community
               </Typography>
