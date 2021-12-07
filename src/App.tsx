@@ -182,6 +182,8 @@ const App = (props: any) => {
     // },
   ];
 
+  console.log('isJoinFlow: ', isJoinFlow);
+
   return (
     <>
       <LogsDialog open={open} handleClose={handleClose} logs={logs} fullScreen={small} />
