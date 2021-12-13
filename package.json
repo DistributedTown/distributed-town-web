@@ -54,7 +54,7 @@
     "redux-logger": "~3.0.6",
     "redux-persist": "~6.0.0",
     "sw-abi-types": "git+https://github.com/SkillWallet/abi-types.git#main",
-    "sw-web-shared": "git+https://github.com/DistributedTown/sw-web-shared.git#master"
+    "sw-web-shared": "github:DistributedTown/sw-web-shared#master"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "~5.14.1",
