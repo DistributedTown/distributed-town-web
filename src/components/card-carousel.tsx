@@ -162,16 +162,13 @@ export function CardCarousel(props) {
     setSlideTotal(locSlides.length - 1);
     setSlideCurrent(-1);
     if (slideCurrent === -1) {
-      setTimeout(() => {
-        slideRight();
-      }, 500);
+      slideRight();
     }
   }, [props.slides, slideTotal]);
+
   useEffect(() => {
     if (slideCurrent === -1) {
-      setTimeout(() => {
-        slideRight();
-      }, 500);
+      slideRight();
     }
   }, [slides, slideCurrent]);
 

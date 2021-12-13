@@ -1,7 +1,7 @@
 import { createTheme, ThemeOptions } from '@mui/material/styles';
 import { Fade, PaletteOptions, SimplePaletteColorOptions } from '@mui/material';
-import createShadows from '@dito-utils/shadows';
 import { Shadows } from '@mui/material/styles/shadows';
+import { createShadows } from 'sw-web-shared';
 
 const palette: PaletteOptions & { type: string } = {
   type: 'dark',

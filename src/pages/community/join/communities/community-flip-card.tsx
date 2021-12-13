@@ -8,15 +8,7 @@ import Flipcard from '../../../../components/flip-card';
 import './community-flip-card.scss';
 import { CommunityCategory } from '../store/model';
 
-const CommunityFlipCard = ({
-  community,
-  selectedCommunityName,
-  onSelect,
-}: {
-  community: CommunityCategory;
-  selectedCommunityName: string;
-  onSelect: (communityName: string) => any;
-}) => {
+const CommunityFlipCard = ({ community, onSelect }: { community: CommunityCategory; onSelect: (communityName: string) => any }) => {
   const [isFlipped, setFlipped] = useState(false);
 
   const theme = useTheme();

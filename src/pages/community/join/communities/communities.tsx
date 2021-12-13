@@ -21,12 +21,8 @@ import {
   selectCommunity,
   setCurrentStep,
 } from '../store/join.reducer';
-
-import CommunityCard from './community-card';
 import { OnClaimMembershipHandlers } from './claim-membership-handlers';
 import { ClaimMembershipDialog } from './claim-membership-dialog';
-import CommunityCredits from './community-credits';
-
 import CommunityFlipCard from './community-flip-card';
 
 const Communities = (props) => {
@@ -40,7 +36,7 @@ const Communities = (props) => {
   const { selectedCategory } = useSelector((state: RootState) => state.joinCommunity.category);
   const { selectedSkills } = useSelector((state: RootState) => state.joinCommunity.skills);
   const userInfo = useSelector((state: RootState) => state.joinCommunity.userInfo);
-  const { entities, selectedCommunityName, status } = useSelector((state: RootState) => state.joinCommunity.community);
+  const { entities, status } = useSelector((state: RootState) => state.joinCommunity.community);
   const selectedCommunity = useSelector(getCommunity);
   const formattedSkills = useSelector(getFormattedSkills);
   const credits = useSelector(getCredits);
@@ -257,7 +253,7 @@ const Communities = (props) => {
     return fakeEntities?.map((c) => {
       return (
         <div style={{ height: '350px', width: '330px', marginTop: '10px', marginBottom: '10px' }}>
-          <CommunityFlipCard community={c} onSelect={claimMembership} selectedCommunityName={selectedCommunityName} />
+          <CommunityFlipCard community={c} onSelect={claimMembership} />
         </div>
       );
     });
@@ -276,28 +272,31 @@ const Communities = (props) => {
   }, [dispatch, isAutheticated]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      const slides = document.querySelectorAll('.slider-single');
+    let interval = null;
+    if (status === ResultState.Idle) {
+      interval = setInterval(() => {
+        const slides = document.querySelectorAll('.slider-single');
 
-      [...(slides as unknown as any[])].forEach((el: HTMLElement) => {
-        const cardFront = el.querySelector('.sw-card-front');
-        if (!cardFront) {
-          return;
-        }
-        if (el.classList.contains('active') && !cardFront.classList.contains('closed') && !cardFront.classList.contains('flipped')) {
-          cardFront.classList.add('sw-card-tilt');
+        [...(slides as unknown as any[])].forEach((el: HTMLElement) => {
+          const cardFront = el.querySelector('.sw-card-front');
+          if (!cardFront) {
+            return;
+          }
+          if (el.classList.contains('active') && !cardFront.classList.contains('closed') && !cardFront.classList.contains('flipped')) {
+            cardFront.classList.add('sw-card-tilt');
 
-          setTimeout(() => {
+            setTimeout(() => {
+              cardFront.classList.remove('sw-card-tilt');
+            }, 1500);
+          } else {
             cardFront.classList.remove('sw-card-tilt');
-          }, 1500);
-        } else {
-          cardFront.classList.remove('sw-card-tilt');
-        }
-      });
-    }, 8000);
+          }
+        });
+      }, 8000);
+    }
 
-    return () => clearInterval(interval);
-  }, []);
+    return () => interval && clearInterval(interval);
+  }, [status]);
 
   useEffect(() => {
     if (activeStep !== 2) {

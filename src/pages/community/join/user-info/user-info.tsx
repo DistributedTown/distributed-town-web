@@ -2,14 +2,12 @@ import { TextField, Typography } from '@mui/material';
 import { RootState } from '@dito-store/store.model';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { SwButton, SwQuote, SwUploadFile } from 'sw-web-shared';
-
-import { toBase64 } from '@dito-utils/to-base-64';
-import { useEffect, useMemo } from 'react';
-import debounce from 'lodash.debounce';
-
+import { SwButton, SwQuote, SwUploadFile, toBase64 } from 'sw-web-shared';
+import { useEffect, useState } from 'react';
+import { Field } from 'react-final-form';
 import './user-info.scss';
 
+import SwForm from '@dito-components/form-components/SwForm';
 import { setCurrentStep, updateAvatarUrl, updateName } from '../store/join.reducer';
 
 const LeftSide = () => (
@@ -34,14 +32,22 @@ const LeftSide = () => (
 const UserInfo = () => {
   const dispatch = useDispatch();
   const { activeStep } = useSelector((state: RootState) => state.joinCommunity.currentStep);
-  const { name, avatar } = useSelector((state: RootState) => state.joinCommunity.userInfo);
+  const [userInfo] = useState(useSelector((state: RootState) => state.joinCommunity.userInfo));
 
-  const debouncedChangeHandler = useMemo(() => {
-    const changeHandler = (e) => {
-      dispatch(updateName(e.target.value));
-    };
-    return debounce(changeHandler, 10);
-  }, [dispatch]);
+  const changeHandler = async ({ values: { avatar, name } }) => {
+    if (name !== userInfo?.name) {
+      dispatch(updateName(name));
+    }
+
+    if (avatar !== userInfo?.avatar) {
+      if (avatar && typeof avatar !== 'string') {
+        const base64 = await toBase64(avatar);
+        dispatch(updateAvatarUrl(base64));
+      } else {
+        dispatch(updateAvatarUrl(null));
+      }
+    }
+  };
 
   useEffect(() => {
     if (activeStep !== 0) {
@@ -55,73 +61,96 @@ const UserInfo = () => {
         })
       );
     }
-
-    return () => debouncedChangeHandler.cancel();
-  }, [debouncedChangeHandler, dispatch, activeStep]);
+  }, [dispatch, activeStep]);
 
   return (
     <div className="sw-user-info-wrapper">
-      <div className="sw-form-field">
-        <Typography sx={{ color: 'text.primary', mb: '4px' }} component="div" variant="h3">
-          Nickname
-        </Typography>
-        <Typography sx={{ color: 'text.primary', mb: '12px' }} component="div" variant="body2">
-          What would you like your community to call you?
-        </Typography>
-        <div className="sw-form-field-content">
-          <TextField
-            autoFocus
-            focused
-            color="secondary"
-            placeholder="Required Field"
-            defaultValue={name}
-            inputProps={{ maxLength: 20 }}
-            onChange={debouncedChangeHandler}
-            helperText={
-              <Typography sx={{ color: 'text.primary' }} align="right" component="span" variant="body2">
-                Max characters {20 - (name?.length || 0)}
-              </Typography>
-            }
-          />
-        </div>
-      </div>
+      <SwForm changeHandler={changeHandler} initialValues={userInfo}>
+        {({ values }) => {
+          return (
+            <>
+              <div className="sw-form-field">
+                <Typography sx={{ color: 'text.primary', mb: '4px' }} component="div" variant="h3">
+                  Nickname
+                </Typography>
+                <Typography sx={{ color: 'text.primary', mb: '12px' }} component="div" variant="body2">
+                  What would you like your community to call you?
+                </Typography>
+                <div className="sw-form-field-content">
+                  <Field
+                    name="name"
+                    render={(props) => {
+                      return (
+                        <TextField
+                          name={props.input.name}
+                          value={props.input.value}
+                          onChange={props.input.onChange}
+                          autoFocus
+                          required
+                          focused
+                          error={props.meta.touched && props.meta.pristine && !props.input.value}
+                          color="secondary"
+                          placeholder="Required Field"
+                          inputProps={{ maxLength: 20 }}
+                          helperText={
+                            <Typography sx={{ color: 'text.primary' }} align="right" component="span" variant="body2">
+                              Max characters {20 - (props.input.value?.length || 0)}
+                            </Typography>
+                          }
+                        />
+                      );
+                    }}
+                  />
+                </div>
+              </div>
 
-      <div className="sw-form-field">
-        <Typography sx={{ color: 'text.primary', mb: '4px' }} component="div" variant="h3">
-          Avatar
-        </Typography>
-        <Typography sx={{ color: 'text.primary', mb: '12px' }} component="div" variant="body2">
-          A public image - that's how others will see you.
-        </Typography>
-        <div className="sw-form-field-content sw-image-upload">
-          <div className="sw-field-upload">
-            <div>
-              <SwUploadFile
-                initialPreviewUrl={avatar}
-                fileChange={async (file: File) => {
-                  if (file) {
-                    const base64 = await toBase64(file);
-                    dispatch(updateAvatarUrl(base64));
-                  } else {
-                    dispatch(updateAvatarUrl(null));
-                  }
-                }}
-                sx={{
-                  width: '110px',
-                  height: '110px',
-                }}
-              />
-              <Typography sx={{ color: 'text.primary' }} align="right" component="div" variant="body2">
-                .png or .jpg
-              </Typography>
-            </div>
-          </div>
-        </div>
-      </div>
+              <div className="sw-form-field">
+                <Typography sx={{ color: 'text.primary', mb: '4px' }} component="div" variant="h3">
+                  Avatar
+                </Typography>
+                <Typography sx={{ color: 'text.primary', mb: '12px' }} component="div" variant="body2">
+                  A public image - that's how others will see you.
+                </Typography>
+                <div className="sw-form-field-content sw-image-upload">
+                  <div className="sw-field-upload">
+                    <div>
+                      <Field
+                        name="avatar"
+                        render={(props) => {
+                          return (
+                            <SwUploadFile
+                              name={props.input.name}
+                              initialPreviewUrl={props.input.value}
+                              fileChange={props.input.onChange}
+                              sx={{
+                                width: '110px',
+                                height: '110px',
+                              }}
+                            />
+                          );
+                        }}
+                      />
+                      <Typography sx={{ color: 'text.primary' }} align="right" component="div" variant="body2">
+                        .png or .jpg
+                      </Typography>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-      <div className="bottom-action">
-        <SwButton disabled={!name || !avatar} component={Link} to="/join-community/skills" label="Next: Pick your Skills" />
-      </div>
+              <div className="bottom-action">
+                <SwButton
+                  type="button"
+                  disabled={!values?.name || !values?.avatar}
+                  component={Link}
+                  to="/join-community/skills"
+                  label="Next: Pick your Skills"
+                />
+              </div>
+            </>
+          );
+        }}
+      </SwForm>
     </div>
   );
 };

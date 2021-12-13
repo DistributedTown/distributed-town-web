@@ -1,13 +1,11 @@
-import { Box, MobileStepper, ThemeOptions, Tooltip, Button, Typography, Badge, IconButton } from '@mui/material';
+import { Box, ThemeOptions, Tooltip, Button, IconButton } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { Fragment, useEffect, useState } from 'react';
-import { SwLayout, SwSidebar } from 'sw-web-shared';
-import CheckIcon from '@mui/icons-material/Check';
+import { useEffect, useState } from 'react';
+import { SwLayout, SwSidebar, SwStepper } from 'sw-web-shared';
 import { Link, Route, Switch } from 'react-router-dom';
 import { KeyboardArrowLeft } from '@mui/icons-material';
 import { RootState } from '@dito-store/store.model';
 import { useDispatch, useSelector } from 'react-redux';
-import InfoIcon from '@mui/icons-material/Info';
 import MenuIcon from '@mui/icons-material/Menu';
 import { resetJoinCommunityState } from './store/join.reducer';
 import Categories from './categories/categories';
@@ -97,70 +95,20 @@ const Join = (props) => {
             )}
           </div>
           <Box sx={{ maxWidth: activeStep !== -1 ? '650px' : '100%', flexGrow: 1 }} className="sw-box-right-inner">
-            <Box sx={{ width: '100%', position: 'relative' }}>
-              {stepperText && (
-                <Typography className="stepper-top" sx={{ color: 'text.primary' }} component="div" variant="h1" align="center">
-                  {stepperText}
-                </Typography>
-              )}
-              <MobileStepper
-                steps={steps.length}
-                position="static"
-                activeStep={activeStep}
-                sx={{
-                  padding: 0,
-                  height: '40px',
-                  display: activeStep !== -1 ? 'flex' : 'none',
-                  backgroundColor: 'transparent',
-                  width: '100%',
-                }}
-                nextButton={null}
-                backButton={
-                  <Button to={toPrevBtnPath || '/'} size="small" color="info" component={Link}>
-                    <KeyboardArrowLeft sx={{ marginTop: '-3px' }} />
-                    Back
-                  </Button>
-                }
-              />
-              <Box sx={{ maxWidth: '450px', width: '100%', margin: '0 auto' }}>
-                <div key="stepper-dots" className="stepper-dots" style={{ display: activeStep !== -1 ? 'flex' : 'none' }}>
-                  {steps.map((_, index) => {
-                    return (
-                      <Fragment key={index}>
-                        <div className={`stepper-dot ${index === activeStep ? 'active' : ''}`}>
-                          {index < activeStep && <CheckIcon color="info" />}
-                        </div>
-                        {steps.length - 1 !== index && <div className="stepper-line" />}
-                      </Fragment>
-                    );
-                  })}
-                </div>
-                <Typography sx={{ color: 'text.primary', textAlign: 'center', pb: 1 }} component="div" variant="h2">
-                  {title}
-                </Typography>
-                <Typography sx={{ color: 'text.primary', textAlign: 'center', pb: 2, m: '0 -20px' }} component="div" variant="subtitle1">
-                  <Badge
-                    sx={{
-                      padding: '0 8px',
-                    }}
-                    badgeContent={
-                      descriptionTooltip && (
-                        <Tooltip title={descriptionTooltip}>
-                          <InfoIcon
-                            sx={{
-                              fontSize: '1rem',
-                              position: 'absolute',
-                            }}
-                          />
-                        </Tooltip>
-                      )
-                    }
-                  >
-                    {description}
-                  </Badge>
-                </Typography>
-              </Box>
-            </Box>
+            <SwStepper
+              stepperText={stepperText}
+              title={title}
+              steps={steps}
+              description={description}
+              activeStep={activeStep}
+              descriptionTooltip={descriptionTooltip}
+              backButton={
+                <Button to={toPrevBtnPath || '/'} size="small" color="info" component={Link}>
+                  <KeyboardArrowLeft sx={{ marginTop: '-3px' }} />
+                  Back
+                </Button>
+              }
+            />
             <Box className="sw-box" sx={{ maxWidth: activeStep === -1 ? '100%' : '450px', width: '100%', margin: '20px auto' }}>
               <Switch>
                 <Route path="/join-community/categories" component={Categories} {...props} />

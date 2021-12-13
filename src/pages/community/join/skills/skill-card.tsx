@@ -1,19 +1,21 @@
 import { Card, CardContent, Typography, List, ListItem, Stack } from '@mui/material';
-import { SwSlider } from 'sw-web-shared';
-import { toPascalCase } from '@dito-utils/pascal-case';
+import { SwSlider, toPascalCase } from 'sw-web-shared';
+import { Field } from 'react-final-form';
 import { CategoryIcons } from '../categories/categories';
+
 import './skill-card.scss';
 
-function SkillCard({ skills, selectedSkills, updateSkill }) {
+function SkillCard({ skills, state, updateSkill, totalSkills }) {
   return (
     <Card className="sw-skill-card" sx={{ display: 'flex', boxShadow: 0, backgroundColor: 'transparent' }}>
       <CardContent sx={{ flex: '1 0 auto', width: '100%', p: '16px' }}>
         <List className="sw-skill-list">
           {skills.map((skill: string, index: number) => {
-            const currentSkill = selectedSkills.find((x) => x.skill === skill);
-            const disabled = !currentSkill && selectedSkills.length === 3;
-            const isActive = currentSkill?.xp > 0;
+            const currentSkill = state[skill];
+            const disabled = (!currentSkill || currentSkill === 0) && totalSkills?.length === 3;
+            const isActive = currentSkill > 0;
             const SwIcon = CategoryIcons[toPascalCase(skill)];
+
             return (
               <ListItem
                 key={index}
@@ -45,20 +47,28 @@ function SkillCard({ skills, selectedSkills, updateSkill }) {
                   >
                     {skill}
                   </Typography>
-                  <SwSlider
-                    key={`slider-${currentSkill?.xp}`}
-                    step={1}
-                    mode={isActive ? 'white' : 'black'}
-                    marks
-                    min={0}
-                    max={10}
-                    disabled={disabled}
-                    defaultValue={currentSkill?.xp || 0}
-                    onChangeCommitted={(_, value: number) => {
-                      updateSkill({
-                        xp: value,
-                        skill,
-                      });
+                  <Field
+                    name={skill}
+                    render={(props) => {
+                      return (
+                        <SwSlider
+                          name={skill}
+                          value={props.input.value || 0}
+                          onChange={props.input.onChange}
+                          onChangeCommitted={(_, value: number) => {
+                            updateSkill({
+                              xp: value,
+                              skill,
+                            });
+                          }}
+                          step={1}
+                          mode={isActive ? 'white' : 'black'}
+                          marks
+                          min={0}
+                          max={10}
+                          disabled={disabled}
+                        />
+                      );
                     }}
                   />
                 </Stack>

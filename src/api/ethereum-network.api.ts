@@ -1,5 +1,5 @@
 import { addLog } from '@dito-store/ui-reducer';
-import { requestTimeout } from '@dito-utils/request-timeout';
+import { requestTimeout } from 'sw-web-shared';
 
 export const connectToEthereum = async (dispatch?: any): Promise<boolean> => {
   if (!window.ethereum.selectedAddress) {

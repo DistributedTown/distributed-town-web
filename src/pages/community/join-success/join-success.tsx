@@ -35,53 +35,51 @@ const JoinSuccess = () => {
     }
   }, [communityAddress, community, dispatch, search]);
   return (
-    <>
-      <div className="sw-join-success-wrapper">
-        {status === ResultState.Loading ? (
-          <div className="sw-spinner-wrapper">
-            <CircularProgress sx={{ color: 'text.primary' }} />
-          </div>
-        ) : (
-          <>
-            <div className="sw-community-details-wrapper">
-              <div className="sw-congrats-wrapper">
-                <Typography sx={{ color: 'text.primary', mb: '45px', textAlign: 'center' }} component="div" variant="h1">
-                  Congratulations
-                </Typography>
-              </div>
+    <div className="sw-join-success-wrapper">
+      {status === ResultState.Loading ? (
+        <div className="sw-spinner-wrapper">
+          <CircularProgress sx={{ color: 'text.primary' }} />
+        </div>
+      ) : (
+        <>
+          <div className="sw-community-details-wrapper">
+            <div className="sw-congrats-wrapper">
+              <Typography sx={{ color: 'text.primary', mb: '45px', textAlign: 'center' }} component="div" variant="h1">
+                Congratulations
+              </Typography>
+            </div>
 
-              <Typography sx={{ color: 'text.primary', mb: 2, textAlign: 'center' }} component="div" variant="h2">
-                You are now a member of {community?.name}.
-              </Typography>
-              <Typography sx={{ color: 'text.primary', mb: 5, textAlign: 'center' }} component="div" variant="h2">
-                Your new DITO credits are now:
-              </Typography>
-              <DitoCreditsSvg className="sw-dito-credits" height="113px" width="166px" />
-              <Typography
-                sx={{
-                  color: 'text.primary',
-                  mb: 1,
-                  textAlign: 'center',
-                  fontWeight: 'bold',
-                }}
-                component="div"
-                variant="xl"
-              >
-                {diToCredits}
-              </Typography>
-            </div>
-            <div className="sw-share-button-wrapper">
-              <SwButton
-                sx={{ width: '310px', height: '50px' }}
-                label={small ? 'Share' : 'Share  & Invite your peers'}
-                onClick={handleClickOpen}
-              />
-              <ShareDialog community={community} open={open} onClose={handleClose} />
-            </div>
-          </>
-        )}
-      </div>
-    </>
+            <Typography sx={{ color: 'text.primary', mb: 2, textAlign: 'center' }} component="div" variant="h2">
+              You are now a member of {community?.name}.
+            </Typography>
+            <Typography sx={{ color: 'text.primary', mb: 5, textAlign: 'center' }} component="div" variant="h2">
+              Your new DITO credits are now:
+            </Typography>
+            <DitoCreditsSvg className="sw-dito-credits" height="113px" width="166px" />
+            <Typography
+              sx={{
+                color: 'text.primary',
+                mb: 1,
+                textAlign: 'center',
+                fontWeight: 'bold',
+              }}
+              component="div"
+              variant="xl"
+            >
+              {diToCredits}
+            </Typography>
+          </div>
+          <div className="sw-share-button-wrapper">
+            <SwButton
+              sx={{ width: '310px', height: '50px' }}
+              label={small ? 'Share' : 'Share  & Invite your peers'}
+              onClick={handleClickOpen}
+            />
+            <ShareDialog community={community} open={open} onClose={handleClose} />
+          </div>
+        </>
+      )}
+    </div>
   );
 };
 

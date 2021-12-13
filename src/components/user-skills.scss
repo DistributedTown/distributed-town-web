@@ -2,11 +2,11 @@
 @import 'sw-web-shared/lib/styles/breakpoints';
 
 .sw-user-info-wrapper {
-  min-width: 250px;
   display: flex;
   flex-direction: column;
   min-width: 250px;
   align-items: center;
+  margin: 0 auto;
   .sw-total-credits {
     display: flex;
     align-items: center;

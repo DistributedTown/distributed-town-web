@@ -1,4 +1,4 @@
-import { base64toFile } from '@dito-utils/to-base-64';
+import { base64toFile } from 'sw-web-shared';
 import { Buckets } from '@textile/hub';
 import { TextileBucketMetadata } from './model';
 

@@ -1,7 +1,6 @@
-import { toPascalCase } from '@dito-utils/pascal-case';
 import { Typography, Avatar, Badge, Tooltip, useTheme } from '@mui/material';
 import { CategoryIcons } from 'src/pages/community/join/categories/categories';
-import { SwProgressBar, DitoCreditsSvg } from 'sw-web-shared';
+import { SwProgressBar, DitoCreditsSvg, toPascalCase } from 'sw-web-shared';
 import InfoIcon from '@mui/icons-material/Info';
 import './user-skills.scss';
 

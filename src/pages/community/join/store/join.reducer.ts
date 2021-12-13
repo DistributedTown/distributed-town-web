@@ -238,8 +238,6 @@ export const getSkillCredits = createSelector(updateSkill, toggleSkill, (x1): st
     });
   }
 
-  console.log('totalSkills: ', totalSkills);
-
   return totalSkills;
 });
 

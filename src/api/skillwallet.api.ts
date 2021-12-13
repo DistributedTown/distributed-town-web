@@ -53,8 +53,6 @@ export const getTokenIdContract = async (communityAddress: string): Promise<stri
   const contract = new ethers.Contract(skillwalletAddress, SkillWalletAbi, signer as any);
   const isRegistered = await contract.isSkillWalletRegistered(window.ethereum.selectedAddress);
 
-  console.log('isRegistered: ', isRegistered);
-
   if (isRegistered) {
     const tokenId = await contract.getSkillWalletIdByOwner(window.ethereum.selectedAddress);
     return tokenId?.toString();

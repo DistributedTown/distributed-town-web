@@ -4,8 +4,6 @@ import Gigs from './gigs/gigs';
 
 const TownHall = (props) => {
   const { path } = props.match;
-
-  console.log('path: ', path);
   return (
     <Switch>
       <Route component={Dashboard} path={`${path}/dashboard`} {...props} />
