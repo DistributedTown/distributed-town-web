@@ -7,28 +7,32 @@ import {
   hasPendingAuthentication,
   isQrCodeActive,
 } from '@dito-api/skillwallet.api';
-import { Box, CircularProgress, Typography } from '@mui/material';
-import { SwButton, ParseSWErrorMessage, asyncPoll } from 'sw-web-shared';
+import CloseIcon from '@mui/icons-material/Close';
+import { Box, Typography } from '@mui/material';
+import { SwButton, ParseSWErrorMessage, asyncPoll, DitoLogoSvg } from 'sw-web-shared';
 import { QRCode } from 'react-qrcode-logo';
 import { generateTextileBucketUrl } from '@dito-api/textile-bucket.api';
 import { connectToEthereum, switchToEtheremNetwork } from '@dito-api/ethereum-network.api';
 import { addLog } from '@dito-store/ui-reducer';
 import { AppDispatch } from '@dito-store/store.model';
 import { ClaimMembershipErrorTypes } from '../store/model';
+import './communities.scss';
 
 const DialogLoadingMessage = ({ message, subtitle = null, onCancel }) => {
   return (
     <>
       <div className="sw-join-dialog-content">
-        <CircularProgress sx={{ color: 'text.primary' }} />
-        <Typography sx={{ textAlign: 'center', mt: 2 }} component="div" variant="h6">
-          {message}
-        </Typography>
-        <Typography sx={{ color: 'text.primary', textAlign: 'center', mt: 2 }} component="div" variant="body2">
-          {subtitle}
-        </Typography>
+        <CloseIcon onClick={onCancel} sx={{ position: 'absolute', cursor: 'pointer', top: 8, right: 8 }} />
+        <DitoLogoSvg width="220" height="220" className="dialog-loading-logo" />
+        <div style={{ minHeight: '150px', display: 'flex', flexDirection: 'column' }}>
+          <Typography sx={{ textAlign: 'center', mt: 8 }} component="div" variant="h1">
+            {message}
+          </Typography>
+          <Typography sx={{ color: 'text.primary', textAlign: 'center', mt: 2 }} component="div" variant="h4">
+            {subtitle}
+          </Typography>
+        </div>
       </div>
-      <SwButton color="error" onClick={onCancel} sx={{ mt: 4 }} label="Cancel" />
     </>
   );
 };
@@ -37,14 +41,14 @@ const DialogErrorMessage = ({ message, subtitle = null, onCancel }) => {
   return (
     <>
       <div className="sw-join-dialog-content">
-        <Typography sx={{ textAlign: 'center', mt: 2 }} component="div" variant="h6">
+        <CloseIcon onClick={onCancel} sx={{ position: 'absolute', cursor: 'pointer', top: 8, right: 8 }} />
+        <Typography sx={{ textAlign: 'center', mt: 2 }} component="div" variant="h1">
           {message}
         </Typography>
-        <Typography sx={{ color: 'text.primary', textAlign: 'center', mt: 2 }} component="div" variant="body2">
+        <Typography sx={{ color: 'text.primary', textAlign: 'center', mt: 2 }} component="div" variant="h4">
           {subtitle}
         </Typography>
       </div>
-      <SwButton color="error" onClick={onCancel} sx={{ mt: 4 }} label="Cancel" />
     </>
   );
 };
@@ -53,18 +57,22 @@ const DialogAdditionalActionNeeded = ({ message, subtitle, actionLabel, handleAd
   return (
     <>
       <div className="sw-join-dialog-content">
-        <Typography sx={{ textAlign: 'center', mt: 2 }} component="div" variant="h6">
+        <CloseIcon onClick={onCancel} sx={{ position: 'absolute', cursor: 'pointer', top: 8, right: 8 }} />
+        <Typography sx={{ textAlign: 'center', mt: 2 }} component="div" variant="h1">
           {message}
         </Typography>
-        <Typography sx={{ color: 'text.primary', textAlign: 'center', mt: 2 }} component="div" variant="body2">
+        <Typography sx={{ color: 'text.primary', textAlign: 'center', mt: 2 }} component="div" variant="h4">
           {subtitle}
         </Typography>
         <SwButton color="primary" onClick={handleAdditionalAction} sx={{ mt: 4, width: '200px', height: '45px' }} label={actionLabel} />
       </div>
-      <SwButton color="error" onClick={onCancel} sx={{ mt: 4 }} label="Cancel" />
     </>
   );
 };
+
+const qrLogo =
+  // eslint-disable-next-line max-len
+  'data:image/png;base64,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';
 
 export const OnClaimMembershipHandlers = (
   dispatch: AppDispatch,
@@ -303,36 +311,40 @@ export const OnClaimMembershipHandlers = (
     } else {
       setDialogContent(
         <>
-          <Box sx={{ display: 'flex', mt: 2, p: 2, bgcolor: 'white' }}>
+          <CloseIcon onClick={handleClose} sx={{ position: 'absolute', cursor: 'pointer', top: 8, right: 8 }} />
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              px: 2,
+              width: '380px',
+              marginTop: '14px',
+            }}
+          >
+            <Typography sx={{ textAlign: 'center', width: '100%' }} component="div" variant="h1">
+              Scan the QR Code
+            </Typography>
+            <Typography sx={{ textAlign: 'center', mt: 2, width: '100%' }} component="div" variant="h4">
+              Scan with your SkillWallet App <br />
+              to Claim your Membership!
+            </Typography>
+          </Box>
+          <Box sx={{ display: 'flex', mt: 2 }}>
             <QRCode
               value={JSON.stringify({
                 tokenId,
                 nonce,
               })}
-              logoWidth={140}
-              logoHeight={140}
-              bgColor="white"
-              size={205}
+              bgColor="transparent"
+              fgColor="white"
+              logoImage={qrLogo}
+              logoWidth={70}
+              logoHeight={70}
+              size={215}
             />
           </Box>
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              px: 2,
-              bgcolor: 'white',
-              width: '255px',
-              height: '60px',
-              marginTop: '14px',
-            }}
-          >
-            <Typography sx={{ color: 'black', textAlign: 'center' }} component="div" variant="body1">
-              Scan with your <b>SkillWallet App</b> <br />
-              to claim your Membership
-            </Typography>
-          </Box>
-          <SwButton color="error" onClick={handleClose} sx={{ mt: 4 }} label="Cancel" />
         </>
       );
     }

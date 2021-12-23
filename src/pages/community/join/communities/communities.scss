@@ -1,6 +1,5 @@
-@import "sw-web-shared/lib/styles/variables";
-@import "sw-web-shared/lib/styles/breakpoints";
-
+@import 'sw-web-shared/lib/styles/variables';
+@import 'sw-web-shared/lib/styles/breakpoints';
 
 .sw-join-dialog-content {
   display: flex;
@@ -14,4 +13,20 @@
 .sw-communties-wrapper {
   display: grid;
   grid-gap: 15px;
+}
+
+.dialog-loading-logo {
+  animation: pulse-dot 1.25s cubic-bezier(0.455, 0.03, 0.515, 0.955) -0.4s infinite;
+}
+
+@keyframes pulse-dot {
+  0% {
+    transform: scale(0.9);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0.9);
+  }
 }

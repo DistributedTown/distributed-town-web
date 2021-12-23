@@ -5,6 +5,7 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import './community-share-dialog.scss';
 import React from 'react';
+
 import ClipboardCopy from './clipboard-copy';
 
 export interface SimpleDialogProps {
