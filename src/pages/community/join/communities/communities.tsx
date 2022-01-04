@@ -179,7 +179,7 @@ const Communities = (props) => {
         case ClaimMembershipErrorTypes.RetryNetwork:
         case ClaimMembershipErrorTypes.RetryTextile:
           setDialogContent(null);
-          // claimMembership();
+          claimMembership(communityName);
           break;
         default:
           console.error('Not handled!');

@@ -116,19 +116,14 @@ const Categories = () => {
                 <ListItem key={id} sx={{ height: '45px', width: 'auto' }} disablePadding>
                   <SwButton
                     key={id}
-                    sx={{
-                      height: '45px',
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      fontSize: '14px',
-                    }}
+                    mode="light"
+                    btnType="medium"
                     onClick={async () => {
                       await dispatch(selectCategory(name));
                       // props.history.push(`/join-community/user-info`);
                     }}
                     className={selectedCategory === name ? 'active-link' : ''}
-                    startIcon={<SwIcon className="sw-btn-icon" width="14px" />}
+                    startIcon={<SwIcon />}
                     label={name}
                   />
                 </ListItem>

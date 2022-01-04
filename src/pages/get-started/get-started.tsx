@@ -35,12 +35,7 @@ const GetStarted = () => {
           </Typography>
         </Box>
         <Box className="sw-box-actions">
-          <SwButton
-            label="Join"
-            endIcon={<JoinUnselSvg className="sw-btn-icon" width="45px" />}
-            component={Link}
-            to="/join-community/categories"
-          />
+          <SwButton label="Join" mode="light" btnType="large" endIcon={<JoinUnselSvg />} component={Link} to="/join-community/categories" />
           <Badge
             badgeContent={
               <Tooltip title="Coming soon!">
@@ -57,8 +52,10 @@ const GetStarted = () => {
             }
           >
             <SwButton
-              endIcon={<CreateUnselSvg className="sw-btn-icon" width="45px" />}
+              endIcon={<CreateUnselSvg />}
               disabled
+              mode="light"
+              btnType="large"
               label="Create"
               component={Link}
               to="/community/create"
