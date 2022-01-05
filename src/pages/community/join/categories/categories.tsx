@@ -103,11 +103,12 @@ const Categories = () => {
             className="grid"
             sx={{
               padding: 0,
-              display: 'grid',
+              display: 'flex',
               width: '100%',
               gridGap: '15px',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-              gridAutoRows: 'minmax(60px, auto)',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
             {entities.map(({ id, name, icon }) => {
