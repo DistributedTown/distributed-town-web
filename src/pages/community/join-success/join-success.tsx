@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@dito-store/store.model';
 import { ResultState } from '@dito-store/status';
 import { fetchCommunity } from '../store/community.reducer';
-import ShareDialog from './community-share-dialog';
 
 const JoinSuccess = () => {
   const dispatch = useDispatch();
@@ -76,6 +75,7 @@ const JoinSuccess = () => {
           <div className="sw-share-button-wrapper">
             <SwButton
               sx={{ width: '310px', height: '50px' }}
+              mode="light"
               label={small ? 'Share' : 'Share  & Invite your peers'}
               onClick={handleClickOpen}
             />

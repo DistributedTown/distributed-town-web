@@ -91,7 +91,7 @@ const CommunityFlipCard = ({ community, onSelect }: { community: CommunityCatego
             </Typography>
             <SwButton
               sx={{ height: '50px' }}
-              color="secondary"
+              mode="light"
               onClick={(event) => {
                 event.stopPropagation();
                 // eslint-disable-next-line no-unused-expressions

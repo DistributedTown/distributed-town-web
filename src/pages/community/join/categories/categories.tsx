@@ -1,4 +1,4 @@
-import { CircularProgress, List, ListItem } from '@mui/material';
+import { CircularProgress, Grid, List, ListItem } from '@mui/material';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -131,11 +131,34 @@ const Categories = () => {
               );
             })}
           </List>
+          {/* <Grid container className="grid" spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+            {entities.map(({ id, name, icon }) => {
+              const SwIcon = CategoryIcons[icon];
+              return (
+                <Grid item key={id} sx={{ height: '45px', width: 'auto' }}>
+                  <SwButton
+                    key={id}
+                    mode="light"
+                    btnType="medium"
+                    onClick={async () => {
+                      await dispatch(selectCategory(name));
+                      // props.history.push(`/join-community/user-info`);
+                    }}
+                    className={selectedCategory === name ? 'active-link' : ''}
+                    startIcon={<SwIcon />}
+                    label={name}
+                  />
+                </Grid>
+              );
+            })}
+          </Grid> */}
 
           <div className="bottom-action">
             <SwButton
               disabled={selectedCategory === null || status === ResultState.Loading}
               component={Link}
+              mode="light"
+              btnType="large"
               to="/join-community/user-info"
               label="Next: Create your Account"
             />

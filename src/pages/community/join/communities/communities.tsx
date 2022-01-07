@@ -37,7 +37,7 @@ const Communities = (props) => {
   const { selectedSkills } = useSelector((state: RootState) => state.joinCommunity.skills);
   const userInfo = useSelector((state: RootState) => state.joinCommunity.userInfo);
   const { entities, status } = useSelector((state: RootState) => state.joinCommunity.community);
-  const selectedCommunity = useSelector(getCommunity);
+  // const selectedCommunity = useSelector(getCommunity);
   const formattedSkills = useSelector(getFormattedSkills);
   const credits = useSelector(getCredits);
   const creditSkills = useSelector(getSkillCredits);
@@ -53,6 +53,7 @@ const Communities = (props) => {
 
   const claimMembership = async (communityName) => {
     await dispatch(selectCommunity(communityName));
+    const selectedCommunity = entities.find((e) => e.name === communityName);
     const description = await getSkillWalletDescription();
     const metadataJson: TextileBucketMetadata = {
       name: `${userInfo?.name}'s SkillWallet`,

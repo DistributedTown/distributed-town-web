@@ -11,14 +11,14 @@ import SwForm from '@dito-components/form-components/SwForm';
 import { setCurrentStep, updateAvatarUrl, updateName } from '../store/join.reducer';
 
 const LeftSide = () => (
-  <SwQuote key="user-info-1">
+  <SwQuote key="user-info-1" className="show-border">
     <>
       <Typography sx={{ color: 'text.primary', mb: 1 }} component="div" variant="h6" align="center">
         <p>Welcome to Distributed Town 🏙</p>
       </Typography>
 
       <p>
-        Distributedd town is a fully pseudonymous, skill-based ecosystem. <br />
+        Distributed town is a fully pseudonymous, skill-based ecosystem. <br />
       </p>
       <p className="mt-4 mb-4">
         In the next several steps you’ll be customizing your profile, picking your skills, and receiving your first Community Credits 🙌
@@ -140,7 +140,8 @@ const UserInfo = () => {
 
               <div className="bottom-action">
                 <SwButton
-                  type="button"
+                  mode="light"
+                  btnType="large"
                   disabled={!values?.name || !values?.avatar}
                   component={Link}
                   to="/join-community/skills"

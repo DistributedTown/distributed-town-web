@@ -49,7 +49,8 @@ const Dashboard = () => {
         </Typography>
 
         <SwButton
-          sx={{ height: '65px' }}
+          mode="light"
+          btnType="large"
           endIcon={<OpenGigsSvg className="sw-btn-icon" width="30px" />}
           label="Open Gigs"
           component={Link}
@@ -64,7 +65,8 @@ const Dashboard = () => {
           onMouseLeave={() => debouncedHoverHandler(null)}
         />
         <SwButton
-          sx={{ height: '65px' }}
+          mode="light"
+          btnType="large"
           endIcon={<ProjectsSvg className="sw-btn-icon" width="30px" />}
           label="Projects"
           to="/community/town-hall/projects"
@@ -78,7 +80,8 @@ const Dashboard = () => {
           onMouseLeave={() => debouncedHoverHandler(null)}
         />
         <SwButton
-          sx={{ height: '65px' }}
+          mode="light"
+          btnType="large"
           endIcon={<TreasurySvg className="sw-btn-icon" width="30px" />}
           label="Treasury"
           to="/community/town-hall/treasury"

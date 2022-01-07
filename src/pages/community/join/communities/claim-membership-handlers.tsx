@@ -64,7 +64,7 @@ const DialogAdditionalActionNeeded = ({ message, subtitle, actionLabel, handleAd
         <Typography sx={{ color: 'text.primary', textAlign: 'center', mt: 2 }} component="div" variant="h4">
           {subtitle}
         </Typography>
-        <SwButton color="primary" onClick={handleAdditionalAction} sx={{ mt: 4, width: '200px', height: '45px' }} label={actionLabel} />
+        <SwButton mode="light" btnType="medium" sx={{ marginTop: '20px' }} onClick={handleAdditionalAction} label={actionLabel} />
       </div>
     </>
   );
@@ -153,6 +153,7 @@ export const OnClaimMembershipHandlers = (
           onCancel={handleClose}
         />
       );
+
       return await executeCommunityContract({
         url: buckerUrl,
         credits,
@@ -160,7 +161,7 @@ export const OnClaimMembershipHandlers = (
       });
     } catch (error) {
       await dispatch(addLog(JSON.stringify(error)));
-      const message = ParseSWErrorMessage(error.data.message as string);
+      const message = ParseSWErrorMessage(error?.data?.message as string);
       // if (String(message).includes('Already a member')) {
       //   setDialogContent(
       //     <>
@@ -232,7 +233,7 @@ export const OnClaimMembershipHandlers = (
       return await claimCommunityMembershipContract(communityAddress);
     } catch (error) {
       await dispatch(addLog(JSON.stringify(error)));
-      const message = ParseSWErrorMessage(error.data.message.payload as string);
+      const message = ParseSWErrorMessage(error?.data?.message?.payload as string);
 
       if (String(message).includes('There is SkillWallet already registered for this address')) {
         setDialogContent(
@@ -274,7 +275,7 @@ export const OnClaimMembershipHandlers = (
       return await getTokenIdContract(communityAddress);
     } catch (error) {
       await dispatch(addLog(JSON.stringify(error)));
-      const message = ParseSWErrorMessage(error.data.message.payload as string);
+      const message = ParseSWErrorMessage(error?.data?.message?.payload as string);
       setDialogContent(
         <DialogAdditionalActionNeeded
           actionLabel="Retry"
