@@ -6,7 +6,7 @@ export const CategoriesLeftSide = ({ largeDevice }) => (
     <Box className="sw-box-logo">
       <DitoLogoFullSvg height={largeDevice ? '76px' : '80px'} />
     </Box>
-    <SwQuote>
+    <SwQuote className="show-border">
       <>
         <p>
           Have you ever thought, <br />

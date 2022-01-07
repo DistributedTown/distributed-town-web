@@ -134,6 +134,8 @@ const Skills = () => {
             </div>
             <div className="bottom-action">
               <SwButton
+                mode="light"
+                btnType="large"
                 disabled={totalSkills?.length === 0 || status === ResultState.Loading}
                 component={Link}
                 to="/join-community/communities"

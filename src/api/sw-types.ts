@@ -14,6 +14,7 @@ declare module 'ethers' {
 
     claim: () => Promise<{ wait: () => Promise<SWContractEvents> }>;
 
+    // @ts-ignore
     create: (skillWalletOwner: string, url: string, isClaimable: boolean) => Promise<{ wait: () => Promise<SWContractEvents> }>;
 
     getActiveCommunity: (skillWalletId: number) => Promise<{ community: string }>;
@@ -113,7 +114,7 @@ declare module 'ethers' {
 
     join: (skillWalletTokenId: number, credits: number) => Promise<{ wait: () => Promise<SWContractEvents> }>;
 
-    joinNewMember: (uri: string, credits: number) => Promise<{ wait: () => Promise<SWContractEvents> }>;
+    joinNewMember: (uri: string, role: number, credits: number) => Promise<{ wait: () => Promise<SWContractEvents> }>;
 
     leave: (memberAddress: string) => Promise<{ wait: () => Promise<SWContractEvents> }>;
 

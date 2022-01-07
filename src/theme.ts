@@ -6,7 +6,7 @@ import { createShadows } from 'sw-web-shared';
 const palette: PaletteOptions & { type: string } = {
   type: 'dark',
   background: {
-    default: '#161615',
+    default: '#000000',
     paper: '#FFFFFF',
   },
   text: {
@@ -15,7 +15,7 @@ const palette: PaletteOptions & { type: string } = {
     disabled: '#CCCCCC',
   },
   primary: {
-    main: '#161615',
+    main: '#000000',
   },
   secondary: {
     main: '#8F37AA',

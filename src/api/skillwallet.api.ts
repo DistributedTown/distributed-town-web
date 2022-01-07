@@ -19,10 +19,13 @@ export const getSkillWalletDescription = async () => {
 };
 
 export const getSkillWalletAddress = async (communityAddress = null) => {
-  return process.env.REACT_APP_SKILLWALLET_ADDRESS;
+  return axios
+    .get(`${process.env.REACT_APP_PUBLIC_SKILL_WALLET_API_URL}/api/skillwallet/config`)
+    .then((response) => response.data.skillWalletAddress);
 };
 
 export const claimCommunityMembershipContract = async (communityAddress: string): Promise<string> => {
+  console.log(communityAddress, '3212333333333332323232');
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
   const skillWalletAddress = await getSkillWalletAddress(communityAddress);
@@ -83,7 +86,7 @@ export const executeCommunityContract = async ({
   const signer = provider.getSigner();
 
   const contract = new ethers.Contract(communityAddress, DitoCommunityAbi, signer as any);
-  const createTx = await contract.joinNewMember(url, toWei(credits.toString()) as any);
+  const createTx = await contract.joinNewMember(url, 1, toWei(credits.toString()) as any);
   const communityTransactionResult = await createTx.wait();
   const { events } = communityTransactionResult;
   const memberJoinedEvent = events.find(({ event }) => event === SWContractEventType.MemberAdded);
@@ -132,3 +135,5 @@ export const generateNonce = async (action: NonceActions, tokenId: string): Prom
 export const getCommunityInfo = async (communityAddress): Promise<any> => {
   return axios.get(`${process.env.REACT_APP_PUBLIC_API_URL}/api/community/${communityAddress}`).then((response) => response.data);
 };
+
+console.log(DitoCommunityAbi);
