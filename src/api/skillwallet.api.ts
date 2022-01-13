@@ -70,9 +70,11 @@ export const isQrCodeActive = async (): Promise<boolean> => {
     const skillwalletAddress = await getSkillWalletAddress(null);
     const contract = new ethers.Contract(skillwalletAddress, SkillWalletAbi, signer);
     const tokenId = await contract.getSkillWalletIdByOwner(window.ethereum.selectedAddress);
-    const { status } = await contract.isSkillWalletActivated(tokenId);
+    const status = await contract.isSkillWalletActivated(tokenId);
+
     return status;
   } catch (error) {
+    console.log('QR Code not active, error!!');
     return false;
   }
 };

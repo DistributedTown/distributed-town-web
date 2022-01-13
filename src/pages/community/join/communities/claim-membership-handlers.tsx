@@ -359,7 +359,7 @@ export const OnClaimMembershipHandlers = (
     }
     const fn = () => isQrCodeActive();
     const condition = (active: boolean) => !active;
-    const isActive = await asyncPoll<boolean>(fn, condition, 8000, 20);
+    const isActive = await asyncPoll<boolean>(fn, condition, 8000, 50);
 
     if (!isActive) {
       setDialogContent(

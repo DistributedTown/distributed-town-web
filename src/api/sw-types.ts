@@ -33,7 +33,8 @@ declare module 'ethers' {
 
     isRequestIdValid: (requestId: string) => Promise<boolean>;
 
-    isSkillWalletActivated: (skillWalletId: number) => Promise<{ status: boolean }>;
+    // @ts-ignore
+    isSkillWalletActivated: (skillWalletId: number) => Promise<boolean>;
 
     isSkillWalletClaimable: (skillWalletOwner: string) => Promise<{ status: boolean }>;
 

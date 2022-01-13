@@ -1,6 +1,6 @@
 import { Typography, Avatar, Badge, Tooltip, useTheme } from '@mui/material';
 import { CategoryIcons } from 'src/pages/community/join/categories/categories';
-import { SwProgressBar, DitoCreditsSvg, toPascalCase } from 'sw-web-shared';
+import { SwProgressBar, DitoCreditsNewSvg, toPascalCase } from 'sw-web-shared';
 import InfoIcon from '@mui/icons-material/Info';
 import './user-skills.scss';
 
@@ -50,7 +50,7 @@ export const SwUserSkillsLegend = ({ username, avatar, creditSkills, totalCredit
                   <Typography sx={{ color: 'text.primary', textAlign: 'start', mr: 1 }} component="div" variant="h3">
                     {credits}
                   </Typography>
-                  <DitoCreditsSvg sx={{ fill: theme.palette.text.primary }} width="26px" />
+                  <DitoCreditsNewSvg sx={{ fill: theme.palette.text.primary }} width="26px" />
                 </div>
               )}
             </div>

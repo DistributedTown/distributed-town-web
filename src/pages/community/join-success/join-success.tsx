@@ -1,6 +1,6 @@
 import { CircularProgress, ThemeOptions, Typography, useMediaQuery } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { DitoCreditsSvg, SwButton, SwShare } from 'sw-web-shared';
+import { DitoCreditsSuccessLogoSvg, SwButton, SwShare } from 'sw-web-shared';
 import './join-success.scss';
 import { useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -58,7 +58,7 @@ const JoinSuccess = () => {
             <Typography sx={{ color: 'text.primary', mb: 5, textAlign: 'center' }} component="div" variant="h2">
               Your new DITO credits are now:
             </Typography>
-            <DitoCreditsSvg className="sw-dito-credits" height="113px" width="166px" />
+            <DitoCreditsSuccessLogoSvg className="sw-dito-credits" width="166px" />
             <Typography
               sx={{
                 color: 'text.primary',

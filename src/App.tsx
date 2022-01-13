@@ -223,6 +223,7 @@ const App = (props: any) => {
               <skillwallet-auth
                 style={{
                   visibility: isJoinFlow ? 'hidden' : 'visible',
+                  marginBottom: '-34px',
                 }}
                 mode="light"
                 allowCreateNewUser={false}
