@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { ethers } from 'ethers';
 import { toWei } from 'web3-utils';
 import axios from 'axios';
-import { DitoCommunityAbi, SkillWalletAbi, SWContractEventType } from 'sw-abi-types';
+import { DitoCommunityAbi, SkillWalletAbi, SWContractEventType } from '@skill-wallet/sw-abi-types';
 import { CommunityContract, CommunityContractError, CommunityContractResponse, NonceActions } from './model';
+import { Web3ContractProvider } from './web3.provider';
 
 function NoEventException(value: CommunityContractError) {
   this.value = value;
@@ -26,10 +26,8 @@ export const getSkillWalletAddress = async (communityAddress = null) => {
 
 export const claimCommunityMembershipContract = async (communityAddress: string): Promise<string> => {
   console.log(communityAddress, '3212333333333332323232');
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = provider.getSigner();
   const skillWalletAddress = await getSkillWalletAddress(communityAddress);
-  const contract = new ethers.Contract(skillWalletAddress, SkillWalletAbi, signer);
+  const contract = await Web3ContractProvider(skillWalletAddress, SkillWalletAbi);
   const claimTx = await contract.claim();
   const { events } = await claimTx.wait();
   const claimedEvent = events.find((e) => e.event === SWContractEventType.SkillWalletClaimed);
@@ -50,10 +48,8 @@ export const claimCommunityMembershipContract = async (communityAddress: string)
 };
 
 export const getTokenIdContract = async (communityAddress: string): Promise<string> => {
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = provider.getSigner();
   const skillwalletAddress = await getSkillWalletAddress(communityAddress);
-  const contract = new ethers.Contract(skillwalletAddress, SkillWalletAbi, signer as any);
+  const contract = await Web3ContractProvider(skillwalletAddress, SkillWalletAbi);
   const isRegistered = await contract.isSkillWalletRegistered(window.ethereum.selectedAddress);
 
   if (isRegistered) {
@@ -65,10 +61,8 @@ export const getTokenIdContract = async (communityAddress: string): Promise<stri
 
 export const isQrCodeActive = async (): Promise<boolean> => {
   try {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
     const skillwalletAddress = await getSkillWalletAddress(null);
-    const contract = new ethers.Contract(skillwalletAddress, SkillWalletAbi, signer);
+    const contract = await Web3ContractProvider(skillwalletAddress, SkillWalletAbi);
     const tokenId = await contract.getSkillWalletIdByOwner(window.ethereum.selectedAddress);
     const status = await contract.isSkillWalletActivated(tokenId);
 
@@ -84,11 +78,9 @@ export const executeCommunityContract = async ({
   url,
   credits,
 }: CommunityContract): Promise<CommunityContractResponse> => {
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = provider.getSigner();
-
-  const contract = new ethers.Contract(communityAddress, DitoCommunityAbi, signer as any);
-  const createTx = await contract.joinNewMember(url, 1, toWei(credits.toString()) as any);
+  const contract = await Web3ContractProvider(communityAddress, DitoCommunityAbi);
+  // , toWei(credits.toString())
+  const createTx = await contract.joinNewMember(url, 1);
   const communityTransactionResult = await createTx.wait();
   const { events } = communityTransactionResult;
   const memberJoinedEvent = events.find(({ event }) => event === SWContractEventType.MemberAdded);

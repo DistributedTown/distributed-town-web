@@ -27,8 +27,8 @@ const JoinSuccess = () => {
   };
 
   // eslint-disable-next-line max-len
-  const shareMessage = `Hey there! We've just deployed ${community?.name} on SkillWallet - choose your Role in our Community, pick your Skills, and let's build something great together!`;
-
+  const shareMessage = `Hey there! We've just got some funds and deployed ${community?.name}on DistributedTown - pick your Skills, and let's build something great together!`;
+  const url = window.location.hostname;
   const { search } = useLocation();
   const communityAddress = new URLSearchParams(search).get('communityAddress');
   const diToCredits = new URLSearchParams(search).get('diToCredits');
@@ -81,7 +81,7 @@ const JoinSuccess = () => {
             />
             <SwShare
               mode="dark"
-              url="https://skillwallet.id/"
+              url={url}
               title="with friends"
               sx={{
                 '.MuiTypography-h2': {
@@ -110,12 +110,12 @@ const JoinSuccess = () => {
               fullScreen={xsmall}
               twitterProps={{
                 title: shareMessage,
-                hashtags: ['SkillWallet', 'DAO', 'Blockchain'],
+                hashtags: ['DistributedTown', 'DAO', 'Blockchain'],
               }}
               linkedinProps={{
                 title: shareMessage,
-                summary: 'Do more with DAO',
-                source: 'https://skillwallet.id',
+                summary: 'DistributedTown',
+                source: { url },
               }}
               telegramProps={{
                 title: shareMessage,

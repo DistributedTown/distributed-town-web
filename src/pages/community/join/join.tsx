@@ -36,12 +36,13 @@ const Join = (props) => {
     }
   }, [small]);
 
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('hideSwButton'));
+    return () => {
+      window.dispatchEvent(new CustomEvent('showSwButton'));
       dispatch(resetJoinCommunityState());
-    },
-    [dispatch]
-  );
+    };
+  }, [dispatch]);
 
   return (
     <div className="sw-join-base-container">

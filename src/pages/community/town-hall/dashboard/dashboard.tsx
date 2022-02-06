@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 
 const defaultHoverContent = {
   title: 'The Dark DiTo',
+  isDefault: true,
   icon: OpenGigsSvg,
   description:
     // eslint-disable-next-line max-len
@@ -16,7 +17,6 @@ const defaultHoverContent = {
 };
 const Dashboard = () => {
   const largeDevice = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.up('lg'));
-
   const [hoveredContent, setHoveredContent] = useState(defaultHoverContent);
   const debouncedHoverHandler = useMemo(() => {
     const changeHandler = (content: any) => {
@@ -43,9 +43,9 @@ const Dashboard = () => {
         }}
         className="sw-box"
       >
-        <Typography sx={{ color: 'text.primary', textAlign: 'center', pb: 2 }} component="div" variant="h4">
+        <Typography sx={{ color: 'text.primary', textAlign: 'center', pb: 2 }} component="div" variant="h1">
           Welcome to diTown Hall <br />
-          <small>where everything happes</small>
+          <small>where everything happens</small>
         </Typography>
 
         <SwButton
@@ -112,25 +112,36 @@ const Dashboard = () => {
               addEndListener={(node: any, done: any) => node.addEventListener('transitionend', done, false)}
               classNames="fade"
             >
-              <Card sx={{ bgcolor: 'text.primary' }}>
-                <CardHeader
-                  avatar={
-                    <Avatar sx={{ boxShadow: 3, bgcolor: 'primary.main', width: 60, height: 60, borderRadius: 0 }} aria-label="recipe">
-                      <SvgIcon fontSize="large" component={hoveredContent?.icon} />
-                    </Avatar>
-                  }
-                  titleTypographyProps={{
-                    fontSize: 'large',
-                    color: 'primary.main',
-                  }}
-                  title={hoveredContent?.title}
-                />
-                <CardContent>
-                  <Typography color="primary.main" variant="body2">
-                    {hoveredContent?.description}
-                  </Typography>
-                </CardContent>
-              </Card>
+              <div>
+                <Card sx={{ bgcolor: 'text.primary', width: '420px', minHeight: '310px', padding: '30px' }}>
+                  <CardHeader
+                    avatar={
+                      <Avatar sx={{ boxShadow: 3, bgcolor: 'primary.main', width: 60, height: 60, borderRadius: 0 }} aria-label="recipe">
+                        <SvgIcon fontSize="large" component={hoveredContent?.icon} />
+                      </Avatar>
+                    }
+                    titleTypographyProps={{
+                      variant: 'h2',
+                      color: 'primary.main',
+                      sx: { textAlign: 'center', textDecoration: 'underline' },
+                    }}
+                    title={hoveredContent?.title}
+                  />
+                  <CardContent>
+                    <Typography color="primary.main" variant="subtitle1">
+                      {hoveredContent?.description}
+                    </Typography>
+                  </CardContent>
+                </Card>
+                {hoveredContent.isDefault && (
+                  <SwButton
+                    mode="light"
+                    label="Activity & Logs"
+                    to="/community/town-hall/logs"
+                    sx={{ height: '85px', width: '100%', marginTop: '20px' }}
+                  />
+                )}
+              </div>
             </CSSTransition>
           </SwitchTransition>
         </Box>

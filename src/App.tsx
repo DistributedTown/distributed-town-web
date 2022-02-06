@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import './App.scss';
 import SvgIcon from '@mui/material/SvgIcon';
 import MenuIcon from '@mui/icons-material/Menu';
-import { defineCustomElements } from '@skill-wallet/auth/loader';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { withRouter, Route, Switch } from 'react-router-dom';
 import {
@@ -69,7 +68,6 @@ const AuthRoutes: React.FC = (props: any) => {
 };
 
 // const originalConsoleError = console.error;
-
 const App = (props: any) => {
   const dispatch = useAppDispatch();
   const [isLoading, setLoading] = useState(true);
@@ -117,7 +115,6 @@ const App = (props: any) => {
       }
     };
     const onSWInit = async () => setLoading(false);
-    defineCustomElements(window);
     window.addEventListener('initSkillwalletAuth', onSWInit);
     window.addEventListener('onSkillwalletLogin', onSWLogin);
 
@@ -220,13 +217,11 @@ const App = (props: any) => {
             )}
             <div className="right">
               {/* @ts-ignore */}
-              <skillwallet-auth
+              <sw-auth
+                partner-key="2"
                 style={{
-                  visibility: isJoinFlow ? 'hidden' : 'visible',
                   marginBottom: '-34px',
                 }}
-                mode="light"
-                allowCreateNewUser={false}
                 id="walletButton"
               />
               {/* <SwButton sx={{ width: '120px', height: '33px', ml: 2 }} label="Logs" onClick={() => setOpen(true)} /> */}

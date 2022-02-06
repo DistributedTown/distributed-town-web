@@ -33,30 +33,36 @@ export const SwUserSkillsLegend = ({ username, avatar, creditSkills, totalCredit
           </Typography>
         </Badge>
       </div>
-      {creditSkills.map(({ value, name, credits }, index) => {
-        const SwIcon = CategoryIcons[toPascalCase(name)];
-        return (
-          <div key={index} className="sw-credit-widget">
-            <div className="credit-label">
-              {SwIcon === undefined ? <div className="sw-credit-icon" /> : <SwIcon className="sw-credit-icon" height="16px" />}
-              <Typography sx={{ color: 'text.primary', textAlign: 'start' }} component="div" variant="h3">
-                {name}
-              </Typography>
+      {creditSkills ? (
+        creditSkills.map(({ value, name, credits }, index) => {
+          const SwIcon = CategoryIcons[toPascalCase(name)];
+          return (
+            <div key={index} className="sw-credit-widget">
+              <div className="credit-label">
+                {SwIcon === undefined ? <div className="sw-credit-icon" /> : <SwIcon className="sw-credit-icon" height="16px" />}
+                <Typography sx={{ color: 'text.primary', textAlign: 'start' }} component="div" variant="h3">
+                  {name}
+                </Typography>
+              </div>
+              <div className="credit-content">
+                <SwProgressBar percentage={value}> </SwProgressBar>
+                {showCreditAmount && (
+                  <div className="credit-amount">
+                    <Typography sx={{ color: 'text.primary', textAlign: 'start', mr: 1 }} component="div" variant="h3">
+                      {credits}
+                    </Typography>
+                    <DitoCreditsNewSvg sx={{ fill: theme.palette.text.primary }} width="26px" />
+                  </div>
+                )}
+              </div>
             </div>
-            <div className="credit-content">
-              <SwProgressBar percentage={value}> </SwProgressBar>
-              {showCreditAmount && (
-                <div className="credit-amount">
-                  <Typography sx={{ color: 'text.primary', textAlign: 'start', mr: 1 }} component="div" variant="h3">
-                    {credits}
-                  </Typography>
-                  <DitoCreditsNewSvg sx={{ fill: theme.palette.text.primary }} width="26px" />
-                </div>
-              )}
-            </div>
-          </div>
-        );
-      })}
+          );
+        })
+      ) : (
+        <Typography sx={{ color: 'text.primary', textAlign: 'center', mb: 2 }} component="div" variant="subtitle1">
+          This user has no skills!
+        </Typography>
+      )}
     </div>
   );
 };

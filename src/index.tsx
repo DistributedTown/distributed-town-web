@@ -8,6 +8,7 @@ import { CssBaseline } from '@mui/material';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import store from './store/store';
+import '@skill-wallet/auth';
 import { SwTheme } from './theme';
 import './index.css';
 
