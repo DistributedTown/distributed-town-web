@@ -12,12 +12,12 @@ module.exports = {
       buffer: require.resolve('buffer'),
     };
 
-    configuration.plugins.push(
-      new webpack.ProvidePlugin({
-        process: 'process/browser',
-        Buffer: ['buffer', 'Buffer'],
-      })
-    );
+    // configuration.plugins.push(
+    //   new webpack.ProvidePlugin({
+    //     process: 'process/browser',
+    //     Buffer: ['buffer', 'Buffer'],
+    //   })
+    // );
     const modifiedConfig = alias({
       '@dito-utils': path.resolve(__dirname, './src/utils'),
       '@dito-api': path.resolve(__dirname, './src/api'),

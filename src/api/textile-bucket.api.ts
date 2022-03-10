@@ -1,34 +1,51 @@
-import { base64toFile } from 'sw-web-shared';
-import { Buckets } from '@textile/hub';
-import { TextileBucketMetadata } from './model';
+import axios from 'axios';
+import { NFTStorage } from 'nft.storage';
 
-const keyInfo = {
-  key: process.env.REACT_APP_PUBLIC_TEXTILE_KEY,
-  secret: process.env.REACT_APP_PUBLIC_TEXTILE_SECRET,
+const client = new NFTStorage({ token: process.env.REACT_APP_NFT_STORAGE_KEY });
+
+const isValidUrl = (uri: string) => {
+  let url = null;
+  try {
+    url = new URL(uri);
+  } catch (_) {
+    return false;
+  }
+  return url.protocol === 'ipfs:' || url.protocol === 'http:' || url.protocol === 'https:';
 };
 
-export async function uploadImageToTextileBucket(content: ArrayBuffer) {
-  const buckets = await Buckets.withKeyInfo(keyInfo);
-  const { root } = await buckets.getOrCreate(process.env.REACT_APP_PUBLIC_BUCKET_NAME);
-  if (!root) throw new Error('bucket not created');
-  const path = `profile.png`;
-  const links = await buckets.pushPath(root.key, path, content);
-  return `https://hub.textile.io${links.path.path}`;
+export function ipfsCIDToHttpUrl(url: string, isJson: boolean) {
+  if (!url.includes('textile'))
+    return isJson
+      ? `https://ipfs.io/ipfs/${url.replace('ipfs://', '')}/metadata.json`
+      : `https://ipfs.io/ipfs/${url.replace('ipfs://', '')}`;
+  return url;
 }
 
-export const generateTextileBucketUrl = async (metadata: TextileBucketMetadata) => {
-  const buckets = await Buckets.withKeyInfo(keyInfo);
-  const { root } = await buckets.getOrCreate(process.env.REACT_APP_PUBLIC_BUCKET_NAME);
-  if (!root) throw new Error('bucket not created');
+const storeAsBlob = async (json: any): Promise<string> => {
+  const encodedJson = new TextEncoder().encode(JSON.stringify(json));
+  const blob = new Blob([encodedJson], {
+    type: 'application/json;charset=utf-8',
+  });
+  const file = new File([blob], 'metadata.json');
+  const cid = await client.storeBlob(file);
+  return ipfsCIDToHttpUrl(cid, false);
+};
 
-  if (metadata.image) {
-    const file = base64toFile(metadata.image, 'avatar');
-    const arrayBuffer = await file.arrayBuffer();
-    metadata.image = await uploadImageToTextileBucket(arrayBuffer);
+const storeAsJson = async (json: any): Promise<string> => {
+  const metadata = await client.store(json as any);
+  return ipfsCIDToHttpUrl(metadata.ipnft, true);
+};
+
+export async function generateTextileBucketUrl(json: any, convertImageBlobToFile: (blob: Blob) => File = null) {
+  if (convertImageBlobToFile && isValidUrl(json.image)) {
+    const result = await axios.get(json.image, {
+      responseType: 'blob',
+    });
+    json.image = convertImageBlobToFile(result.data);
   }
 
-  const buf = Buffer.from(JSON.stringify(metadata, null, 2));
-  const path = 'metadata.json';
-  const links = await buckets.pushPath(root.key, path, buf);
-  return `https://hub.textile.io${links.path.path}`;
-};
+  if (isValidUrl(json.image)) {
+    return storeAsBlob(json);
+  }
+  return storeAsJson(json);
+}

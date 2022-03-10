@@ -17,6 +17,15 @@ export enum ClaimMembershipErrorTypes {
   RetryQrCode = 'RetryQrCode',
 }
 
+export enum CreateGigErrorTypes {
+  RetryCreate = 'RetryCreate',
+  RetryNetwork = 'RetryNetwork',
+  RetryTextile = 'RetryTextile',
+  RetryNonce = 'RetryNonce',
+  RetryTokenId = 'RetryTokenId',
+  RetryQrCode = 'RetryQrCode',
+}
+
 export interface Category {
   id: number;
   name: string;

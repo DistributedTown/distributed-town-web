@@ -3,12 +3,9 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ErrorParser } from '@dito-utils/error-parser';
 import { getCommunityInfo } from '@dito-api/skillwallet.api';
 import { CommunityCategory } from '../join/store/model';
-import { getGigs } from './community.api';
-import { Gig } from './model';
 
 export interface CommunityState {
   community: CommunityCategory;
-  gigs: Gig[];
   status: ResultState;
 }
 
@@ -20,18 +17,9 @@ export const fetchCommunity = createAsyncThunk('community', async (address: stri
   }
 });
 
-export const fetchGigs = createAsyncThunk('community/gigs', async (address: string, { dispatch }) => {
-  try {
-    return await getGigs(address);
-  } catch (error) {
-    return ErrorParser(error, dispatch);
-  }
-});
-
 const initialState: CommunityState = {
   community: null,
   status: ResultState.Idle,
-  gigs: [],
 };
 
 export const communitySlice = createSlice({
@@ -54,21 +42,26 @@ export const communitySlice = createSlice({
       })
       .addCase(fetchCommunity.rejected, (state) => {
         state.status = ResultState.Failed;
-      })
-      .addCase(fetchGigs.pending, (state) => {
-        state.status = ResultState.Loading;
-      })
-      .addCase(fetchGigs.fulfilled, (state, action) => {
-        // @ts-ignore
-        state.gigs = [...action.payload, ...action.payload, ...action.payload] as any;
-        state.status = ResultState.Idle;
-      })
-      .addCase(fetchGigs.rejected, (state) => {
-        state.status = ResultState.Failed;
       });
   },
 });
 
 export const { setCommunity } = communitySlice.actions;
+export const CommunityCategories = (state: any) => {
+  console.log(state, 'state');
+  return (state.community?.community?.skills?.categories || []).reduce((accumulation: any[], category: any) => {
+    const { subCat, skills } = category;
+    return [
+      ...accumulation,
+      {
+        name: subCat,
+        skills: skills.map((name: string) => ({
+          name,
+          selected: false,
+        })),
+      },
+    ];
+  }, []);
+};
 
 export default communitySlice.reducer;

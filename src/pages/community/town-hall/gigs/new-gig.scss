@@ -1,0 +1,92 @@
+.sw-new-gig {
+  width: 100%;
+  margin: 0 auto;
+  z-index: 3;
+
+  .sw-post-button-wrapper {
+    margin-top: 20px;
+    display: flex;
+    padding: 20px;
+    justify-content: center;
+    align-content: center;
+  }
+
+  .sw-slider-field {
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+
+    .sw-slider {
+      color: white;
+      background-color: white;
+
+      .MuiSlider-track {
+        background-color: black;
+      }
+    }
+  }
+
+  .sw-form-field + .sw-form-field {
+    margin-top: 15px;
+  }
+
+  .sw-form-field-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    grid-gap: 20px;
+    background-color: white;
+    padding: 15px 15px 12px 15px;
+
+    .MuiTypography-root,
+    .sw-field-upload,
+    .MuiFormControl-root {
+      flex: 1;
+    }
+  }
+
+  .sw-form-field-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    grid-gap: 20px;
+
+    .MuiFormControl-root {
+      flex: 1;
+    }
+
+    .MuiFormHelperText-root {
+      text-align: end;
+      margin-right: 0;
+    }
+
+    fieldset {
+      border: none;
+    }
+
+    .MuiInputBase-root {
+      padding: 0px;
+
+      &::before,
+      &::after {
+      }
+    }
+  }
+
+  .sw-accordion-summary-wrapper {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+
+    .sw-options-wrapper {
+      flex-direction: column;
+      display: flex;
+      width: 33%;
+      justify-content: center;
+      align-content: center;
+      padding: 16px;
+    }
+  }
+}

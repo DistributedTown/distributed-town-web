@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
+import { InitSwAuth } from '@skill-wallet/auth';
 import './App.scss';
 import SvgIcon from '@mui/material/SvgIcon';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -118,6 +118,8 @@ const App = (props: any) => {
     window.addEventListener('initSkillwalletAuth', onSWInit);
     window.addEventListener('onSkillwalletLogin', onSWLogin);
 
+    InitSwAuth();
+
     return () => {
       window.removeEventListener('initSkillwalletAuth', onSWInit);
       window.removeEventListener('onSkillwalletLogin', onSWLogin);
@@ -187,7 +189,7 @@ const App = (props: any) => {
         hideTop={isJoinFlow}
         className={isLoading ? 'loading' : ''}
         disableGutters={isJoinFlow}
-        scrollbarStyles={{ height: isJoinFlow ? `100%` : `calc(100% - 50px)` }}
+        scrollbarStyles={{ height: isJoinFlow ? `100%` : `calc(100% - 70px)` }}
         top={
           <div
             className="top-bar"
@@ -219,8 +221,9 @@ const App = (props: any) => {
               {/* @ts-ignore */}
               <sw-auth
                 partner-key="2"
+                use-dev="true"
                 style={{
-                  marginBottom: '-34px',
+                  marginBottom: '0px',
                 }}
                 id="walletButton"
               />

@@ -4,7 +4,8 @@
 .sw-gig-card {
   border: 1px solid $border-color-base;
   box-sizing: border-box;
-  min-height: 260px;
+  min-height: 250px;
+  padding: 20px 35px;
 
   .car-subtitle {
     display: flex;

@@ -24,15 +24,15 @@ export interface JsonFragment {
 
 export interface TextileBucketSkillsMetadata {
   name: string; // skillname
-  value: number; // xp
+  value?: number; // xp
 }
 
 export interface TextileBucketMetadata {
   name: string;
   description: string;
-  image: string;
+  image: File;
   properties: {
-    username: string;
+    username?: string;
     skills: TextileBucketSkillsMetadata[];
   };
 }

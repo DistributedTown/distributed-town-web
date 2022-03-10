@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import {
   Card,
   CardContent,
@@ -13,7 +14,7 @@ import {
   linearProgressClasses,
   styled,
 } from '@mui/material';
-import { DitoCreditsSvg, SwQuote } from 'sw-web-shared';
+import { DitoCreditsSvg, SwButton, SwQuote } from 'sw-web-shared';
 import { Gig } from '../../store/model';
 import './gig-card.scss';
 import ReadMore from './read-more';
@@ -31,74 +32,72 @@ const NoBorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   },
 }));
 
-function GigCard({ gig }: { gig: Gig }) {
+function GigCard({ gig, onSelect }: { gig: Gig; onSelect: (gigId: string) => any }) {
   const small = useMediaQuery((theme: ThemeOptions) => theme.breakpoints.down('sm'));
   return (
     <Card className="sw-gig-card" sx={{ bgcolor: 'text.primary', display: 'flex', flexDirection: 'column', boxShadow: 4 }}>
-      <CardContent sx={{ flex: '1', display: 'flex', flexDirection: 'column' }}>
-        <Box>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Avatar sx={{ width: 28, height: 28 }} src={gig.image} />
-            <DitoCreditsSvg width="30px" />
+      <CardContent sx={{ flex: '1', display: 'flex', flexDirection: 'row', padding: '0', paddingBottom: '0 !important' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', width: '70%' }}>
+          <Typography sx={{ mt: '5px' }} lineHeight={1} variant={small ? 'body1' : 'h3'} color="primary.main">
+            {gig.title}
+          </Typography>
+          {/* <ReadMore text={gig.description} numberOfLines={6} lineHeight={1.4} showLessButton readMoreCharacterLimit={360} style={{ minHeight: '100px'}} /> */}
+          <Typography sx={{ mt: '5px', minHeight: '100px' }} lineHeight={1.4} variant="body2" color="primary.main">
+            {gig.description}
+          </Typography>
+          <div style={{ display: 'flex', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+            <SwButton
+              mode="light"
+              btnType="large"
+              sx={{ height: '50px !important', boxShadow: 'none' }}
+              label="Take this Gig"
+              onClick={(event) => {
+                event.stopPropagation();
+                onSelect(gig.id);
+              }}
+            />
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Typography sx={{ mt: '3px' }} lineHeight={1} variant={small ? 'body1' : 'h6'} color="primary.main">
-              {gig.title}
-            </Typography>
-            <Typography
-              minWidth="70px"
-              sx={{ mt: '3px' }}
-              textAlign="end"
-              fontWeight="bold"
-              lineHeight={1}
-              variant={small ? 'body2' : 'body1'}
-              color="primary.main"
-            >
+        </Box>
+        <Box>
+          <Divider orientation="vertical" sx={{ borderRightWidth: '2px', borderColor: 'primary.main', padding: '15px' }} />
+        </Box>
+        <Box sx={{ flex: '1', display: 'flex', flexDirection: 'column' }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+              height: '50%',
+            }}
+          >
+            <Typography sx={{ mb: '5px' }} textAlign="center" variant="h3" color="primary.main">
               {gig.credits} DITO
             </Typography>
+            <div>
+              <DitoCreditsSvg width="30px" />
+            </div>
           </div>
-        </Box>
-        <Box sx={{ flex: '1' }}>
-          <ReadMore text={gig.description} numberOfLines={6} lineHeight={1.4} showLessButton readMoreCharacterLimit={180} />
-        </Box>
-        <Divider sx={{ my: 2, borderColor: 'primary.main' }} />
-
-        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <div className="credit-label">
-            <SwQuote
-              mobile
-              mobileStartText={
-                <Typography color="primary.main" sx={{ textAlign: 'start' }} component="div" variant="body2">
-                  Match your skills
-                </Typography>
-              }
-            >
-              <>
-                <Typography sx={{ textAlign: 'start' }} component="div" variant="body2">
-                  Match your skills
-                </Typography>
-              </>
-            </SwQuote>
-          </div>
-          <div className="sw-progress-bar">
-            <NoBorderLinearProgress sx={{ borderColor: 'text.primary' }} variant="determinate" value={gig.props.commitment} />
-            <Typography
-              className="sw-progress-bar-label"
-              sx={{ color: 'text.primary', textAlign: 'center' }}
-              component="span"
-              variant="body2"
-            >
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+              height: '50%',
+            }}
+          >
+            <Typography sx={{ textAlign: 'start' }} component="div" variant="h6" color="primary.main">
+              Match your skills
+            </Typography>
+            <Typography sx={{ fontSize: '35px', fontWeight: 'lighter' }} component="div" color="primary.main">
               {gig.props.commitment}%
             </Typography>
           </div>
         </Box>
       </CardContent>
-      <Divider sx={{ borderColor: 'primary.main' }} />
-      <CardActions sx={{ justifyContent: 'center' }}>
-        <Button variant="outlined" size="small">
-          <span style={{ marginTop: '4px' }}>Take this Gig</span>
-        </Button>
-      </CardActions>
     </Card>
   );
 }

@@ -7,6 +7,7 @@ import { combineReducers } from 'redux';
 import { persistReducer, PersistConfig } from 'redux-persist';
 import authSliceReducer from '../auth/auth.reducer';
 import joinCommunitySliceReducer from '../pages/community/join/store/join.reducer';
+import gigSliceReducer from '../pages/community/store/gigs.reducer';
 import uiSliceReducer from './ui-reducer';
 import communitySliceReducer from '../pages/community/store/community.reducer';
 
@@ -21,6 +22,7 @@ const reducers = combineReducers({
   joinCommunity: joinCommunitySliceReducer,
   auth: authSliceReducer,
   ui: uiSliceReducer,
+  gigs: gigSliceReducer,
   community: communitySliceReducer,
 });
 
