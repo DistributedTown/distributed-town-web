@@ -9,13 +9,15 @@ import {
 } from '@dito-api/skillwallet.api';
 import CloseIcon from '@mui/icons-material/Close';
 import { Box, Typography } from '@mui/material';
-import { SwButton, ParseSWErrorMessage, asyncPoll, DitoLogoSvg } from 'sw-web-shared';
+
+import { SwButton, ParseSWErrorMessage, asyncPoll, DitoLogoSvg, isBase64, base64toFile } from 'sw-web-shared';
+
 import { QRCode } from 'react-qrcode-logo';
-import { generateTextileBucketUrl } from '@dito-api/textile-bucket.api';
+import { generateBucketUrl } from '@dito-api/textile-bucket.api';
 import { connectToEthereum, switchToEtheremNetwork } from '@dito-api/ethereum-network.api';
 import { addLog } from '@dito-store/ui-reducer';
 import { AppDispatch } from '@dito-store/store.model';
-import { ClaimMembershipErrorTypes, CreateGigErrorTypes } from '../store/model';
+import { ClaimMembershipErrorTypes } from '../store/model';
 import './communities.scss';
 
 const DialogLoadingMessage = ({ message, subtitle = null, onCancel }) => {
@@ -89,7 +91,7 @@ export const OnClaimMembershipHandlers = (
           actionLabel="Retry"
           subtitle="If this problem repeats plase make sure your metamask is connected"
           message="We could not enable the ethereum network"
-          handleAdditionalAction={() => handleAdditionalAction(CreateGigErrorTypes.RetryNetwork)}
+          handleAdditionalAction={() => handleAdditionalAction(ClaimMembershipErrorTypes.RetryNetwork)}
           onCancel={handleClose}
         />
       );
@@ -110,7 +112,7 @@ export const OnClaimMembershipHandlers = (
           actionLabel="Retry"
           subtitle={null}
           message="We could not set the correct network, please set it manually and try again"
-          handleAdditionalAction={() => handleAdditionalAction(CreateGigErrorTypes.RetryNetwork)}
+          handleAdditionalAction={() => handleAdditionalAction(ClaimMembershipErrorTypes.RetryNetwork)}
           onCancel={handleClose}
         />
       );
@@ -125,7 +127,12 @@ export const OnClaimMembershipHandlers = (
     setDialogContent(<DialogLoadingMessage message="Generating url ..." onCancel={handleClose} />);
 
     try {
-      return await generateTextileBucketUrl(metadataJson);
+      return await generateBucketUrl(metadataJson, (base64OrBlob: string | Blob) => {
+        if (isBase64(base64OrBlob as string)) {
+          return base64toFile(base64OrBlob as string, 'community_avatar.jpeg');
+        }
+        return new File([base64OrBlob as Blob], 'community_avatar.jpeg');
+      });
     } catch (error) {
       await dispatch(addLog(JSON.stringify(error)));
       setDialogContent(
@@ -145,6 +152,7 @@ export const OnClaimMembershipHandlers = (
     if (!buckerUrl) {
       return null;
     }
+
     try {
       setDialogContent(
         <DialogLoadingMessage
@@ -233,7 +241,7 @@ export const OnClaimMembershipHandlers = (
       return await claimCommunityMembershipContract(communityAddress);
     } catch (error) {
       await dispatch(addLog(JSON.stringify(error)));
-      const message = ParseSWErrorMessage(error?.data?.message?.payload as string);
+      const message = ParseSWErrorMessage(error?.data?.message as string);
 
       if (String(message).includes('There is SkillWallet already registered for this address')) {
         setDialogContent(
@@ -242,6 +250,16 @@ export const OnClaimMembershipHandlers = (
             subtitle="Connect to SkillWallet account to see your community"
             message={message}
             handleAdditionalAction={() => handleAdditionalAction(ClaimMembershipErrorTypes.AlreadyClaimed)}
+            onCancel={handleClose}
+          />
+        );
+      } else if (String(message).includes('There is no SkillWallet to be claimed by this address.')) {
+        setDialogContent(
+          <DialogAdditionalActionNeeded
+            actionLabel="Retry"
+            subtitle="Try with another skillwallet address"
+            message={message}
+            handleAdditionalAction={() => handleAdditionalAction(ClaimMembershipErrorTypes.RetryClaim)}
             onCancel={handleClose}
           />
         );
@@ -260,8 +278,8 @@ export const OnClaimMembershipHandlers = (
     }
   };
 
-  const onGetTokenId = async (communityAddress: string) => {
-    if (!communityAddress) {
+  const onGetTokenId = async (communityAddress: string, claimSuccess: boolean) => {
+    if (!communityAddress || !claimSuccess) {
       return null;
     }
     setDialogContent(
@@ -275,7 +293,7 @@ export const OnClaimMembershipHandlers = (
       return await getTokenIdContract(communityAddress);
     } catch (error) {
       await dispatch(addLog(JSON.stringify(error)));
-      const message = ParseSWErrorMessage(error?.data?.message?.payload as string);
+      const message = ParseSWErrorMessage(error?.data?.message as string);
       setDialogContent(
         <DialogAdditionalActionNeeded
           actionLabel="Retry"
@@ -285,14 +303,15 @@ export const OnClaimMembershipHandlers = (
           onCancel={handleClose}
         />
       );
-      return null;
     }
+    return null;
   };
 
-  const onQRCodeGenerate = async (tokenId: string) => {
-    if (!tokenId) {
+  const onQRCodeGenerate = async (tokenId: string, claimSuccess: boolean) => {
+    if (!tokenId || !claimSuccess) {
       return null;
     }
+
     setDialogContent(
       <DialogLoadingMessage subtitle="This might take awhile, please be patient" message="Generating QR code ..." onCancel={handleClose} />
     );
@@ -357,6 +376,7 @@ export const OnClaimMembershipHandlers = (
     if (!tokenId) {
       return false;
     }
+
     const fn = () => isQrCodeActive();
     const condition = (active: boolean) => !active;
     const isActive = await asyncPoll<boolean>(fn, condition, 8000, 50);

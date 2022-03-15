@@ -90,6 +90,7 @@ const Communities = (props) => {
       let tokenId = null;
       let nonce = null;
       let active = false;
+      let claimSuccess = null;
       switch (message) {
         case ClaimMembershipErrorTypes.AlreadyMember:
           handleClose();
@@ -100,13 +101,13 @@ const Communities = (props) => {
           /*
               Step 1 - get tokenId from skillwallet
           */
-          tokenId = await onGetTokenId(selectedCommunity.address);
+          tokenId = await onGetTokenId(selectedCommunity.address, true);
           console.log('TokenId: ', tokenId);
 
           /*
               Step 2 - generate qr code nonce
           */
-          nonce = await onQRCodeGenerate(tokenId);
+          nonce = await onQRCodeGenerate(tokenId, true);
 
           /*
               Step 3 - poll to check if qr code was used/activate
@@ -124,18 +125,19 @@ const Communities = (props) => {
           /*
               Step 1 - Execute claim membership smart contract
           */
-          await onClaimMembership(selectedCommunity.address, true);
+          claimSuccess = await onClaimMembership(selectedCommunity.address, true);
 
+          console.log('claimSuccess: ', claimSuccess);
           /*
               Step 2 - get tokenId from skillwallet
           */
-          tokenId = await onGetTokenId(selectedCommunity.address);
+          tokenId = await onGetTokenId(selectedCommunity.address, claimSuccess);
           console.log('TokenId: ', tokenId);
 
           /*
               Step 3 - generate qr code nonce
           */
-          nonce = await onQRCodeGenerate(tokenId);
+          nonce = await onQRCodeGenerate(tokenId, !!claimSuccess);
           console.log('Nonce: ', nonce);
 
           /*
@@ -153,12 +155,12 @@ const Communities = (props) => {
           /*
              Step 1 - get tokenId from skillwallet
          */
-          tokenId = await onGetTokenId(selectedCommunity.address);
+          tokenId = await onGetTokenId(selectedCommunity.address, claimSuccess);
           console.log('TokenId: ', tokenId);
           /*
             Step 2 - generate qr code nonce
           */
-          nonce = await onQRCodeGenerate(tokenId);
+          nonce = await onQRCodeGenerate(tokenId, true);
           console.log('Nonce: ', nonce);
 
           /*
@@ -208,7 +210,7 @@ const Communities = (props) => {
     /*
         Step 4 - Execute join membership smart contract
     */
-    const member = await onJoinMembership(bucketUrl, selectedCommunity.address, credits);
+    const member = await onJoinMembership(bucketUrl, selectedCommunity.address, credits as any);
     const tokenId = member?.tokenId;
     console.log('Member: ', member);
     console.log('TokenId: ', tokenId);
@@ -216,12 +218,12 @@ const Communities = (props) => {
     /*
         Step 5 - Execute claim membership smart contract
     */
-    await onClaimMembership(selectedCommunity.address, !!member);
+    const claimSuccessful = await onClaimMembership(selectedCommunity.address, !!member);
 
     /*
         Step 6 - Generate nonce & show qr code
     */
-    const nonce = await onQRCodeGenerate(tokenId);
+    const nonce = await onQRCodeGenerate(tokenId, !!claimSuccessful);
     console.log('Nonce: ', nonce);
 
     /*

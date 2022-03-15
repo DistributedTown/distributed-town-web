@@ -1,7 +1,7 @@
 import { connectToEthereum, switchToEtheremNetwork } from '@dito-api/ethereum-network.api';
 import { NonceActions, TextileBucketMetadata } from '@dito-api/model';
 import { generateNonce, isQrCodeActive } from '@dito-api/skillwallet.api';
-import { generateTextileBucketUrl } from '@dito-api/textile-bucket.api';
+import { generateBucketUrl } from '@dito-api/textile-bucket.api';
 import { AppDispatch } from '@dito-store/store.model';
 import { addLog } from '@dito-store/ui-reducer';
 import { Box, Typography } from '@mui/material';
@@ -119,7 +119,7 @@ export const OnCreateGigHandlers = (
     setDialogContent(<DialogLoadingMessage message="Generating url ..." onCancel={handleClose} />);
 
     try {
-      return await generateTextileBucketUrl(metadataJson);
+      return await generateBucketUrl(metadataJson);
     } catch (error) {
       dispatch(addLog(JSON.stringify(error)));
       setDialogContent(

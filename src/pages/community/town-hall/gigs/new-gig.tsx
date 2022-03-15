@@ -102,7 +102,6 @@ const NewGig = () => {
     };
 
     dispatch(createGig(metadataJson));
-    console.log(metadataJson, '========================');
 
     // const { onEthConnection, onEthNetworkChange, onIPFS, onCreateGig } = OnCreateGigHandlers(
     //   dispatch,

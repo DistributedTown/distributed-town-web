@@ -4,11 +4,20 @@ import { DITOCommunityABI, GigsABI, SkillWalletABI, SWContractEventType } from '
 import { toWei } from 'web3-utils';
 import { CommunityContract, CommunityContractError, CommunityContractResponse, NonceActions } from './model';
 import { Web3ContractProvider } from './web3.provider';
-import { generateTextileBucketUrl } from './textile-bucket.api';
+import { generateBucketUrl } from './textile-bucket.api';
 
 function NoEventException(value: CommunityContractError) {
   this.value = value;
   this.message = 'No event found!';
+  // eslint-disable-next-line func-names
+  this.toString = function () {
+    return this.value + this.message;
+  };
+}
+
+function CustomException(value: CommunityContractError) {
+  this.value = value;
+  this.message = 'An error occured!';
   // eslint-disable-next-line func-names
   this.toString = function () {
     return this.value + this.message;
@@ -26,8 +35,10 @@ export const getSkillWalletAddress = async (communityAddress = null) => {
 };
 
 export const claimCommunityMembershipContract = async (communityAddress: string): Promise<string> => {
-  console.log(communityAddress, '3212333333333332323232');
+  console.log('communityAddress', communityAddress);
   const skillWalletAddress = await getSkillWalletAddress(communityAddress);
+  console.log('skillWalletAddress: ', skillWalletAddress);
+
   const contract = await Web3ContractProvider(skillWalletAddress, SkillWalletABI);
   const claimTx = await contract.claim();
   const { events } = await claimTx.wait();
@@ -57,7 +68,15 @@ export const getTokenIdContract = async (communityAddress: string): Promise<stri
     const tokenId = await contract.getSkillWalletIdByOwner(window.ethereum.selectedAddress);
     return tokenId?.toString();
   }
-  return null;
+  throw new CustomException({
+    code: -32603,
+    message: 'Internal JSON-RPC error.',
+    data: {
+      code: 3,
+      data: '',
+      message: 'execution reverted:SkillWallet:NotRegistered',
+    },
+  });
 };
 
 export const isQrCodeActive = async (): Promise<boolean> => {
@@ -80,9 +99,9 @@ export const executeCommunityContract = async ({
   credits,
 }: CommunityContract): Promise<CommunityContractResponse> => {
   const contract = await Web3ContractProvider(communityAddress, DITOCommunityABI);
-
-  const createTx = await contract.joinNewMember(url, 1, toWei(credits.toString()) as unknown as number);
+  const createTx = await contract.joinNewMember(url, 1);
   const communityTransactionResult = await createTx.wait();
+  console.log('Join TX ', communityTransactionResult);
   const { events } = communityTransactionResult;
   const memberJoinedEvent = events.find(({ event }) => event === SWContractEventType.MemberAdded);
 
@@ -164,7 +183,7 @@ export const createGig = async (communityAddress: string, metadata: any) => {
 
   const { credits, ...rest } = metadata;
 
-  const url = await generateTextileBucketUrl(rest);
+  const url = await generateBucketUrl(rest);
   const communityContract = await Web3ContractProvider(communityAddress, DITOCommunityABI);
   const gigsAddress = await communityContract.gigsAddr();
   const gigContract = await Web3ContractProvider(gigsAddress, GigsABI);

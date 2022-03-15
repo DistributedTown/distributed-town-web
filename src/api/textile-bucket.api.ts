@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { NFTStorage } from 'nft.storage';
+import { base64toFile, isBase64 } from 'sw-web-shared';
 
 const client = new NFTStorage({ token: process.env.REACT_APP_NFT_STORAGE_KEY });
 
@@ -36,12 +37,24 @@ const storeAsJson = async (json: any): Promise<string> => {
   return ipfsCIDToHttpUrl(metadata.ipnft, true);
 };
 
-export async function generateTextileBucketUrl(json: any, convertImageBlobToFile: (blob: Blob) => File = null) {
+const isStringBase64 = (url: string) => {
+  if (!url || typeof url !== 'string') {
+    return false;
+  }
+  const [, base64] = url.split(',');
+  return isBase64(base64);
+};
+
+export async function generateBucketUrl(json: any, convertImageBlobToFile: (blob: Blob | string) => File = null) {
   if (convertImageBlobToFile && isValidUrl(json.image)) {
     const result = await axios.get(json.image, {
       responseType: 'blob',
     });
     json.image = convertImageBlobToFile(result.data);
+  }
+
+  if (isStringBase64(json.image)) {
+    json.image = convertImageBlobToFile(json.image);
   }
 
   if (isValidUrl(json.image)) {

@@ -36,7 +36,7 @@ declare module 'ethers' {
 
     isMember: (member: string) => Promise<boolean>;
 
-    joinNewMember: (uri: string, role: number, credits: number) => Promise<{ wait: () => Promise<SWContractEvents> }>;
+    joinNewMember: (uri: string, role: number) => Promise<{ wait: () => Promise<SWContractEvents> }>;
 
     markAsMigrated: (_migratedTo: string) => Promise<{ wait: () => Promise<SWContractEvents> }>;
 
