@@ -37,7 +37,7 @@
     "@mui/icons-material": "~5.2.1",
     "@mui/material": "~5.2.3",
     "@reduxjs/toolkit": "~1.7.0",
-    "@skill-wallet/auth": "0.0.93-alpha",
+    "@skill-wallet/auth": "1.0.66",
     "@textile/hub": "~6.3.2",
     "axios": "~0.24.0",
     "buffer": "^6.0.3",
